@@ -9,11 +9,25 @@
 
         <context:property-placeholder location="application.properties"/>
 
-        <bean id="questionExtractorServiceBean" scope="singleton" class="ru.pipko.otus.homework.service.QuestionExtractorService">
+        <bean id="interviewService" scope="singleton" class="ru.pipko.otus.homework.service.InterviewServiceImpl">
+            <constructor-arg name="questionDao" ref="questionDao"/>
+            <constructor-arg name="displayQuestionsService" ref="displayQuestionsService"/>
+            <constructor-arg name="printService" ref="printService"/>
+        </bean>
+
+        <bean id="questionDao" scope="singleton" class="ru.pipko.otus.homework.dao.QuestionCsvDao">
             <constructor-arg name="csvFileName" value="${csv.file.name}"/>
         </bean>
 
-        <bean id="questionDaoSimpleBean" scope="singleton" class="ru.pipko.otus.homework.dao.QuestionDaoSimple">
-            <constructor-arg name="questionsExtractor" ref="questionExtractorServiceBean"/>
+        <bean id="printService" scope="singleton" class="ru.pipko.otus.homework.service.PrintConsoleService"/>
+
+        <bean id="displayAnswersService" scope="singleton" class="ru.pipko.otus.homework.service.DisplayAnswersServiceImpl">
+            <constructor-arg name="printService" ref="printService"/>
         </bean>
+
+        <bean id="displayQuestionsService" scope="singleton" class="ru.pipko.otus.homework.service.DisplayQuestionsServiceImpl">
+            <constructor-arg name="printService" ref="printService"/>
+            <constructor-arg name="displayAnswersService" ref="displayAnswersService"/>
+        </bean>
+
 </beans>

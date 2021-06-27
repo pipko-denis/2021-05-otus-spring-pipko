@@ -4,8 +4,8 @@ import ru.pipko.otus.homework.domain.Question;
 
 import java.util.List;
 
-public interface IQuestionExtractorService {
+public interface DisplayQuestionsService {
 
-    List<Question> getQuestions();
+    void displayQuestions(List<Question> questionList) throws Exception;
 
 }

@@ -1,16 +1,12 @@
 package ru.pipko.otus.homework;
 
-import static org.junit.jupiter.api.Assertions.assertTrue;
-
 import org.junit.jupiter.api.Test;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.util.Assert;
+import ru.pipko.otus.homework.dao.QuestionDao;
+import ru.pipko.otus.homework.dao.QuestionCsvDao;
 import ru.pipko.otus.homework.domain.Question;
-import ru.pipko.otus.homework.service.IQuestionExtractorService;
-import ru.pipko.otus.homework.service.QuestionExtractorService;
 
 import java.io.IOException;
-import java.io.InputStream;
 import java.util.List;
 
 /**
@@ -21,12 +17,12 @@ public class AppTest
 
 
     @Test
-    public void isFileWithQuestionsUnreachableOrEmpty() {
+    public void isFileWithQuestionsUnreachableOrEmpty() throws IOException {
         String fileName = "questions.csv";
 
-        IQuestionExtractorService extractorService = new QuestionExtractorService(fileName);
+        QuestionDao dao = new QuestionCsvDao(fileName);
 
-        List<Question> questionList = extractorService.getQuestions();
+        List<Question> questionList = dao.getQuestions();
 
         Assert.isTrue(questionList != null,"Questions list in file \""+fileName+"\" is null");
 
