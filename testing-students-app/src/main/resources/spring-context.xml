@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:context="http://www.springframework.org/schema/context"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans
+    http://www.springframework.org/schema/beans/spring-beans.xsd
+    http://www.springframework.org/schema/context
+    http://www.springframework.org/schema/context/spring-context.xsd">
+
+        <context:property-placeholder location="application.properties"/>
+
+        <bean id="interviewService" scope="singleton" class="ru.pipko.otus.homework.service.InterviewServiceImpl">
+            <constructor-arg name="questionDao" ref="questionDao"/>
+            <constructor-arg name="displayQuestionsService" ref="displayQuestionsService"/>
+            <constructor-arg name="printService" ref="printService"/>
+        </bean>
+
+        <bean id="questionDao" scope="singleton" class="ru.pipko.otus.homework.dao.QuestionCsvDao">
+            <constructor-arg name="csvFileName" value="${csv.file.name}"/>
+        </bean>
+
+        <bean id="printService" scope="singleton" class="ru.pipko.otus.homework.service.PrintConsoleService"/>
+
+        <bean id="displayAnswersService" scope="singleton" class="ru.pipko.otus.homework.service.DisplayAnswersServiceImpl">
+            <constructor-arg name="printService" ref="printService"/>
+        </bean>
+
+        <bean id="displayQuestionsService" scope="singleton" class="ru.pipko.otus.homework.service.DisplayQuestionsServiceImpl">
+            <constructor-arg name="printService" ref="printService"/>
+            <constructor-arg name="displayAnswersService" ref="displayAnswersService"/>
+        </bean>
+
+</beans>
