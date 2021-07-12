@@ -2,8 +2,8 @@ package ru.pipko.otus.homework.service;
 
 import ru.pipko.otus.homework.dao.QuestionDao;
 import ru.pipko.otus.homework.domain.Question;
+import ru.pipko.otus.homework.exeptions.QuestionsDaoException;
 
-import java.io.IOException;
 import java.util.List;
 
 public class InterviewServiceImpl implements InterviewService{
@@ -25,7 +25,7 @@ public class InterviewServiceImpl implements InterviewService{
         List<Question> questionList = null;
         try {
             questionList = questionDao.getQuestions();
-        } catch (IOException ex) {
+        } catch (QuestionsDaoException ex) {
             this.printService.printLn("Getting questions error: "+ex.getMessage());
         }
 

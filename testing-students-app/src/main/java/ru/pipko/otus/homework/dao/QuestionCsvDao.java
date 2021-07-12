@@ -1,6 +1,7 @@
 package ru.pipko.otus.homework.dao;
 
 import ru.pipko.otus.homework.domain.Question;
+import ru.pipko.otus.homework.exeptions.QuestionsDaoException;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -20,31 +21,29 @@ public class QuestionCsvDao implements QuestionDao {
     }
 
     @Override
-    public List<Question> getQuestions() throws IOException {
+    public List<Question> getQuestions() throws QuestionsDaoException {
         List<Question> result = new ArrayList<>();
 
 
-        InputStream inputStream = QuestionCsvDao.class.getClassLoader().getResourceAsStream(this.csvFileName);
-        if (inputStream == null){
-            throw  new IOException("Can't read file because input stream is null");
+        try (
+                InputStream inputStream = QuestionCsvDao.class.getClassLoader().getResourceAsStream(this.csvFileName);
+                InputStreamReader streamReader = new InputStreamReader(inputStream, StandardCharsets.UTF_8);
+                BufferedReader reader = new BufferedReader(streamReader);
+        ){
+            String line;
+            String[] row;
+            while ((line = reader.readLine()) != null) {
+                row = line.split(";");
+
+                if (row.length < 2) {
+                    throw new QuestionsDaoException("The row \""+line+"\" row doesn't contain enough blocks separated by \";\"");
+                }
+
+                result.add(new Question(row[0], Arrays.copyOfRange(row, 1, row.length)));
+            }
+        } catch (Exception ex){
+            throw new QuestionsDaoException("",ex.getCause()) ;
         }
-        InputStreamReader streamReader = new InputStreamReader(inputStream, StandardCharsets.UTF_8);
-        BufferedReader reader = new BufferedReader(streamReader);
-
-        String line;
-        String[] row;
-        while ((line = reader.readLine()) != null) {
-            row = line.split(";");
-            //Skipping questions with no answers
-            if (row.length < 2) continue;
-
-            result.add(new Question(row[0], Arrays.copyOfRange(row, 1, row.length )));
-        }
-
-        if (reader != null) reader.close();
-        if (streamReader != null) streamReader.close();
-        if (inputStream != null) inputStream.close();
-
 
         return result;
     }
