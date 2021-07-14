@@ -42,7 +42,7 @@ public class InterviewServiceImpl implements InterviewService{
         }
 
         try {
-            this.displayQuestionsService.displayQuestions(questionList);
+            this.displayQuestionsService.askQuestions(questionList);
         } catch (Exception ex) {
             this.printService.printLn("Displaying questions error: "+ex.getMessage());
         }

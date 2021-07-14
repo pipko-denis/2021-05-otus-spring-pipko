@@ -13,7 +13,7 @@ import ru.pipko.otus.homework.service.*;
 @PropertySource("application.properties")
 public class AppConfig {
 
-    @Bean
+    @Bean()
     InterviewService interviewService(QuestionDao questionDao, PrintService printService
             , DisplayQuestionsService displayQuestionsService, ValidateQuestionService validateQuestionService){
         return new InterviewServiceImpl(questionDao,printService,displayQuestionsService,validateQuestionService);
@@ -32,8 +32,10 @@ public class AppConfig {
 
     @Bean
     DisplayQuestionsService displayQuestionsService(PrintService printService,
-                                                    DisplayAnswersService displayAnswersService){
-        return new DisplayQuestionsServiceImpl(printService,displayAnswersService);
+                                                    DisplayAnswersService displayAnswersService,
+                                                    ReadAnswerService readAnswerService,
+                                                    ValidateUserResponseService validateUserResponseService){
+        return new DisplayQuestionsServiceImpl(printService,displayAnswersService, readAnswerService, validateUserResponseService);
     }
 
     @Bean
@@ -46,4 +48,14 @@ public class AppConfig {
         return new DisplayAnswersServiceImpl(printService);
     }
 
+    @Bean
+    ValidateUserResponseService validateUserResponseService(){
+        return new ValidateUserResponseServiceImpl();
+    }
+
+    @Bean
+    ReadAnswerService readAnswerService(PrintStreamService printService,ValidateUserResponseService validateUserResponseService
+            ,@Value("${ask.questions.max.attempts}") int maxAttempts){
+        return new ReadAnswerServiceImpl(System.in,printService,validateUserResponseService, maxAttempts);
+    }
 }

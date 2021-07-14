@@ -6,6 +6,6 @@ import java.util.List;
 
 public interface DisplayQuestionsService {
 
-    void displayQuestions(List<Question> questionList);
+    void askQuestions(List<Question> questionList);
 
 }
