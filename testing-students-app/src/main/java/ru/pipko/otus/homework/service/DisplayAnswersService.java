@@ -6,6 +6,6 @@ import java.util.List;
 
 public interface DisplayAnswersService {
 
-    void displayAnswers(List<Answer> answers) throws Exception;
+    void displayAnswers(List<Answer> answers);
 
 }

@@ -15,18 +15,24 @@ public class DisplayQuestionsServiceImpl implements DisplayQuestionsService{
     }
 
     @Override
-    public void displayQuestions(List<Question> questionList) throws Exception {
+    public void displayQuestions(List<Question> questionList) {
 
-        for(Question question : questionList){
-            if (question == null) continue;
+        Question question;
 
-            printService.printLn(question.getText());
+        for (int i = 0; i < questionList.size(); i++) {
+            question = questionList.get(i);
+
+            printService.printLn("Question #" + i + ": " + question.getText());
 
             displayAnswersService.displayAnswers(question.getAnswers());
 
         }
 
+
     }
+
+
+
 
 
 

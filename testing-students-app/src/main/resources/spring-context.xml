@@ -13,13 +13,14 @@
             <constructor-arg name="questionDao" ref="questionDao"/>
             <constructor-arg name="displayQuestionsService" ref="displayQuestionsService"/>
             <constructor-arg name="printService" ref="printService"/>
+            <constructor-arg name="validateQuestionService" ref="validateQuestionService" />
         </bean>
 
         <bean id="questionDao" scope="singleton" class="ru.pipko.otus.homework.dao.QuestionCsvDao">
             <constructor-arg name="csvFileName" value="${csv.file.name}"/>
         </bean>
 
-        <bean id="printService" scope="singleton" class="ru.pipko.otus.homework.service.PrintConsoleService"/>
+        <bean id="printService" scope="singleton" class="ru.pipko.otus.homework.service.PrintStreamService"/>
 
         <bean id="displayAnswersService" scope="singleton" class="ru.pipko.otus.homework.service.DisplayAnswersServiceImpl">
             <constructor-arg name="printService" ref="printService"/>
@@ -29,5 +30,8 @@
             <constructor-arg name="printService" ref="printService"/>
             <constructor-arg name="displayAnswersService" ref="displayAnswersService"/>
         </bean>
+
+        <bean id="validateQuestionService" scope="singleton" class="ru.pipko.otus.homework.service.ValidateQuestionServiceImpl"/>
+
 
 </beans>
