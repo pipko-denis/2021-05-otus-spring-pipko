@@ -9,8 +9,6 @@ public class Question {
 
     private final List<Answer> answers;
 
-    private boolean passed = false;
-
     private Answer pickedAnswer = null;
 
     public Question(String text, String[] answers) {
@@ -23,14 +21,6 @@ public class Question {
 
     public String getText() {
         return text;
-    }
-
-    public boolean isPassed() {
-        return passed;
-    }
-
-    public void setPassed(boolean passed) {
-        this.passed = passed;
     }
 
     public List<Answer> getAnswers() {
