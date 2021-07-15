@@ -9,10 +9,10 @@ public class DisplayQuestionsServiceImpl implements DisplayQuestionsService{
 
     private final DisplayAnswersService displayAnswersService;
 
-    private final ReadAnswerService readAnswerService;
+    private final ReadUserResponseService readAnswerService;
 
 
-    public DisplayQuestionsServiceImpl(PrintService printService, DisplayAnswersService displayAnswersService, ReadAnswerService readAnswerService, ValidateUserResponseService validateUserResponceService){
+    public DisplayQuestionsServiceImpl(PrintService printService, DisplayAnswersService displayAnswersService, ReadUserResponseService readAnswerService){
         this.printService = printService;
         this.displayAnswersService = displayAnswersService;
         this.readAnswerService = readAnswerService;
@@ -29,7 +29,7 @@ public class DisplayQuestionsServiceImpl implements DisplayQuestionsService{
 
             displayAnswersService.displayAnswers(question.getAnswers());
 
-            question.setPickedAnswer(readAnswerService.readResponse(question));
+            question.setPickedAnswer(readAnswerService.readAnswer(question));
 
         }
 

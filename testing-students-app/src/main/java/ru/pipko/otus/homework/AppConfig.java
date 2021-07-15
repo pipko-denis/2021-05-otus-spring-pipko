@@ -33,9 +33,8 @@ public class AppConfig {
     @Bean
     DisplayQuestionsService displayQuestionsService(PrintService printService,
                                                     DisplayAnswersService displayAnswersService,
-                                                    ReadAnswerService readAnswerService,
-                                                    ValidateUserResponseService validateUserResponseService){
-        return new DisplayQuestionsServiceImpl(printService,displayAnswersService, readAnswerService, validateUserResponseService);
+                                                    ReadUserResponseService readAnswerService){
+        return new DisplayQuestionsServiceImpl(printService,displayAnswersService, readAnswerService);
     }
 
     @Bean
@@ -53,9 +52,10 @@ public class AppConfig {
         return new ValidateUserResponseServiceImpl();
     }
 
+    //@Value("#{Integer.parseInt('${ask.questions.max.attempts}')}")
     @Bean
-    ReadAnswerService readAnswerService(PrintStreamService printService,ValidateUserResponseService validateUserResponseService
-            ,@Value("${ask.questions.max.attempts}") int maxAttempts){
-        return new ReadAnswerServiceImpl(System.in,printService,validateUserResponseService, maxAttempts);
+    ReadUserResponseService readAnswerService(PrintStreamService printService, ValidateUserResponseService validateUserResponseService
+            , @Value("${ask.questions.max.attempts}") int maxAttempts){
+        return new ReadUserResponseServiceImpl(System.in,printService,validateUserResponseService, maxAttempts);
     }
 }
