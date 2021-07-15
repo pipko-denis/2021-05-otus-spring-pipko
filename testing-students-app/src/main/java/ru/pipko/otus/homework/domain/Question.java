@@ -14,8 +14,10 @@ public class Question {
     public Question(String text, String[] answers) {
         this.text = text;
         this.answers = new ArrayList<>();
+        String[] answerData;
         for (String answerText : answers) {
-            this.answers.add(new Answer(answerText));
+            answerData = answerText.split("::");
+            this.answers.add(new Answer(answerData[0], Boolean.parseBoolean(answerData[1])));
         }
     }
 
