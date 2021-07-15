@@ -2,15 +2,12 @@ package ru.pipko.otus.homework;
 
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
-import ru.pipko.otus.homework.dao.QuestionDao;
 import ru.pipko.otus.homework.dao.QuestionCsvDao;
+import ru.pipko.otus.homework.dao.QuestionDao;
 import ru.pipko.otus.homework.domain.Question;
 import ru.pipko.otus.homework.exeptions.QuestionsDaoException;
 
-
-import java.util.ArrayList;
 import java.util.List;
-import java.util.concurrent.atomic.AtomicReference;
 
 /**
  * Unit test for QuestionsDao
