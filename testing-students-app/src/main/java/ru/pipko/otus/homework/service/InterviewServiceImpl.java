@@ -1,50 +1,55 @@
 package ru.pipko.otus.homework.service;
 
 import ru.pipko.otus.homework.dao.QuestionDao;
-import ru.pipko.otus.homework.domain.Question;
+import ru.pipko.otus.homework.domain.Interview;
 import ru.pipko.otus.homework.exeptions.QuestionsDaoException;
 import ru.pipko.otus.homework.exeptions.ValidateQuestionException;
-
-import java.util.List;
 
 public class InterviewServiceImpl implements InterviewService{
 
     private final QuestionDao questionDao;
 
-    private final DisplayQuestionsService displayQuestionsService;
+    private final AskQuestionsService askQuestionsService;
 
     private final ValidateQuestionService validateQuestionService;
 
     private final PrintService printService;
 
+    private final DisplayService displayService;
+
 
     public InterviewServiceImpl(QuestionDao questionDao, PrintService printService
-            , DisplayQuestionsService displayQuestionsService, ValidateQuestionService validateQuestionService){
+            , AskQuestionsService askQuestionsService, ValidateQuestionService validateQuestionService, DisplayService displayService){
         this.questionDao = questionDao;
         this.printService = printService;
-        this.displayQuestionsService = displayQuestionsService;
+        this.askQuestionsService = askQuestionsService;
         this.validateQuestionService = validateQuestionService;
-
+        this.displayService = displayService;
     }
 
     public void takeAnInterview() {
-        List<Question> questionList = null;
+        String firstName = this.askQuestionsService.askSomething("What is your first name?");
+        String lastName = this.askQuestionsService.askSomething("What is your last name?");
+        Interview interview = new Interview(firstName,lastName);
+
+
         try {
-            questionList = questionDao.getQuestions();
+            interview.setQuestionList(questionDao.getQuestions());
         } catch (QuestionsDaoException ex) {
-            this.printService.printLn("Getting questions error: "+ex.getMessage());
+            this.printService.printLn("Sorry "+interview.getUserName()+"! Getting questions error: "+ex.getMessage());
         }
 
         try {
-            this.validateQuestionService.validateQuestionsList(questionList);
+            this.validateQuestionService.validateQuestionsList(interview.getQuestionList());
         } catch (ValidateQuestionException ex) {
-            this.printService.printLn("Validating questions error: "+ex.getMessage());
+            this.printService.printLn("Sorry "+interview.getUserName()+"! Validating questions error: "+ex.getMessage());
         }
 
         try {
-            this.displayQuestionsService.askQuestions(questionList);
+            this.askQuestionsService.askQuestions(interview.getQuestionList());
+            this.displayService.displayInterviewResults(interview);
         } catch (Exception ex) {
-            this.printService.printLn("Displaying questions error: "+ex.getMessage());
+            this.printService.printLn("Sorry "+interview.getUserName()+"! Asking questions error: "+ex.getMessage());
         }
 
 

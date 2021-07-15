@@ -2,6 +2,7 @@ package ru.pipko.otus.homework;
 
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.PropertySource;
 import ru.pipko.otus.homework.dao.QuestionCsvDao;
@@ -15,13 +16,13 @@ public class AppConfig {
 
     @Bean()
     InterviewService interviewService(QuestionDao questionDao, PrintService printService
-            , DisplayQuestionsService displayQuestionsService, ValidateQuestionService validateQuestionService){
-        return new InterviewServiceImpl(questionDao,printService,displayQuestionsService,validateQuestionService);
+            , AskQuestionsService askQuestionsService, ValidateQuestionService validateQuestionService, DisplayService displayService){
+        return new InterviewServiceImpl(questionDao,printService, askQuestionsService,validateQuestionService, displayService);
 
     }
 
     @Bean
-    QuestionDao questionDao(@Value("${csv.file.name}") String csvFileName){
+    QuestionDao questionDao(@Value("${csv-file-name}") String csvFileName){
         return new QuestionCsvDao(csvFileName);
     }
 
@@ -31,10 +32,10 @@ public class AppConfig {
     }
 
     @Bean
-    DisplayQuestionsService displayQuestionsService(PrintService printService,
-                                                    DisplayAnswersService displayAnswersService,
-                                                    ReadUserResponseService readAnswerService){
-        return new DisplayQuestionsServiceImpl(printService,displayAnswersService, readAnswerService);
+    AskQuestionsService displayQuestionsService(PrintService printService,
+                                                DisplayService displayService,
+                                                ReadUserResponseService readAnswerService){
+        return new AskQuestionsServiceImpl(printService, displayService, readAnswerService);
     }
 
     @Bean
@@ -43,8 +44,8 @@ public class AppConfig {
     }
 
     @Bean
-    DisplayAnswersService displayAnswersService(PrintService printService){
-        return new DisplayAnswersServiceImpl(printService);
+    DisplayService displayAnswersService(PrintService printService, @Value("${min-pass-count}")int minPassCount){
+        return new DisplayServiceImpl(printService,minPassCount);
     }
 
     @Bean
@@ -55,7 +56,7 @@ public class AppConfig {
     //@Value("#{Integer.parseInt('${ask.questions.max.attempts}')}")
     @Bean
     ReadUserResponseService readAnswerService(PrintStreamService printService, ValidateUserResponseService validateUserResponseService
-            , @Value("${ask.questions.max.attempts}") int maxAttempts){
+            , @Value("${ask-questions-max-attempts}") int maxAttempts){
         return new ReadUserResponseServiceImpl(System.in,printService,validateUserResponseService, maxAttempts);
     }
 }

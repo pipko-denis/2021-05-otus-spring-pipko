@@ -4,8 +4,13 @@ import ru.pipko.otus.homework.domain.Question;
 
 import java.util.List;
 
-public interface DisplayQuestionsService {
+public interface AskQuestionsService {
 
     void askQuestions(List<Question> questionList);
+
+    String askSomething(String question);
+
+
+
 
 }

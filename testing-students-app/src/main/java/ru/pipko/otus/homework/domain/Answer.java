@@ -15,7 +15,7 @@ public class Answer {
         return text;
     }
 
-    public Boolean getRightAnswer() {
+    public Boolean getIsRightAnswer() {
         return isRightAnswer;
     }
 
