@@ -10,6 +10,15 @@ public class ValidateUserResponseServiceImpl implements ValidateUserResponseServ
     @Override
     public boolean isUserResponseIsValid(Question question, String response) {
         final Pattern pattern = Pattern.compile("[1-"+question.getAnswers().size()+"]");
-        return pattern.matcher(response).find();
+        if ( pattern.matcher(response).find()){
+            int responseIntValue =  Integer.parseInt(response);
+            if ( (responseIntValue > 0) && (responseIntValue <= question.getAnswers().size() ) ){
+                return true;
+            }else {
+                return false;
+            }
+        } else {
+            return false;
+        }
     }
 }
