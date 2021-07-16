@@ -1,10 +1,12 @@
 package ru.pipko.otus.homework.service;
 
+import org.springframework.stereotype.Service;
 import ru.pipko.otus.homework.dao.QuestionDao;
 import ru.pipko.otus.homework.domain.Interview;
 import ru.pipko.otus.homework.exeptions.QuestionsDaoException;
 import ru.pipko.otus.homework.exeptions.ValidateQuestionException;
 
+@Service("interviewService")
 public class InterviewServiceImpl implements InterviewService{
 
     private final QuestionDao questionDao;

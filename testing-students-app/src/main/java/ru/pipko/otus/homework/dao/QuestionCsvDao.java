@@ -1,5 +1,7 @@
 package ru.pipko.otus.homework.dao;
 
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.stereotype.Service;
 import ru.pipko.otus.homework.domain.Question;
 import ru.pipko.otus.homework.exeptions.QuestionsDaoException;
 
@@ -11,11 +13,12 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
+@Service
 public class QuestionCsvDao implements QuestionDao {
 
     private final String csvFileName;
 
-    public QuestionCsvDao(String csvFileName) {
+    public QuestionCsvDao(@Value("${csv-file-name}") String csvFileName) {
         this.csvFileName = csvFileName;
     }
 

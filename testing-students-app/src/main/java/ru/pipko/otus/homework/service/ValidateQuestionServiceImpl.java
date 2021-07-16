@@ -1,11 +1,13 @@
 package ru.pipko.otus.homework.service;
 
+import org.springframework.stereotype.Service;
 import ru.pipko.otus.homework.domain.Answer;
 import ru.pipko.otus.homework.domain.Question;
 import ru.pipko.otus.homework.exeptions.ValidateQuestionException;
 
 import java.util.List;
 
+@Service
 public class ValidateQuestionServiceImpl implements ValidateQuestionService{
 
     @Override

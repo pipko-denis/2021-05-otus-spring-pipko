@@ -1,11 +1,14 @@
 package ru.pipko.otus.homework.service;
 
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.stereotype.Service;
 import ru.pipko.otus.homework.domain.Answer;
 import ru.pipko.otus.homework.domain.Question;
 
 import java.io.InputStream;
 import java.util.Scanner;
 
+@Service
 public class ReadUserResponseServiceImpl implements ReadUserResponseService {
 
     private final Scanner scanner;
@@ -18,8 +21,8 @@ public class ReadUserResponseServiceImpl implements ReadUserResponseService {
 
 
 
-    public ReadUserResponseServiceImpl(InputStream inputStream, PrintService printService, ValidateUserResponseService validateUserResponseService
-            , int maxAttempts){
+    public ReadUserResponseServiceImpl(@Value("#{T(java.lang.System).in}")InputStream inputStream, PrintService printService, ValidateUserResponseService validateUserResponseService
+            , @Value("${ask-questions-max-attempts}") int maxAttempts){
         this.scanner = new Scanner(inputStream);
         this.printService = printService;
         this.validateUserResponseService = validateUserResponseService;

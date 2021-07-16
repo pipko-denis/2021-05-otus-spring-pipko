@@ -1,11 +1,14 @@
 package ru.pipko.otus.homework.service;
 
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.stereotype.Service;
 import ru.pipko.otus.homework.domain.Answer;
 import ru.pipko.otus.homework.domain.Interview;
 import ru.pipko.otus.homework.domain.Question;
 
 import java.util.List;
 
+@Service
 public class DisplayServiceImpl implements DisplayService {
 
 
@@ -13,7 +16,7 @@ public class DisplayServiceImpl implements DisplayService {
 
     private final int minRightResponses;
 
-    public DisplayServiceImpl(PrintService printService, int minRightResponses){
+    public DisplayServiceImpl(PrintService printService, @Value("${min-pass-count}") int minRightResponses){
         this.printService = printService;
         this.minRightResponses = minRightResponses;
     }
@@ -38,9 +41,9 @@ public class DisplayServiceImpl implements DisplayService {
             }
         }
         if (cntRightAnswers >= minRightResponses){
-            this.printService.printLn("Congratulation, test passed! You have "+cntRightAnswers+" right answers.");
+            this.printService.printLn("Congratulation, the test is passed! You have "+cntRightAnswers+" right answers.");
         } else{
-            this.printService.printLn("Sorry, test not passed! You only have "+cntRightAnswers+" correct answers from "+this.minRightResponses+" needed to complete.");
+            this.printService.printLn("Sorry, the test is not passed! You only have "+cntRightAnswers+" correct answers from "+this.minRightResponses+" needed to complete.");
         }
 
 

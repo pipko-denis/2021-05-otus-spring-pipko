@@ -1,8 +1,10 @@
 package ru.pipko.otus.homework.service;
+import org.springframework.stereotype.Service;
 import ru.pipko.otus.homework.domain.Question;
 
 import java.util.List;
 
+@Service
 public class AskQuestionsServiceImpl implements AskQuestionsService {
 
     private final PrintService printService;
