@@ -9,7 +9,7 @@ import ru.pipko.otus.homework.dao.QuestionDao;
 import ru.pipko.otus.homework.service.*;
 
 
-@Configuration
+//@Configuration
 @PropertySource("application.properties")
 public class AppConfig {
 

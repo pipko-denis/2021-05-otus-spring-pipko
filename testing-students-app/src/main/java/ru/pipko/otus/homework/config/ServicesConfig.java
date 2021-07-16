@@ -9,7 +9,7 @@ import ru.pipko.otus.homework.service.*;
 @Configuration
 public class ServicesConfig {
 
-    @Bean()
+    @Bean
     InterviewService interviewService(QuestionDao questionDao, PrintService printService
             , AskQuestionsService askQuestionsService, ValidateQuestionService validateQuestionService, DisplayService displayService){
         return new InterviewServiceImpl(questionDao,printService, askQuestionsService,validateQuestionService, displayService);

@@ -13,7 +13,7 @@ public class App {
     public static void main(String[] args) {
         AnnotationConfigApplicationContext context = new AnnotationConfigApplicationContext(App.class);
 
-        InterviewService interviewService = context.getBean("  interviewService", InterviewService.class);
+        InterviewService interviewService = context.getBean("interviewService", InterviewService.class);
 
         interviewService.takeAnInterview();
 
