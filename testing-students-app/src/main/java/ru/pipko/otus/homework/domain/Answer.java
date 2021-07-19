@@ -4,19 +4,12 @@ public class Answer {
 
     private String text;
 
-    private Boolean isRightAnswer;
-
-    public Answer(String text, Boolean isRightAnswer){
+    public Answer(String text){
         this.text = text;
-        this.isRightAnswer = isRightAnswer;
     }
 
     public String getText() {
         return text;
-    }
-
-    public Boolean getIsRightAnswer() {
-        return isRightAnswer;
     }
 
     @Override

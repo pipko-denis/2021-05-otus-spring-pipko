@@ -1,87 +1,42 @@
 package ru.pipko.otus.homework.service;
 
-import org.springframework.stereotype.Service;
 import ru.pipko.otus.homework.dao.QuestionDao;
-import ru.pipko.otus.homework.domain.Interview;
 import ru.pipko.otus.homework.domain.Question;
-import ru.pipko.otus.homework.domain.Student;
-import ru.pipko.otus.homework.exeptions.QuestionsDaoException;
-import ru.pipko.otus.homework.exeptions.ValidateQuestionException;
 
+import java.io.IOException;
 import java.util.List;
 
-@Service("interviewService")
 public class InterviewServiceImpl implements InterviewService{
 
     private final QuestionDao questionDao;
 
-    private final AskQuestionsService askQuestionsService;
-
-    private final ValidateQuestionService validateQuestionService;
+    private final DisplayQuestionsService displayQuestionsService;
 
     private final PrintService printService;
 
-    private final DisplayService displayService;
 
-
-    public InterviewServiceImpl(QuestionDao questionDao, PrintService printService
-            , AskQuestionsService askQuestionsService, ValidateQuestionService validateQuestionService, DisplayService displayService){
+    public InterviewServiceImpl(QuestionDao questionDao, PrintService printService, DisplayQuestionsService displayQuestionsService){
         this.questionDao = questionDao;
         this.printService = printService;
-        this.askQuestionsService = askQuestionsService;
-        this.validateQuestionService = validateQuestionService;
-        this.displayService = displayService;
+        this.displayQuestionsService = displayQuestionsService;
     }
 
     public void takeAnInterview() {
-
+        List<Question> questionList = null;
         try {
-            Student student = findOutStudentName();
-
-            List<Question> questionList = getQuestionsListFromRepository();
-
-            Interview interview = new Interview(student,questionList);
-
-            validateQuestionsList(questionList);
-
-            askQuestions(questionList);
-
-            displayInterviewResults(interview);
-        } catch (QuestionsDaoException ex) {
-            printService.printLn("Getting questions error: "+ex.getMessage());
-            ex.printStackTrace();
-        } catch (ValidateQuestionException ex) {
-            printService.printLn("Validating questions error: "+ex.getMessage());
-            ex.printStackTrace();
+            questionList = questionDao.getQuestions();
+        } catch (IOException ex) {
+            this.printService.printLn("Getting questions error: "+ex.getMessage());
         }
 
+        try {
+            this.displayQuestionsService.displayQuestions(questionList);
+        } catch (Exception ex) {
+            this.printService.printLn("Displaying questions error: "+ex.getMessage());
+        }
+
+
     }
-
-    private Student findOutStudentName() {
-        String firstName = this.askQuestionsService.askSomething("What is your first name?");
-        String lastName = this.askQuestionsService.askSomething("What is your last name?");
-        return new Student(firstName, lastName);
-    }
-
-    private List<Question> getQuestionsListFromRepository() throws QuestionsDaoException {
-        return questionDao.getQuestions();
-    }
-
-    private void validateQuestionsList(List<Question> questionList) throws ValidateQuestionException {
-        validateQuestionService.validateQuestionsList(questionList);
-    }
-
-    private void askQuestions(List<Question> questionList) {
-        askQuestionsService.askQuestions(questionList);
-    }
-
-    private void displayInterviewResults( Interview interview) {
-        displayService.displayInterviewResults(interview);
-    }
-
-
-
-
 
 
 
