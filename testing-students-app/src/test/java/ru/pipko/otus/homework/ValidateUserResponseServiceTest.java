@@ -21,15 +21,15 @@ public class ValidateUserResponseServiceTest {
         String letters = "abc";
 
         Assertions.assertFalse(
-                this.validateQuestionService.isUserResponseIsValid(this.questionWithThreeAnswers, letters)
+                validateQuestionService.isUserResponseIsValid(this.questionWithThreeAnswers, letters)
                 , "letters \""+letters+"\""+"  - should be incorrect user response");
 
         Assertions.assertTrue(
-                this.validateQuestionService.isUserResponseIsValid(this.questionWithThreeAnswers, "1")
+                validateQuestionService.isUserResponseIsValid(this.questionWithThreeAnswers, "1")
                 , "letters \""+letters+"\""+"  - should be incorrect user response");
 
         Assertions.assertFalse(
-                this.validateQuestionService.isUserResponseIsValid(this.questionWithThreeAnswers, "4")
+                validateQuestionService.isUserResponseIsValid(this.questionWithThreeAnswers, "4")
                 , "Number \"4\""+"  - should be incorrect user response");
 
     }

@@ -10,7 +10,4 @@ public interface AskQuestionsService {
 
     String askSomething(String question);
 
-
-
-
 }

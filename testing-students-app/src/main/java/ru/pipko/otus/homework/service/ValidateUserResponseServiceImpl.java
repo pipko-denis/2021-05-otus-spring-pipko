@@ -14,11 +14,7 @@ public class ValidateUserResponseServiceImpl implements ValidateUserResponseServ
         final Pattern pattern = Pattern.compile("[1-"+question.getAnswers().size()+"]");
         if ( pattern.matcher(response).find()){
             int responseIntValue =  Integer.parseInt(response);
-            if ( (responseIntValue > 0) && (responseIntValue <= question.getAnswers().size() ) ){
-                return true;
-            }else {
-                return false;
-            }
+            return  (responseIntValue > 0) && (responseIntValue <= question.getAnswers().size() ) ;
         } else {
             return false;
         }

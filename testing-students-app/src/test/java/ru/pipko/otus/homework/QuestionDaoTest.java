@@ -36,14 +36,15 @@ public class QuestionDaoTest {
 
     @Test
     public void doesIncorrectFileProducesException() {
-        String fileName = "questions_second_line_error.csv";
+        String fileName = "questions_without_flag.csv";
 
         QuestionDao dao = new QuestionCsvDao(fileName);
 
         Assertions.assertThrows(QuestionsDaoException.class,
                 () -> dao.getQuestions()
-                , "File \"questions_second_line_error.csv\" parsing should produce QuestionsDaoException exception");
+                , "File \"questions_without_flag.csv\" parsing should produce QuestionsDaoException exception");
 
     }
+
 
 }

@@ -2,11 +2,8 @@ package ru.pipko.otus.homework.service;
 
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
-import ru.pipko.otus.homework.domain.Answer;
 import ru.pipko.otus.homework.domain.Interview;
 import ru.pipko.otus.homework.domain.Question;
-
-import java.util.List;
 
 @Service
 public class DisplayServiceImpl implements DisplayService {
@@ -22,18 +19,8 @@ public class DisplayServiceImpl implements DisplayService {
     }
 
     @Override
-    public void displayAnswers(List<Answer> answers)  {
-
-        Answer answer;
-        for (int i = 0; i < answers.size(); i++) {
-            answer = answers.get(i);
-            printService.printLn((i + 1) + ". " + answer);
-        }
-    }
-
-    @Override
     public void displayInterviewResults(Interview interview) {
-        printService.printLn("Student "+interview.getUserName() + " passing results... ");
+        printService.printLn("Student "+interview.getStudent().getFullName() + " passing results... ");
         int cntRightAnswers = 0;
         for(Question question : interview.getQuestionList()){
             if ( (question.getPickedAnswer() != null) && (question.getPickedAnswer().getIsRightAnswer())){
@@ -41,9 +28,9 @@ public class DisplayServiceImpl implements DisplayService {
             }
         }
         if (cntRightAnswers >= minRightResponses){
-            this.printService.printLn("Congratulation, the test is passed! You have "+cntRightAnswers+" right answers.");
+            printService.printLn("Congratulation, the test is passed! You have "+cntRightAnswers+" right answers.");
         } else{
-            this.printService.printLn("Sorry, the test is not passed! You only have "+cntRightAnswers+" correct answers from "+this.minRightResponses+" needed to complete.");
+            printService.printLn("Sorry, the test is not passed! You only have "+cntRightAnswers+" correct answers from "+this.minRightResponses+" needed to complete.");
         }
 
 
