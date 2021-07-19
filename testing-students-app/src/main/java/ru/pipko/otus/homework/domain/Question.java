@@ -9,28 +9,20 @@ public class Question {
 
     private final List<Answer> answers;
 
-    private boolean passed = false;
-
     private Answer pickedAnswer = null;
 
     public Question(String text, String[] answers) {
         this.text = text;
         this.answers = new ArrayList<>();
+        String[] answerData;
         for (String answerText : answers) {
-            this.answers.add(new Answer(answerText));
+            answerData = answerText.split("::");
+            this.answers.add(new Answer(answerData[0], Boolean.parseBoolean(answerData[1])));
         }
     }
 
     public String getText() {
         return text;
-    }
-
-    public boolean isPassed() {
-        return passed;
-    }
-
-    public void setPassed(boolean passed) {
-        this.passed = passed;
     }
 
     public List<Answer> getAnswers() {
