@@ -35,10 +35,11 @@ public class InterviewServiceImpl implements InterviewService{
 
     public void takeAnInterview() {
 
+        Student student = findOutStudentName();
+
         List<Question> questionList;
         Interview interview;
         try {
-            Student student = findOutStudentName();
 
             questionList = getQuestionsListFromRepository();
 
