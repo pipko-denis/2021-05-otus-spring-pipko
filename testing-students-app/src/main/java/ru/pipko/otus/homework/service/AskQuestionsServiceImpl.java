@@ -23,7 +23,7 @@ public class AskQuestionsServiceImpl implements AskQuestionsService {
 
     public AskQuestionsServiceImpl(PrintService printService, DisplayService displayService,
                                    ReadService readAnswerService, ValidateUserResponseService validateUserResponseService,
-                                   ReadService readService, @Value("${ask-questions-max-attempts}") int maxAttempts) {
+                                   @Value("${ask-questions-max-attempts}") int maxAttempts) {
         this.printService = printService;
         this.displayService = displayService;
         this.readService = readAnswerService;
