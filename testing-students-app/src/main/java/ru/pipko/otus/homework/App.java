@@ -5,7 +5,7 @@ import ru.pipko.otus.homework.service.*;
 
 @Configuration
 @ComponentScan
-@PropertySource("application.properties")
+@PropertySource("classpath:application.properties")
 public class App {
     public static void main(String[] args) {
 

@@ -35,25 +35,29 @@ public class InterviewServiceImpl implements InterviewService{
 
     public void takeAnInterview() {
 
+        Student student = findOutStudentName();
+
+        List<Question> questionList;
+        Interview interview;
         try {
-            Student student = findOutStudentName();
 
-            List<Question> questionList = getQuestionsListFromRepository();
+            questionList = getQuestionsListFromRepository();
 
-            Interview interview = new Interview(student,questionList);
+            interview = new Interview(student,questionList);
 
             validateQuestionsList(questionList);
 
-            askQuestions(questionList);
-
-            displayInterviewResults(interview);
         } catch (QuestionsDaoException ex) {
             printService.printLn("Getting questions error: "+ex.getMessage());
-            ex.printStackTrace();
+            return;
         } catch (ValidateQuestionException ex) {
             printService.printLn("Validating questions error: "+ex.getMessage());
-            ex.printStackTrace();
+            return;
         }
+
+        askQuestions(questionList);
+
+        displayInterviewResults(interview);
 
     }
 
