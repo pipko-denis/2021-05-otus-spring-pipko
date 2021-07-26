@@ -36,16 +36,17 @@ public class InterviewServiceImpl implements InterviewService{
     public void takeAnInterview() {
 
         Student student = findOutStudentName();
-
-        List<Question> questionList;
-        Interview interview;
         try {
 
-            questionList = getQuestionsListFromRepository();
+            List<Question> questionList = getQuestionsListFromRepository();
 
-            interview = new Interview(student,questionList);
+            Interview interview = new Interview(student,questionList);
 
             validateQuestionsList(questionList);
+
+            askQuestions(questionList);
+
+            displayInterviewResults(interview);
 
         } catch (QuestionsDaoException ex) {
             printService.printLn("Getting questions error: "+ex.getMessage());
@@ -55,9 +56,7 @@ public class InterviewServiceImpl implements InterviewService{
             return;
         }
 
-        askQuestions(questionList);
 
-        displayInterviewResults(interview);
 
     }
 
@@ -82,13 +81,5 @@ public class InterviewServiceImpl implements InterviewService{
     private void displayInterviewResults( Interview interview) {
         displayService.displayInterviewResults(interview);
     }
-
-
-
-
-
-
-
-
 
 }

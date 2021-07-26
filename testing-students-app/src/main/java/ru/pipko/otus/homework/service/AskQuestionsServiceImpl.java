@@ -12,8 +12,6 @@ public class AskQuestionsServiceImpl implements AskQuestionsService {
 
     private final PrintService printService;
 
-    private final DisplayService displayService;
-
     private final ReadService readService;
 
     private final ValidateUserResponseService validateUserResponseService;
@@ -21,11 +19,10 @@ public class AskQuestionsServiceImpl implements AskQuestionsService {
     private final int maxAttempts;
 
 
-    public AskQuestionsServiceImpl(PrintService printService, DisplayService displayService,
+    public AskQuestionsServiceImpl(PrintService printService,
                                    ReadService readAnswerService, ValidateUserResponseService validateUserResponseService,
                                    @Value("${ask-questions-max-attempts}") int maxAttempts) {
         this.printService = printService;
-        this.displayService = displayService;
         this.readService = readAnswerService;
         this.validateUserResponseService = validateUserResponseService;
         this.maxAttempts = maxAttempts;
