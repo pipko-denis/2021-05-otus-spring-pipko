@@ -1,7 +1,7 @@
 package ru.pipko.otus.homework.dao;
 
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Repository;
+import ru.pipko.otus.homework.config.CustomProperties;
 import ru.pipko.otus.homework.domain.Question;
 import ru.pipko.otus.homework.exeptions.QuestionsDaoException;
 
@@ -18,8 +18,8 @@ public class QuestionCsvDao implements QuestionDao {
 
     private final String csvFileName;
 
-    public QuestionCsvDao(@Value("${csv-file-name}") String csvFileName) {
-        this.csvFileName = csvFileName;
+    public QuestionCsvDao(CustomProperties customProperties) {
+        this.csvFileName = customProperties.getCsvFileName();
     }
 
     @Override

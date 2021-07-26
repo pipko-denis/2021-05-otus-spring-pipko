@@ -2,6 +2,7 @@ package ru.pipko.otus.homework;
 
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
+import ru.pipko.otus.homework.config.CustomProperties;
 import ru.pipko.otus.homework.dao.QuestionCsvDao;
 import ru.pipko.otus.homework.dao.QuestionDao;
 import ru.pipko.otus.homework.domain.Question;
@@ -17,9 +18,11 @@ public class QuestionDaoTest {
 
     @Test
     public void isFileWithQuestionsUnreachableOrEmpty() {
-        String fileName = "questions.csv";
+        final String fileName = "questions.csv";
+        final CustomProperties customProperties = new CustomProperties();
+        customProperties.setCsvFileName(fileName);
 
-        QuestionDao dao = new QuestionCsvDao(fileName);
+        final QuestionDao dao = new QuestionCsvDao(customProperties);
 
         List<Question> questionList = null;
 
@@ -36,9 +39,11 @@ public class QuestionDaoTest {
 
     @Test
     public void doesIncorrectFileProducesException() {
-        String fileName = "questions_without_flag.csv";
+        final String fileName = "questions_without_flag.csv";
+        final CustomProperties customProperties = new CustomProperties();
+        customProperties.setCsvFileName(fileName);
 
-        QuestionDao dao = new QuestionCsvDao(fileName);
+        final QuestionDao dao = new QuestionCsvDao(customProperties);
 
         Assertions.assertThrows(QuestionsDaoException.class,
                 () -> dao.getQuestions()

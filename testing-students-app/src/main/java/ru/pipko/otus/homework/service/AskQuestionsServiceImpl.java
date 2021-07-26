@@ -2,6 +2,7 @@ package ru.pipko.otus.homework.service;
 
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
+import ru.pipko.otus.homework.config.CustomProperties;
 import ru.pipko.otus.homework.domain.Answer;
 import ru.pipko.otus.homework.domain.Question;
 
@@ -21,11 +22,11 @@ public class AskQuestionsServiceImpl implements AskQuestionsService {
 
     public AskQuestionsServiceImpl(PrintService printService,
                                    ReadService readAnswerService, ValidateUserResponseService validateUserResponseService,
-                                   @Value("${ask-questions-max-attempts}") int maxAttempts) {
+                                   CustomProperties customProperties) {
         this.printService = printService;
         this.readService = readAnswerService;
         this.validateUserResponseService = validateUserResponseService;
-        this.maxAttempts = maxAttempts;
+        this.maxAttempts = customProperties.getAskQuestionsMaxAttempts();
     }
 
     @Override

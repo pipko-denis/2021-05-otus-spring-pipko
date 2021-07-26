@@ -1,7 +1,7 @@
 package ru.pipko.otus.homework.service;
 
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
+import ru.pipko.otus.homework.config.CustomProperties;
 import ru.pipko.otus.homework.domain.Interview;
 import ru.pipko.otus.homework.domain.Question;
 
@@ -13,9 +13,9 @@ public class DisplayServiceImpl implements DisplayService {
 
     private final int minRightResponses;
 
-    public DisplayServiceImpl(PrintService printService, @Value("${min-pass-count}") int minRightResponses){
+    public DisplayServiceImpl(PrintService printService, CustomProperties customProperties){
         this.printService = printService;
-        this.minRightResponses = minRightResponses;
+        this.minRightResponses = customProperties.getMinPassCount();
     }
 
     @Override
