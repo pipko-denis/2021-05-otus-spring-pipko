@@ -1,21 +1,19 @@
 package ru.pipko.otus.homework;
 
-import org.springframework.context.annotation.*;
+import org.springframework.boot.SpringApplication;
+import org.springframework.boot.autoconfigure.SpringBootApplication;
+import org.springframework.context.ConfigurableApplicationContext;
 import ru.pipko.otus.homework.service.*;
 
-@Configuration
-@ComponentScan
-@PropertySource("classpath:application.properties")
+@SpringBootApplication
 public class App {
     public static void main(String[] args) {
-
-        AnnotationConfigApplicationContext context = new AnnotationConfigApplicationContext(App.class);
+        ConfigurableApplicationContext context = SpringApplication.run(App.class, args);
 
         InterviewService interviewService = context.getBean("interviewService", InterviewService.class);
 
         interviewService.takeAnInterview();
 
-        context.close();
     }
 
 }
