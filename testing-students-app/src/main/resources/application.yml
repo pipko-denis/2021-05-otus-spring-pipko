@@ -1,3 +1,4 @@
+spring.output.ansi.enabled: always
 application.csv-file-name: questions.csv
 application.ask-questions-max-attempts: 3
 application.min-pass-count: 3
