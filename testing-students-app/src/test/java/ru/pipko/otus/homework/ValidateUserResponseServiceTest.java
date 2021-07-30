@@ -2,6 +2,7 @@ package ru.pipko.otus.homework;
 
 
 import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import ru.pipko.otus.homework.domain.Question;
 import ru.pipko.otus.homework.service.ValidateUserResponseService;
@@ -16,8 +17,9 @@ public class ValidateUserResponseServiceTest {
 
 
 
+    @DisplayName("Работает ли валидационный сервис корректно")
     @Test
-    public void isValidationQuestionServiseWorkingCorrect() {
+    public void isValidationQuestionServiceWorkingCorrect() {
         String letters = "abc";
 
         Assertions.assertFalse(

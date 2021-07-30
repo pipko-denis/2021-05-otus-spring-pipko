@@ -1,6 +1,7 @@
 package ru.pipko.otus.homework;
 
 import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import ru.pipko.otus.homework.config.CustomProperties;
 import ru.pipko.otus.homework.dao.QuestionCsvDao;
@@ -16,6 +17,7 @@ import java.util.List;
 public class QuestionDaoTest {
 
 
+    @DisplayName("Доступен ли файл с вопросами")
     @Test
     public void isFileWithQuestionsUnreachableOrEmpty() {
         final String fileName = "questions.csv";
@@ -37,6 +39,7 @@ public class QuestionDaoTest {
         Assertions.assertFalse(questionList.isEmpty(), "Questions list in file \"" + fileName + "\" is empty");
     }
 
+    @DisplayName("Вызывает ли исключение некорректный файл")
     @Test
     public void doesIncorrectFileProducesException() {
         final String fileName = "questions_without_flag.csv";
