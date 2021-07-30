@@ -23,14 +23,17 @@ public class InterviewServiceImpl implements InterviewService{
 
     private final DisplayService displayService;
 
+    private final LocalizationService localizationService;
+
 
     public InterviewServiceImpl(QuestionDao questionDao, PrintService printService
-            , AskQuestionsService askQuestionsService, ValidateQuestionService validateQuestionService, DisplayService displayService){
+            , AskQuestionsService askQuestionsService, ValidateQuestionService validateQuestionService, DisplayService displayService, LocalizationService localizationService){
         this.questionDao = questionDao;
         this.printService = printService;
         this.askQuestionsService = askQuestionsService;
         this.validateQuestionService = validateQuestionService;
         this.displayService = displayService;
+        this.localizationService = localizationService;
     }
 
     public void takeAnInterview() {
@@ -49,11 +52,11 @@ public class InterviewServiceImpl implements InterviewService{
             displayInterviewResults(interview);
 
         } catch (QuestionsDaoException ex) {
-            printService.printLn("Getting questions error: "+ex.getMessage());
-            return;
+            String message = localizationService.localizeMessage("strings.error.getting",new String[] {ex.getMessage()});
+            printService.printLn(message);
         } catch (ValidateQuestionException ex) {
-            printService.printLn("Validating questions error: "+ex.getMessage());
-            return;
+            String message = localizationService.localizeMessage("strings.error.validating",new String[] {ex.getMessage()});
+            printService.printLn(message);
         }
 
 
@@ -61,8 +64,8 @@ public class InterviewServiceImpl implements InterviewService{
     }
 
     private Student findOutStudentName() {
-        String firstName = this.askQuestionsService.askSomething("What is your first name?");
-        String lastName = this.askQuestionsService.askSomething("What is your last name?");
+        String firstName = this.askQuestionsService.askSomething(localizationService.localizeMessage("strings.first.name",null));
+        String lastName = this.askQuestionsService.askSomething(localizationService.localizeMessage("strings.last.name",null));
         return new Student(firstName, lastName);
     }
 

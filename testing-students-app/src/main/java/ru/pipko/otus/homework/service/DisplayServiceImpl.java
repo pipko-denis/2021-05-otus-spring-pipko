@@ -13,25 +13,30 @@ public class DisplayServiceImpl implements DisplayService {
 
     private final int minRightResponses;
 
-    public DisplayServiceImpl(PrintService printService, CustomProperties customProperties){
+    private final LocalizationService localizationService;
+
+    public DisplayServiceImpl(PrintService printService, CustomProperties customProperties, LocalizationService localizationService) {
         this.printService = printService;
         this.minRightResponses = customProperties.getMinPassCount();
+        this.localizationService = localizationService;
     }
 
     @Override
     public void displayInterviewResults(Interview interview) {
-        printService.printLn("Student "+interview.getStudent().getFullName() + " passing results... ");
+        String message = localizationService.localizeMessage("strings.passing.results", new String[]{interview.getStudent().getFullName()});
+        printService.printLn(message);
         int cntRightAnswers = 0;
-        for(Question question : interview.getQuestionList()){
-            if ( (question.getPickedAnswer() != null) && (question.getPickedAnswer().getIsRightAnswer())){
+        for (Question question : interview.getQuestionList()) {
+            if ((question.getPickedAnswer() != null) && (question.getPickedAnswer().getIsRightAnswer())) {
                 cntRightAnswers++;
             }
         }
-        if (cntRightAnswers >= minRightResponses){
-            printService.printLn("Congratulation, the test is passed! You have "+cntRightAnswers+" right answers.");
-        } else{
-            printService.printLn("Sorry, the test is not passed! You only have "+cntRightAnswers+" correct answers from "+this.minRightResponses+" needed to complete.");
-        }
+
+        message = localizationService.localizeMessage(
+                (cntRightAnswers >= minRightResponses) ? "strings.congrats" : "strings.sorry"
+                , new String[]{String.valueOf(cntRightAnswers)});
+
+        printService.printLn(message);
 
 
     }

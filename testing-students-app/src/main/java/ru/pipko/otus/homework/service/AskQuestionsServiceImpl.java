@@ -1,6 +1,5 @@
 package ru.pipko.otus.homework.service;
 
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import ru.pipko.otus.homework.config.CustomProperties;
 import ru.pipko.otus.homework.domain.Answer;
@@ -19,22 +18,28 @@ public class AskQuestionsServiceImpl implements AskQuestionsService {
 
     private final int maxAttempts;
 
+    private final LocalizationService localizationService;
+
 
     public AskQuestionsServiceImpl(PrintService printService,
                                    ReadService readAnswerService, ValidateUserResponseService validateUserResponseService,
-                                   CustomProperties customProperties) {
+                                   CustomProperties customProperties, LocalizationService localizationService) {
         this.printService = printService;
         this.readService = readAnswerService;
         this.validateUserResponseService = validateUserResponseService;
         this.maxAttempts = customProperties.getAskQuestionsMaxAttempts();
+        this.localizationService = localizationService;
     }
 
     @Override
     public void askQuestions(List<Question> questionList) {
-        Question question;
+
         for (int i = 0; i < questionList.size(); i++) {
-            question = questionList.get(i);
-            printService.printLn("Question #" + (i + 1) + ": " + question.getText());
+            Question question = questionList.get(i);
+
+            String message = localizationService.localizeMessage("strings.question",new String[] {String.valueOf(i + 1),question.getText()});
+
+            printService.printLn(message);
 
             displayAnswers(question.getAnswers());
 
@@ -44,10 +49,10 @@ public class AskQuestionsServiceImpl implements AskQuestionsService {
 
 
     private void displayAnswers(List<Answer> answers) {
-        Answer answer;
         for (int i = 0; i < answers.size(); i++) {
-            answer = answers.get(i);
-            printService.printLn((i + 1) + ". " + answer.getText());
+            Answer answer = answers.get(i);
+            String message = localizationService.localizeMessage("strings.answer",new String[] {String.valueOf(i + 1),answer.getText()});
+            printService.printLn(message);
         }
     }
 
@@ -60,8 +65,10 @@ public class AskQuestionsServiceImpl implements AskQuestionsService {
 
     private Answer readAnswer(Question question) {
 
+        String answersCount = String.valueOf(question.getAnswers().size() );
         for (int i = 0; i < maxAttempts; i++) {
-            printService.printLn("Please, enter answer's # from 1 to " + question.getAnswers().size() + " (attempt # " + (i + 1) + ")");
+            String message = localizationService.localizeMessage("strings.enter.answer.request",new String[] {answersCount,String.valueOf(i + 1)});
+            printService.printLn(message);
 
             String userResponse = readService.readInput();
 
