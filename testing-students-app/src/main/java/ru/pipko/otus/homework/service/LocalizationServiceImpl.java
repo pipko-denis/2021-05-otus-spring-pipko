@@ -4,8 +4,6 @@ import org.springframework.context.MessageSource;
 import org.springframework.stereotype.Service;
 import ru.pipko.otus.homework.config.CustomProperties;
 
-import java.util.Locale;
-
 @Service
 public class LocalizationServiceImpl implements LocalizationService {
 
@@ -18,8 +16,8 @@ public class LocalizationServiceImpl implements LocalizationService {
     }
 
     @Override
-    public String localizeMessage(String messageName, String[] args) {
-        return messageSource.getMessage(messageName,args, Locale.forLanguageTag(customProperties.getLocale()));
+    public String localizeMessage(String messageName, String... args) {
+        return messageSource.getMessage(messageName,args, customProperties.getLocale());
     }
 
 
