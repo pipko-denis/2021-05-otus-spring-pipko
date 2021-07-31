@@ -17,7 +17,7 @@ public class ReadAnswerServiceImpl implements ReadAnswerService{
 
     @Override
     public String readAnswerForQuestion(String messageId, String... args) {
-        printLocalizedMessagesService.printLocalizedMessage("strings.enter.answer.request",args);
+        printLocalizedMessagesService.printLocalizedMessage(messageId,args);
         return readService.readInput();
     }
 }
