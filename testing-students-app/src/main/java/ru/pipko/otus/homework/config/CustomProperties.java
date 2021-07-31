@@ -3,6 +3,7 @@ package ru.pipko.otus.homework.config;
 import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.stereotype.Component;
 
+import java.util.Locale;
 import java.util.Map;
 
 @Component
@@ -48,8 +49,8 @@ public class CustomProperties {
         this.localizedFiles = localizedFiles;
     }
 
-    public String getLocale() {
-        return locale;
+    public Locale getLocale() {
+        return Locale.forLanguageTag(locale);
     }
 
     public void setLocale(String locale) {
