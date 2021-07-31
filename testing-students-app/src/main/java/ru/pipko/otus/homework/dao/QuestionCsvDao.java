@@ -14,7 +14,6 @@ import java.util.Arrays;
 import java.util.List;
 
 @Repository
-//@ConfigurationProperties(prefix = "application")
 public class QuestionCsvDao implements QuestionDao {
 
     private final CsvCustomProperties csvCustomProperties;
