@@ -1,9 +1,10 @@
 spring.output.ansi.enabled: always
-application.csv-file-name: questions.csv
-application.ask-questions-max-attempts: 3
-application.min-pass-count: 3
-application.localized-files:
-  ru-RU: questions_ru.csv
-  en-EN: questions_en.csv
-application.locale: ru-RU
-#application.locale: en-EN
+application:
+  csv-file-name: questions.csv
+  ask-questions-max-attempts: 3
+  min-pass-count: 3
+  localized-files:
+    ru-RU: questions_ru.csv
+    en-EN: questions_en.csv
+  locale: ru-RU
+  #locale: en-EN
