@@ -23,7 +23,7 @@ public class DisplayServiceImpl implements DisplayService {
 
     @Override
     public void displayInterviewResults(Interview interview) {
-        String message = localizationService.localizeMessage("strings.passing.results", new String[]{interview.getStudent().getFullName()});
+        String message = localizationService.localizeMessage("strings.passing.results", interview.getStudent().getFullName());
         printService.printLn(message);
         int cntRightAnswers = 0;
         for (Question question : interview.getQuestionList()) {
@@ -34,7 +34,7 @@ public class DisplayServiceImpl implements DisplayService {
 
         message = localizationService.localizeMessage(
                 (cntRightAnswers >= minRightResponses) ? "strings.congrats" : "strings.sorry"
-                , new String[]{String.valueOf(cntRightAnswers)});
+                , String.valueOf(cntRightAnswers),String.valueOf(minRightResponses));
 
         printService.printLn(message);
 

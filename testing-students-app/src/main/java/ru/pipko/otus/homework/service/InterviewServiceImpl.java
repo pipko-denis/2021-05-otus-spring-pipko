@@ -52,10 +52,10 @@ public class InterviewServiceImpl implements InterviewService{
             displayInterviewResults(interview);
 
         } catch (QuestionsDaoException ex) {
-            String message = localizationService.localizeMessage("strings.error.getting",new String[] {ex.getMessage()});
+            String message = localizationService.localizeMessage("strings.error.getting",ex.getMessage());
             printService.printLn(message);
         } catch (ValidateQuestionException ex) {
-            String message = localizationService.localizeMessage("strings.error.validating",new String[] {ex.getMessage()});
+            String message = localizationService.localizeMessage("strings.error.validating",ex.getMessage());
             printService.printLn(message);
         }
 
@@ -64,8 +64,8 @@ public class InterviewServiceImpl implements InterviewService{
     }
 
     private Student findOutStudentName() {
-        String firstName = this.askQuestionsService.askSomething(localizationService.localizeMessage("strings.first.name",null));
-        String lastName = this.askQuestionsService.askSomething(localizationService.localizeMessage("strings.last.name",null));
+        String firstName = this.askQuestionsService.askSomething(localizationService.localizeMessage("strings.first.name", (String[]) null));
+        String lastName = this.askQuestionsService.askSomething(localizationService.localizeMessage("strings.last.name",(String[]) null));
         return new Student(firstName, lastName);
     }
 

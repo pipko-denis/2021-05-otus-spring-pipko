@@ -37,7 +37,7 @@ public class AskQuestionsServiceImpl implements AskQuestionsService {
         for (int i = 0; i < questionList.size(); i++) {
             Question question = questionList.get(i);
 
-            String message = localizationService.localizeMessage("strings.question",new String[] {String.valueOf(i + 1),question.getText()});
+            String message = localizationService.localizeMessage("strings.question",String.valueOf(i + 1),question.getText());
 
             printService.printLn(message);
 
@@ -51,7 +51,7 @@ public class AskQuestionsServiceImpl implements AskQuestionsService {
     private void displayAnswers(List<Answer> answers) {
         for (int i = 0; i < answers.size(); i++) {
             Answer answer = answers.get(i);
-            String message = localizationService.localizeMessage("strings.answer",new String[] {String.valueOf(i + 1),answer.getText()});
+            String message = localizationService.localizeMessage("strings.answer",String.valueOf(i + 1),answer.getText());
             printService.printLn(message);
         }
     }
@@ -67,7 +67,7 @@ public class AskQuestionsServiceImpl implements AskQuestionsService {
 
         String answersCount = String.valueOf(question.getAnswers().size() );
         for (int i = 0; i < maxAttempts; i++) {
-            String message = localizationService.localizeMessage("strings.enter.answer.request",new String[] {answersCount,String.valueOf(i + 1)});
+            String message = localizationService.localizeMessage("strings.enter.answer.request",answersCount,String.valueOf(i + 1));
             printService.printLn(message);
 
             String userResponse = readService.readInput();

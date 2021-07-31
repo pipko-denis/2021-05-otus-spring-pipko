@@ -29,7 +29,7 @@ public class InterviewDurationAspect {
         LocalDateTime dtStart = LocalDateTime.now();
         joinPoint.proceed();
         Duration duration = Duration.between(dtStart, LocalDateTime.now());
-        String message = localizationService.localizeMessage("strings.passing.duration",new String[] {String.valueOf(duration.getSeconds())});
+        String message = localizationService.localizeMessage("strings.passing.duration",String.valueOf(duration.getSeconds()));
         printService.printLn(message);
     }
 
