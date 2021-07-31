@@ -1,5 +1,8 @@
 package ru.pipko.otus.homework.service;
 
+import org.springframework.stereotype.Service;
+
+@Service
 public class PrintLocalizedMessagesServiceImpl implements PrintLocalizedMessagesService {
 
     private final PrintService printService;
