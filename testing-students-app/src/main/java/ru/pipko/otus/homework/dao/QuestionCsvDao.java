@@ -20,7 +20,8 @@ public class QuestionCsvDao implements QuestionDao {
 
     public QuestionCsvDao( CsvCustomProperties csvCustomProperties) {
                            //@Value("#{application.localized-files}") Map<String,String> localizedFiles) {
-                           //@Value("#{ (T(java.util.HashMap)) ${application.localized-files})}") Map<String,String> localizedFiles) {
+                           //@Value("#{ (T(java.util.Map)) ${application.localized-files})}") Map<String,String> localizedFiles) {
+                           //@Value("#{ ((T(java.util.Map)) ${application.localized-files})).get(...)}") Map<String,String> localizedFiles) {
         this.csvCustomProperties = csvCustomProperties;
         //System.out.println(localizedFiles);
     }
