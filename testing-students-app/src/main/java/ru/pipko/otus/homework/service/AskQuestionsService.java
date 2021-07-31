@@ -8,6 +8,4 @@ public interface AskQuestionsService {
 
     void askQuestions(List<Question> questionList);
 
-    String askSomething(String question);
-
 }

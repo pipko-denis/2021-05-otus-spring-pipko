@@ -13,18 +13,17 @@ public class DisplayServiceImpl implements DisplayService {
 
     private final int minRightResponses;
 
-    private final LocalizationService localizationService;
+    private final PrintLocalizedMessagesServiceImpl printLocalizedMessagesService;
 
-    public DisplayServiceImpl(PrintService printService, CustomProperties customProperties, LocalizationService localizationService) {
+    public DisplayServiceImpl(PrintService printService, CustomProperties customProperties, PrintLocalizedMessagesServiceImpl printLocalizedMessagesService) {
         this.printService = printService;
         this.minRightResponses = customProperties.getMinPassCount();
-        this.localizationService = localizationService;
+        this.printLocalizedMessagesService = printLocalizedMessagesService;
     }
 
     @Override
     public void displayInterviewResults(Interview interview) {
-        String message = localizationService.localizeMessage("strings.passing.results", interview.getStudent().getFullName());
-        printService.printLn(message);
+        printLocalizedMessagesService.printLocalizedMessage("strings.passing.results", interview.getStudent().getFullName());
         int cntRightAnswers = 0;
         for (Question question : interview.getQuestionList()) {
             if ((question.getPickedAnswer() != null) && (question.getPickedAnswer().getIsRightAnswer())) {
@@ -32,11 +31,10 @@ public class DisplayServiceImpl implements DisplayService {
             }
         }
 
-        message = localizationService.localizeMessage(
+        printLocalizedMessagesService.printLocalizedMessage(
                 (cntRightAnswers >= minRightResponses) ? "strings.congrats" : "strings.sorry"
                 , String.valueOf(cntRightAnswers),String.valueOf(minRightResponses));
 
-        printService.printLn(message);
 
 
     }

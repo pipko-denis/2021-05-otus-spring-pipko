@@ -23,17 +23,22 @@ public class InterviewServiceImpl implements InterviewService{
 
     private final DisplayService displayService;
 
-    private final LocalizationService localizationService;
+    private final PrintLocalizedMessagesService printLocalizedMessagesService;
+
+    private final ReadAnswerService readAnswerService;
 
 
     public InterviewServiceImpl(QuestionDao questionDao, PrintService printService
-            , AskQuestionsService askQuestionsService, ValidateQuestionService validateQuestionService, DisplayService displayService, LocalizationService localizationService){
+            , AskQuestionsService askQuestionsService, ValidateQuestionService validateQuestionService,
+                                DisplayService displayService, PrintLocalizedMessagesService printLocalizedMessagesService,
+                                ReadAnswerService readAnswerService){
         this.questionDao = questionDao;
         this.printService = printService;
         this.askQuestionsService = askQuestionsService;
         this.validateQuestionService = validateQuestionService;
         this.displayService = displayService;
-        this.localizationService = localizationService;
+        this.printLocalizedMessagesService = printLocalizedMessagesService;
+        this.readAnswerService = readAnswerService;
     }
 
     public void takeAnInterview() {
@@ -52,11 +57,9 @@ public class InterviewServiceImpl implements InterviewService{
             displayInterviewResults(interview);
 
         } catch (QuestionsDaoException ex) {
-            String message = localizationService.localizeMessage("strings.error.getting",ex.getMessage());
-            printService.printLn(message);
+            printLocalizedMessagesService.printLocalizedMessage("strings.error.getting",ex.getMessage());
         } catch (ValidateQuestionException ex) {
-            String message = localizationService.localizeMessage("strings.error.validating",ex.getMessage());
-            printService.printLn(message);
+            printLocalizedMessagesService.printLocalizedMessage("strings.error.validating",ex.getMessage());
         }
 
 
@@ -64,8 +67,8 @@ public class InterviewServiceImpl implements InterviewService{
     }
 
     private Student findOutStudentName() {
-        String firstName = this.askQuestionsService.askSomething(localizationService.localizeMessage("strings.first.name", (String[]) null));
-        String lastName = this.askQuestionsService.askSomething(localizationService.localizeMessage("strings.last.name",(String[]) null));
+        String firstName = readAnswerService.readAnswerForQuestion("strings.first.name", (String[]) null);
+        String lastName = readAnswerService.readAnswerForQuestion("strings.last.name",(String[]) null);
         return new Student(firstName, lastName);
     }
 

@@ -5,6 +5,7 @@ import org.aspectj.lang.annotation.Around;
 import org.aspectj.lang.annotation.Aspect;
 import org.springframework.stereotype.Component;
 import ru.pipko.otus.homework.service.LocalizationService;
+import ru.pipko.otus.homework.service.PrintLocalizedMessagesService;
 import ru.pipko.otus.homework.service.PrintService;
 
 import java.time.Duration;
@@ -14,12 +15,12 @@ import java.time.LocalDateTime;
 @Aspect
 public class InterviewDurationAspect {
 
-    private final LocalizationService localizationService;
+    private final PrintLocalizedMessagesService printLocalizedMessagesService;
     private final PrintService printService;
 
-    public InterviewDurationAspect(LocalizationService localizationService, PrintService printService){
+    public InterviewDurationAspect(PrintLocalizedMessagesService printLocalizedMessagesService, PrintService printService){
 
-        this.localizationService = localizationService;
+        this.printLocalizedMessagesService = printLocalizedMessagesService;
         this.printService = printService;
     }
 
@@ -29,8 +30,7 @@ public class InterviewDurationAspect {
         LocalDateTime dtStart = LocalDateTime.now();
         joinPoint.proceed();
         Duration duration = Duration.between(dtStart, LocalDateTime.now());
-        String message = localizationService.localizeMessage("strings.passing.duration",String.valueOf(duration.getSeconds()));
-        printService.printLn(message);
+        printLocalizedMessagesService.printLocalizedMessage("strings.passing.duration",String.valueOf(duration.getSeconds()));
     }
 
 }
