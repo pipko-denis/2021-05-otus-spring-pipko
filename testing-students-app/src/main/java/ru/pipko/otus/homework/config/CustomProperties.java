@@ -10,20 +10,8 @@ import java.util.Map;
 @ConfigurationProperties(prefix = "application")
 public class CustomProperties {
 
-    private String csvFileName;
     private int askQuestionsMaxAttempts;
     private int minPassCount;
-    private Map<String,String> localizedFiles;
-    private String locale;
-
-    public String getCsvFileName() {
-        return localizedFiles.get(locale);
-        //return csvFileName;
-    }
-
-    public void setCsvFileName(String csvFileName) {
-        this.csvFileName = csvFileName;
-    }
 
     public int getAskQuestionsMaxAttempts() {
         return askQuestionsMaxAttempts;
@@ -41,19 +29,5 @@ public class CustomProperties {
         this.minPassCount = minPassCount;
     }
 
-    public Map<String, String> getLocalizedFiles() {
-        return localizedFiles;
-    }
 
-    public void setLocalizedFiles(Map<String, String> localizedFiles) {
-        this.localizedFiles = localizedFiles;
-    }
-
-    public Locale getLocale() {
-        return Locale.forLanguageTag(locale);
-    }
-
-    public void setLocale(String locale) {
-        this.locale = locale;
-    }
 }
