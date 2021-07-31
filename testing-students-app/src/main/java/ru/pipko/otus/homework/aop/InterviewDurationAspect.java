@@ -25,7 +25,7 @@ public class InterviewDurationAspect {
 
 
     @Around("execution(* ru.pipko.otus.homework.service.AskQuestionsService.askQuestions(..))")
-    public void timingInterviewAspect(ProceedingJoinPoint joinPoint) throws Throwable {
+    public void timingInterviewAdvice(ProceedingJoinPoint joinPoint) throws Throwable {
         LocalDateTime dtStart = LocalDateTime.now();
         joinPoint.proceed();
         Duration duration = Duration.between(dtStart, LocalDateTime.now());
