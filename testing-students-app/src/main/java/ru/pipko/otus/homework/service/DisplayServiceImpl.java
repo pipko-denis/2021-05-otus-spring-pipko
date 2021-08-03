@@ -1,7 +1,7 @@
 package ru.pipko.otus.homework.service;
 
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
+import ru.pipko.otus.homework.config.CustomProperties;
 import ru.pipko.otus.homework.domain.Interview;
 import ru.pipko.otus.homework.domain.Question;
 
@@ -13,25 +13,28 @@ public class DisplayServiceImpl implements DisplayService {
 
     private final int minRightResponses;
 
-    public DisplayServiceImpl(PrintService printService, @Value("${min-pass-count}") int minRightResponses){
+    private final PrintLocalizedMessagesServiceImpl printLocalizedMessagesService;
+
+    public DisplayServiceImpl(PrintService printService, CustomProperties customProperties, PrintLocalizedMessagesServiceImpl printLocalizedMessagesService) {
         this.printService = printService;
-        this.minRightResponses = minRightResponses;
+        this.minRightResponses = customProperties.getMinPassCount();
+        this.printLocalizedMessagesService = printLocalizedMessagesService;
     }
 
     @Override
     public void displayInterviewResults(Interview interview) {
-        printService.printLn("Student "+interview.getStudent().getFullName() + " passing results... ");
+        printLocalizedMessagesService.printLocalizedMessage("strings.passing.results", interview.getStudent().getFullName());
         int cntRightAnswers = 0;
-        for(Question question : interview.getQuestionList()){
-            if ( (question.getPickedAnswer() != null) && (question.getPickedAnswer().getIsRightAnswer())){
+        for (Question question : interview.getQuestionList()) {
+            if ((question.getPickedAnswer() != null) && (question.getPickedAnswer().getIsRightAnswer())) {
                 cntRightAnswers++;
             }
         }
-        if (cntRightAnswers >= minRightResponses){
-            printService.printLn("Congratulation, the test is passed! You have "+cntRightAnswers+" right answers.");
-        } else{
-            printService.printLn("Sorry, the test is not passed! You only have "+cntRightAnswers+" correct answers from "+this.minRightResponses+" needed to complete.");
-        }
+
+        printLocalizedMessagesService.printLocalizedMessage(
+                (cntRightAnswers >= minRightResponses) ? "strings.congrats" : "strings.sorry"
+                , String.valueOf(cntRightAnswers),String.valueOf(minRightResponses));
+
 
 
     }

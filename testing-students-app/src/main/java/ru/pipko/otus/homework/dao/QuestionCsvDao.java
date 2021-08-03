@@ -1,7 +1,7 @@
 package ru.pipko.otus.homework.dao;
 
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Repository;
+import ru.pipko.otus.homework.config.CsvCustomProperties;
 import ru.pipko.otus.homework.domain.Question;
 import ru.pipko.otus.homework.exeptions.QuestionsDaoException;
 
@@ -16,19 +16,26 @@ import java.util.List;
 @Repository
 public class QuestionCsvDao implements QuestionDao {
 
-    private final String csvFileName;
+    private final CsvCustomProperties csvCustomProperties;
 
-    public QuestionCsvDao(@Value("${csv-file-name}") String csvFileName) {
-        this.csvFileName = csvFileName;
+    public QuestionCsvDao( CsvCustomProperties csvCustomProperties) {
+                           //@Value("#{application.localized-files}") Map<String,String> localizedFiles) {
+                           //@Value("#{ (T(java.util.Map)) ${application.localized-files})}") Map<String,String> localizedFiles) {
+                           //@Value("#{ ((T(java.util.Map)) ${application.localized-files})).get(...)}") Map<String,String> localizedFiles) {
+        this.csvCustomProperties = csvCustomProperties;
+        //System.out.println(localizedFiles);
     }
 
     @Override
     public List<Question> getQuestions() throws QuestionsDaoException {
         List<Question> result = new ArrayList<>();
 
+        String fileName = csvCustomProperties.getCsvFileName();
+
+        if ((fileName == null) || (fileName.isBlank())) throw new QuestionsDaoException("В найстройках не указан путь к файлу csv") ;
 
         try (
-                InputStream inputStream = QuestionCsvDao.class.getClassLoader().getResourceAsStream(this.csvFileName);
+                InputStream inputStream = QuestionCsvDao.class.getClassLoader().getResourceAsStream(fileName);
                 InputStreamReader streamReader = new InputStreamReader(inputStream, StandardCharsets.UTF_8);
                 BufferedReader reader = new BufferedReader(streamReader);
         ) {
@@ -39,7 +46,7 @@ public class QuestionCsvDao implements QuestionDao {
                 result.add(new Question(row[0], Arrays.copyOfRange(row, 1, row.length)));
             }
         } catch (Exception ex){
-            throw new QuestionsDaoException(ex.getMessage(),ex.getCause()) ;
+            throw new QuestionsDaoException("Во время получения вопросов возникла ошибка: "+ex.getMessage(),ex) ;
         }
 
         return result;

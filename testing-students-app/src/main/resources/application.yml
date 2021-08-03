@@ -1,0 +1,9 @@
+spring.output.ansi.enabled: always
+application:
+  ask-questions-max-attempts: 3
+  min-pass-count: 3
+  localized-files:
+    ru-RU: questions_ru.csv
+    en-EN: questions_en.csv
+  locale-name: ru-RU
+  #locale: en-EN

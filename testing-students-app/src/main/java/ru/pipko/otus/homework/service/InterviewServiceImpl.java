@@ -23,47 +23,52 @@ public class InterviewServiceImpl implements InterviewService{
 
     private final DisplayService displayService;
 
+    private final PrintLocalizedMessagesService printLocalizedMessagesService;
+
+    private final ReadAnswerService readAnswerService;
+
 
     public InterviewServiceImpl(QuestionDao questionDao, PrintService printService
-            , AskQuestionsService askQuestionsService, ValidateQuestionService validateQuestionService, DisplayService displayService){
+            , AskQuestionsService askQuestionsService, ValidateQuestionService validateQuestionService,
+                                DisplayService displayService, PrintLocalizedMessagesService printLocalizedMessagesService,
+                                ReadAnswerService readAnswerService){
         this.questionDao = questionDao;
         this.printService = printService;
         this.askQuestionsService = askQuestionsService;
         this.validateQuestionService = validateQuestionService;
         this.displayService = displayService;
+        this.printLocalizedMessagesService = printLocalizedMessagesService;
+        this.readAnswerService = readAnswerService;
     }
 
     public void takeAnInterview() {
 
         Student student = findOutStudentName();
-
-        List<Question> questionList;
-        Interview interview;
         try {
 
-            questionList = getQuestionsListFromRepository();
+            List<Question> questionList = getQuestionsListFromRepository();
 
-            interview = new Interview(student,questionList);
+            Interview interview = new Interview(student,questionList);
 
             validateQuestionsList(questionList);
 
+            askQuestions(questionList);
+
+            displayInterviewResults(interview);
+
         } catch (QuestionsDaoException ex) {
-            printService.printLn("Getting questions error: "+ex.getMessage());
-            return;
+            printLocalizedMessagesService.printLocalizedMessage("strings.error.getting",ex.getMessage());
         } catch (ValidateQuestionException ex) {
-            printService.printLn("Validating questions error: "+ex.getMessage());
-            return;
+            printLocalizedMessagesService.printLocalizedMessage("strings.error.validating",ex.getMessage());
         }
 
-        askQuestions(questionList);
 
-        displayInterviewResults(interview);
 
     }
 
     private Student findOutStudentName() {
-        String firstName = this.askQuestionsService.askSomething("What is your first name?");
-        String lastName = this.askQuestionsService.askSomething("What is your last name?");
+        String firstName = readAnswerService.readAnswerForQuestion("strings.first.name", (String[]) null);
+        String lastName = readAnswerService.readAnswerForQuestion("strings.last.name",(String[]) null);
         return new Student(firstName, lastName);
     }
 
@@ -82,13 +87,5 @@ public class InterviewServiceImpl implements InterviewService{
     private void displayInterviewResults( Interview interview) {
         displayService.displayInterviewResults(interview);
     }
-
-
-
-
-
-
-
-
 
 }

@@ -1,12 +1,16 @@
 package ru.pipko.otus.homework;
 
 import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
+import ru.pipko.otus.homework.config.CsvCustomProperties;
+import ru.pipko.otus.homework.config.LocaleCustomProperties;
 import ru.pipko.otus.homework.dao.QuestionCsvDao;
 import ru.pipko.otus.homework.dao.QuestionDao;
 import ru.pipko.otus.homework.domain.Question;
 import ru.pipko.otus.homework.exeptions.QuestionsDaoException;
 
+import java.util.Collections;
 import java.util.List;
 
 /**
@@ -15,11 +19,17 @@ import java.util.List;
 public class QuestionDaoTest {
 
 
+    @DisplayName("Доступен ли файл с вопросами")
     @Test
     public void isFileWithQuestionsUnreachableOrEmpty() {
-        String fileName = "questions.csv";
+        final String fileName = "questions.csv";
+        String localeName = "ru-RU";
+        final LocaleCustomProperties localeCustomProperties = new LocaleCustomProperties();
+        localeCustomProperties.setLocaleName(localeName);
+        final CsvCustomProperties csvCustomProperties = new CsvCustomProperties(localeCustomProperties);
+        csvCustomProperties.setLocalizedFiles(Collections.singletonMap(localeName, fileName));
 
-        QuestionDao dao = new QuestionCsvDao(fileName);
+        final QuestionDao dao = new QuestionCsvDao(csvCustomProperties);
 
         List<Question> questionList = null;
 
@@ -34,11 +44,17 @@ public class QuestionDaoTest {
         Assertions.assertFalse(questionList.isEmpty(), "Questions list in file \"" + fileName + "\" is empty");
     }
 
+    @DisplayName("Вызывает ли исключение некорректный файл")
     @Test
     public void doesIncorrectFileProducesException() {
-        String fileName = "questions_without_flag.csv";
+        final String fileName = "questions_without_flag.csv";
+        String localeName = "ru-RU";
+        final LocaleCustomProperties localeCustomProperties = new LocaleCustomProperties();
+        localeCustomProperties.setLocaleName(localeName);
+        final CsvCustomProperties csvCustomProperties = new CsvCustomProperties(localeCustomProperties);
+        csvCustomProperties.setLocalizedFiles(Collections.singletonMap(localeName, fileName));
 
-        QuestionDao dao = new QuestionCsvDao(fileName);
+        final QuestionDao dao = new QuestionCsvDao(csvCustomProperties);
 
         Assertions.assertThrows(QuestionsDaoException.class,
                 () -> dao.getQuestions()
