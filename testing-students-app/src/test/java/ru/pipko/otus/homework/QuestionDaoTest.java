@@ -3,12 +3,13 @@ package ru.pipko.otus.homework;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
-import ru.pipko.otus.homework.config.CsvCustomProperties;
-import ru.pipko.otus.homework.config.LocaleCustomProperties;
+import ru.pipko.otus.homework.config.CustomProperties;
 import ru.pipko.otus.homework.dao.QuestionCsvDao;
 import ru.pipko.otus.homework.dao.QuestionDao;
 import ru.pipko.otus.homework.domain.Question;
 import ru.pipko.otus.homework.exeptions.QuestionsDaoException;
+import ru.pipko.otus.homework.service.CsvFileNameProvider;
+import ru.pipko.otus.homework.service.CsvFileNameProviderImpl;
 
 import java.util.Collections;
 import java.util.List;
@@ -18,18 +19,22 @@ import java.util.List;
  */
 public class QuestionDaoTest {
 
+    private QuestionDao getQuestionDao(String fileName, String localeName){
+        final CustomProperties customProperties = new CustomProperties();
+        customProperties.setLocaleName(localeName);
+        customProperties.setLocalizedFiles(Collections.singletonMap(localeName, fileName));
+        CsvFileNameProvider provider = new CsvFileNameProviderImpl(customProperties);
+
+        return new QuestionCsvDao(provider);
+    }
+
 
     @DisplayName("Доступен ли файл с вопросами")
     @Test
     public void isFileWithQuestionsUnreachableOrEmpty() {
         final String fileName = "questions.csv";
-        String localeName = "ru-RU";
-        final LocaleCustomProperties localeCustomProperties = new LocaleCustomProperties();
-        localeCustomProperties.setLocaleName(localeName);
-        final CsvCustomProperties csvCustomProperties = new CsvCustomProperties(localeCustomProperties);
-        csvCustomProperties.setLocalizedFiles(Collections.singletonMap(localeName, fileName));
-
-        final QuestionDao dao = new QuestionCsvDao(csvCustomProperties);
+        final String localeName = "ru-RU";
+        final QuestionDao dao = getQuestionDao(fileName,localeName);
 
         List<Question> questionList = null;
 
@@ -48,13 +53,8 @@ public class QuestionDaoTest {
     @Test
     public void doesIncorrectFileProducesException() {
         final String fileName = "questions_without_flag.csv";
-        String localeName = "ru-RU";
-        final LocaleCustomProperties localeCustomProperties = new LocaleCustomProperties();
-        localeCustomProperties.setLocaleName(localeName);
-        final CsvCustomProperties csvCustomProperties = new CsvCustomProperties(localeCustomProperties);
-        csvCustomProperties.setLocalizedFiles(Collections.singletonMap(localeName, fileName));
-
-        final QuestionDao dao = new QuestionCsvDao(csvCustomProperties);
+        final String localeName = "ru-RU";
+        final QuestionDao dao = getQuestionDao(fileName,localeName);
 
         Assertions.assertThrows(QuestionsDaoException.class,
                 () -> dao.getQuestions()

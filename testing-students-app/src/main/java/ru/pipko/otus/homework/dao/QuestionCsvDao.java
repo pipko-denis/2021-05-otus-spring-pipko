@@ -1,9 +1,9 @@
 package ru.pipko.otus.homework.dao;
 
 import org.springframework.stereotype.Repository;
-import ru.pipko.otus.homework.config.CsvCustomProperties;
 import ru.pipko.otus.homework.domain.Question;
 import ru.pipko.otus.homework.exeptions.QuestionsDaoException;
+import ru.pipko.otus.homework.service.CsvFileNameProvider;
 
 import java.io.BufferedReader;
 import java.io.InputStream;
@@ -16,21 +16,17 @@ import java.util.List;
 @Repository
 public class QuestionCsvDao implements QuestionDao {
 
-    private final CsvCustomProperties csvCustomProperties;
+    private final CsvFileNameProvider csvFileNameProvider;
 
-    public QuestionCsvDao( CsvCustomProperties csvCustomProperties) {
-                           //@Value("#{application.localized-files}") Map<String,String> localizedFiles) {
-                           //@Value("#{ (T(java.util.Map)) ${application.localized-files})}") Map<String,String> localizedFiles) {
-                           //@Value("#{ ((T(java.util.Map)) ${application.localized-files})).get(...)}") Map<String,String> localizedFiles) {
-        this.csvCustomProperties = csvCustomProperties;
-        //System.out.println(localizedFiles);
+    public QuestionCsvDao( CsvFileNameProvider csvFileNameProvider) {
+        this.csvFileNameProvider = csvFileNameProvider;
     }
 
     @Override
     public List<Question> getQuestions() throws QuestionsDaoException {
         List<Question> result = new ArrayList<>();
 
-        String fileName = csvCustomProperties.getCsvFileName();
+        String fileName = csvFileNameProvider.getCsvFileName();
 
         if ((fileName == null) || (fileName.isBlank())) throw new QuestionsDaoException("В найстройках не указан путь к файлу csv") ;
 
