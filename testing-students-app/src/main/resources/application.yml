@@ -1,5 +1,8 @@
-spring.output.ansi.enabled: always
+spring:
+  output.ansi.enabled: always
 application:
+  events:
+    show-half-questions:
   ask-questions-max-attempts: 3
   min-pass-count: 3
   localized-files:
