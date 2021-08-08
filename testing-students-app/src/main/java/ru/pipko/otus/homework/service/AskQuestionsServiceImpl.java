@@ -4,6 +4,8 @@ import org.springframework.stereotype.Service;
 import ru.pipko.otus.homework.config.CustomProperties;
 import ru.pipko.otus.homework.domain.Answer;
 import ru.pipko.otus.homework.domain.Question;
+import ru.pipko.otus.homework.events.EventsPublisher;
+import ru.pipko.otus.homework.events.EventsPublisherImpl;
 
 import java.util.List;
 
@@ -22,23 +24,26 @@ public class AskQuestionsServiceImpl implements AskQuestionsService {
 
     private final ReadAnswerService readAnswerService;
 
+    private final EventsPublisher eventsPublisher;
+
 
     public AskQuestionsServiceImpl(PrintService printService,
                                    ReadService readAnswerService, ValidateUserResponseService validateUserResponseService,
                                    CustomProperties customProperties, PrintLocalizedMessagesService printLocalizedMessagesService,
-                                   ReadAnswerService readAnswerService1) {
+                                   ReadAnswerService readAnswerService1, EventsPublisherImpl eventsPublisher) {
         this.printService = printService;
         this.readService = readAnswerService;
         this.validateUserResponseService = validateUserResponseService;
         this.maxAttempts = customProperties.getAskQuestionsMaxAttempts();
         this.printLocalizedMessagesService = printLocalizedMessagesService;
         this.readAnswerService = readAnswerService1;
+        this.eventsPublisher = eventsPublisher;
     }
 
     @Override
     public void askQuestions(List<Question> questionList) {
-
-        for (int i = 0; i < questionList.size(); i++) {
+        int questiosCount = questionList.size();
+        for (int i = 0; i < questiosCount; i++) {
             Question question = questionList.get(i);
 
             printLocalizedMessagesService.printLocalizedMessage("strings.question",String.valueOf(i + 1),question.getText());
@@ -46,6 +51,8 @@ public class AskQuestionsServiceImpl implements AskQuestionsService {
             displayAnswers(question.getAnswers());
 
             question.setPickedAnswer(readAnswer(question));
+
+            eventsPublisher.publishQuestionsPassed(i, questiosCount);
         }
     }
 
