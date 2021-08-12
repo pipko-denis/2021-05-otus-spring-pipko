@@ -42,7 +42,7 @@ public class QuestionCsvDao implements QuestionDao {
                 result.add(new Question(row[0], Arrays.copyOfRange(row, 1, row.length)));
             }
         } catch (Exception ex){
-            throw new QuestionsDaoException("Во время получения вопросов возникла ошибка: "+ex.getMessage(),ex) ;
+            throw new QuestionsDaoException("Во время получения вопросов из \""+fileName+"\" возникла ошибка: "+ex.getMessage(),ex) ;
         }
 
         return result;
