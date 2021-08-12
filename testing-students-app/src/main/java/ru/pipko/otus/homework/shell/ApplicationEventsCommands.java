@@ -7,7 +7,7 @@ import org.springframework.shell.standard.ShellMethod;
 import org.springframework.shell.standard.ShellMethodAvailability;
 import ru.pipko.otus.homework.domain.Question;
 import ru.pipko.otus.homework.domain.Student;
-import ru.pipko.otus.homework.events.EventsPublisher;
+import ru.pipko.otus.homework.events.PublisherForEvents;
 import ru.pipko.otus.homework.service.DisplayService;
 import ru.pipko.otus.homework.service.InterviewService;
 import ru.pipko.otus.homework.service.LocalizationServiceImpl;
@@ -17,9 +17,9 @@ import java.util.List;
 
 @RequiredArgsConstructor
 @ShellComponent
-public class ApplcationEventsCommands {
+public class ApplicationEventsCommands {
 
-    private final EventsPublisher eventsPublisher;
+    private final PublisherForEvents publisherForEvents;
 
     private final InterviewService interviewService;
 
@@ -43,17 +43,17 @@ public class ApplcationEventsCommands {
         String firstName = readAnswerService.readAnswerForQuestion("strings.first.name", (String[]) null);
         String lastName = readAnswerService.readAnswerForQuestion("strings.last.name",(String[]) null);
         Student student = new Student(firstName, lastName);
-        eventsPublisher.publishUserAssigned(student);
+        publisherForEvents.publishUserAssigned(student);
         return student;
     }
 
-    @ShellMethod(key = {"start","st","test"}, value = "Start testing")
+    @ShellMethod(key = {"start","s","test"}, value = "Start testing")
     @ShellMethodAvailability(value = "isTestingAvailable")
     private void passTest(){
         questionsList = interviewService.takeAnInterview();
     }
 
-    @ShellMethod(key = {"results","res"}, value = "Test results")
+    @ShellMethod(key = {"results","res","r"}, value = "Test results")
     @ShellMethodAvailability(value = "isResultsAvailable")
     private void displayResults(){
         displayService.displayInterviewResults(student,questionsList);

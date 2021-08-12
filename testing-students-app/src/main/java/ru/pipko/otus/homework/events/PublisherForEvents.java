@@ -2,7 +2,7 @@ package ru.pipko.otus.homework.events;
 
 import ru.pipko.otus.homework.domain.Student;
 
-public interface EventsPublisher {
+public interface PublisherForEvents {
 
     void publishUserAssigned(Student student);
 

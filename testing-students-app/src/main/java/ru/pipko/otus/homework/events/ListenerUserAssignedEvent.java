@@ -7,13 +7,13 @@ import ru.pipko.otus.homework.service.PrintLocalizedMessagesService;
 
 @Component
 @RequiredArgsConstructor
-public class UserAssignedEventListener implements ApplicationListener<UserAssignedEvent> {
+public class ListenerUserAssignedEvent implements ApplicationListener<EventUserAssigned> {
 
     private final PrintLocalizedMessagesService printService;
 
     @Override
-    public void onApplicationEvent(UserAssignedEvent userAssignedEvent) {
+    public void onApplicationEvent(EventUserAssigned eventUserAssigned) {
         printService.printLocalizedMessage("strings.events.user.fun",
-                String.valueOf(userAssignedEvent.getStudent().getFullName()));
+                String.valueOf(eventUserAssigned.getStudent().getFullName()));
     }
 }
