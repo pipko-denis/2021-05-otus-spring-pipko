@@ -1,4 +1,4 @@
-package ru.pipko.otus.homework.plain;
+package ru.pipko.otus.homework.boot;
 
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.DisplayName;
@@ -7,6 +7,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
+import org.springframework.context.annotation.ComponentScan;
+import org.springframework.context.annotation.Configuration;
+import ru.pipko.otus.homework.dao.QuestionCsvDao;
 import ru.pipko.otus.homework.dao.QuestionDao;
 import ru.pipko.otus.homework.domain.Question;
 import ru.pipko.otus.homework.exeptions.QuestionsDaoException;
@@ -22,6 +25,12 @@ import static org.mockito.Mockito.when;
 @DisplayName("В QuestionCsvDaoTest")
 @SpringBootTest
 public class QuestionCsvDaoTest {
+
+    @Configuration
+    @ComponentScan(basePackageClasses = {QuestionDao.class, QuestionCsvDao.class})
+    static class Config {
+
+    }
 
     @Autowired
     @Qualifier("questionCsvDao")
