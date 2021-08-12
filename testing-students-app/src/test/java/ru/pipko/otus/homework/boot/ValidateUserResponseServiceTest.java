@@ -7,16 +7,13 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
-import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
 import ru.pipko.otus.homework.config.CustomProperties;
-import ru.pipko.otus.homework.dao.QuestionCsvDao;
 import ru.pipko.otus.homework.dao.QuestionDao;
 import ru.pipko.otus.homework.domain.Question;
 import ru.pipko.otus.homework.events.PublisherForEvents;
 import ru.pipko.otus.homework.exeptions.QuestionsDaoException;
 import ru.pipko.otus.homework.service.AskQuestionsService;
-import ru.pipko.otus.homework.service.CsvFileNameProvider;
 import ru.pipko.otus.homework.service.ValidateUserResponseService;
 import ru.pipko.otus.homework.service.ValidateUserResponseServiceImpl;
 
@@ -24,14 +21,12 @@ import java.util.Collections;
 import java.util.List;
 
 import static org.mockito.BDDMockito.given;
-import static org.mockito.Mockito.when;
 
-@SpringBootTest
+@SpringBootTest(classes = {ValidateUserResponseServiceImpl.class})
 @DisplayName("В ValidateUserResponseServiceTest: ")
 public class ValidateUserResponseServiceTest {
 
     @Configuration
-    @ComponentScan(basePackageClasses = {ValidateUserResponseServiceImpl.class, ValidateUserResponseService.class})
     static class Config {
 
     }

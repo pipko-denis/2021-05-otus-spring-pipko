@@ -4,12 +4,10 @@ import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
-import ru.pipko.otus.homework.dao.QuestionCsvDao;
 import ru.pipko.otus.homework.dao.QuestionDao;
 import ru.pipko.otus.homework.domain.Question;
 import ru.pipko.otus.homework.exeptions.QuestionsDaoException;
@@ -20,20 +18,19 @@ import java.util.List;
 import static org.mockito.Mockito.when;
 
 /**
- * Unit test for QuestionsDao
+ * Unit test for QuestionCsvDaoTest
  */
 @DisplayName("В QuestionCsvDaoTest")
-@SpringBootTest
+@SpringBootTest//(classes = {QuestionCsvDao.class})
 public class QuestionCsvDaoTest {
 
     @Configuration
-    @ComponentScan(basePackageClasses = {QuestionDao.class, QuestionCsvDao.class})
+    @ComponentScan(basePackageClasses = {QuestionDao.class})
     static class Config {
 
     }
 
     @Autowired
-    @Qualifier("questionCsvDao")
     private QuestionDao questionDao;
 
 
