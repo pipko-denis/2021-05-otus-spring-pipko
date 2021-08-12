@@ -34,7 +34,7 @@ public class ApplicationEventsCommands {
     private Student student;
 
     @ShellMethod(key = {"login","log","l"}, value = "Login")
-    private void login(){
+    public void login(){
         questionsList = null;
         student = findOutStudentName();
     }
@@ -49,13 +49,13 @@ public class ApplicationEventsCommands {
 
     @ShellMethod(key = {"start","s","test"}, value = "Start testing")
     @ShellMethodAvailability(value = "isTestingAvailable")
-    private void passTest(){
+    public void passTest(){
         questionsList = interviewService.takeAnInterview();
     }
 
     @ShellMethod(key = {"results","res","r"}, value = "Test results")
     @ShellMethodAvailability(value = "isResultsAvailable")
-    private void displayResults(){
+    public void displayResults(){
         displayService.displayInterviewResults(student,questionsList);
     }
 

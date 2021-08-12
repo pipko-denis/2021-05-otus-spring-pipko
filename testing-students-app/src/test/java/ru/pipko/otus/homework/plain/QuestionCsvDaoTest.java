@@ -4,10 +4,10 @@ import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.boot.test.context.TestConfiguration;
 import org.springframework.boot.test.mock.mockito.MockBean;
-import ru.pipko.otus.homework.dao.QuestionCsvDao;
+import ru.pipko.otus.homework.dao.QuestionDao;
 import ru.pipko.otus.homework.domain.Question;
 import ru.pipko.otus.homework.exeptions.QuestionsDaoException;
 import ru.pipko.otus.homework.service.CsvFileNameProvider;
@@ -23,13 +23,9 @@ import static org.mockito.Mockito.when;
 @SpringBootTest
 public class QuestionCsvDaoTest {
 
-    @TestConfiguration
-    static class Config{
-
-    }
-
     @Autowired
-    private QuestionCsvDao questionDao;
+    @Qualifier("questionCsvDao")
+    private QuestionDao questionDao;
 
 
     @MockBean
