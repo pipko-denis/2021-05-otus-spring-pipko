@@ -4,7 +4,6 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import ru.pipko.otus.homework.dao.QuestionDao;
 import ru.pipko.otus.homework.domain.Question;
-import ru.pipko.otus.homework.events.PublisherForEvents;
 import ru.pipko.otus.homework.exeptions.QuestionsDaoException;
 import ru.pipko.otus.homework.exeptions.ValidateQuestionException;
 
@@ -21,8 +20,6 @@ public class InterviewServiceImpl implements InterviewService {
     private final ValidateQuestionService validateQuestionService;
 
     private final PrintLocalizedMessagesService printLocalizedMessagesService;
-
-    private final PublisherForEvents publisherForEvents;
 
 
     public List<Question> takeAnInterview() {

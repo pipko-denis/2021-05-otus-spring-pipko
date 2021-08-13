@@ -12,9 +12,6 @@ import java.util.List;
 @Service
 public class AskQuestionsServiceImpl implements AskQuestionsService {
 
-    private final PrintService printService;
-
-    private final ReadService readService;
 
     private final ValidateUserResponseService validateUserResponseService;
 
@@ -27,16 +24,13 @@ public class AskQuestionsServiceImpl implements AskQuestionsService {
     private final PublisherForEvents publisherForEvents;
 
 
-    public AskQuestionsServiceImpl(PrintService printService,
-                                   ReadService readAnswerService, ValidateUserResponseService validateUserResponseService,
+    public AskQuestionsServiceImpl(ValidateUserResponseService validateUserResponseService,
                                    CustomProperties customProperties, PrintLocalizedMessagesService printLocalizedMessagesService,
-                                   ReadAnswerService readAnswerService1, PublisherForEventsImpl eventsPublisher) {
-        this.printService = printService;
-        this.readService = readAnswerService;
+                                   ReadAnswerService readAnswerService, PublisherForEventsImpl eventsPublisher) {
         this.validateUserResponseService = validateUserResponseService;
         this.maxAttempts = customProperties.getAskQuestionsMaxAttempts();
         this.printLocalizedMessagesService = printLocalizedMessagesService;
-        this.readAnswerService = readAnswerService1;
+        this.readAnswerService = readAnswerService;
         this.publisherForEvents = eventsPublisher;
     }
 

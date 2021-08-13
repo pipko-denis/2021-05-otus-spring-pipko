@@ -5,6 +5,7 @@ import org.springframework.shell.Availability;
 import org.springframework.shell.standard.ShellComponent;
 import org.springframework.shell.standard.ShellMethod;
 import org.springframework.shell.standard.ShellMethodAvailability;
+import org.springframework.shell.standard.ShellOption;
 import ru.pipko.otus.homework.domain.Question;
 import ru.pipko.otus.homework.domain.Student;
 import ru.pipko.otus.homework.events.PublisherForEvents;
@@ -66,6 +67,16 @@ public class ApplicationEventsCommands {
         } else{
             return Availability.available();
         }
+    }
+
+    @ShellMethod(key = {"h"}, value = "Hello")
+    public String sayHello(@ShellOption String name){
+        return "Hello "+name;
+    }
+
+    @ShellMethod(value = "Hi")
+    public String sayHi(@ShellOption String name){
+        return "Hi "+name;
     }
 
     private Availability isResultsAvailable(){
