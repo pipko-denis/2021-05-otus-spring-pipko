@@ -1,4 +1,4 @@
-package ru.pipko.otus.homework.boot;
+package ru.pipko.otus.homework.dao;
 
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.DisplayName;
@@ -8,13 +8,13 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
-import ru.pipko.otus.homework.dao.QuestionDao;
 import ru.pipko.otus.homework.domain.Question;
 import ru.pipko.otus.homework.exeptions.QuestionsDaoException;
 import ru.pipko.otus.homework.service.CsvFileNameProvider;
 
 import java.util.List;
 
+import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
 /**
@@ -45,6 +45,8 @@ public class QuestionCsvDaoTest {
         when(csvFileNameProvider.getCsvFileName()).thenReturn(fileName);
 
         List<Question> questionList = questionDao.getQuestions();
+
+        verify(questionList.size()).equals(6);
 
         Assertions.assertNotNull(questionList, "Questions list in file \"" + fileName + "\" is null");
 

@@ -1,4 +1,4 @@
-package ru.pipko.otus.homework.boot;
+package ru.pipko.otus.homework.service;
 
 
 import org.junit.jupiter.api.Assertions;
@@ -13,9 +13,6 @@ import ru.pipko.otus.homework.dao.QuestionDao;
 import ru.pipko.otus.homework.domain.Question;
 import ru.pipko.otus.homework.events.PublisherForEvents;
 import ru.pipko.otus.homework.exeptions.QuestionsDaoException;
-import ru.pipko.otus.homework.service.AskQuestionsService;
-import ru.pipko.otus.homework.service.ValidateUserResponseService;
-import ru.pipko.otus.homework.service.ValidateUserResponseServiceImpl;
 
 import java.util.Collections;
 import java.util.List;
