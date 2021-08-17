@@ -38,7 +38,7 @@ class ReadAnswerOnQuestionServiceTest {
 
         Answer answer = readAnswerOnQuestionService.readAnswerForQuestion(question);
 
-        Assertions.assertEquals(question.getAnswers().indexOf(answer),1);
+        Assertions.assertEquals(0,question.getAnswers().indexOf(answer));
 
     }
 }

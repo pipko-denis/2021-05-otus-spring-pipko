@@ -14,7 +14,6 @@ import ru.pipko.otus.homework.service.CsvFileNameProvider;
 
 import java.util.List;
 
-import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
 /**
@@ -45,8 +44,6 @@ public class QuestionCsvDaoTest {
         when(csvFileNameProvider.getCsvFileName()).thenReturn(fileName);
 
         List<Question> questionList = questionDao.getQuestions();
-
-        verify(questionList.size()).equals(6);
 
         Assertions.assertNotNull(questionList, "Questions list in file \"" + fileName + "\" is null");
 
