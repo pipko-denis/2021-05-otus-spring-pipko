@@ -1,38 +1,24 @@
 package ru.pipko.otus.homework.service;
 
+import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
-import ru.pipko.otus.homework.config.CustomProperties;
 import ru.pipko.otus.homework.domain.Answer;
 import ru.pipko.otus.homework.domain.Question;
 import ru.pipko.otus.homework.events.PublisherForEvents;
-import ru.pipko.otus.homework.events.PublisherForEventsImpl;
 
 import java.util.List;
 
 @Service
+@RequiredArgsConstructor
 public class AskQuestionsServiceImpl implements AskQuestionsService {
-
-
-    private final ValidateUserResponseService validateUserResponseService;
-
-    private final int maxAttempts;
 
     private final PrintLocalizedMessagesService printLocalizedMessagesService;
 
-    private final ReadAnswerService readAnswerService;
-
     private final PublisherForEvents publisherForEvents;
 
+    private final ReadAnswerOnQuestionService readAnswerOnQuestionService;
 
-    public AskQuestionsServiceImpl(ValidateUserResponseService validateUserResponseService,
-                                   CustomProperties customProperties, PrintLocalizedMessagesService printLocalizedMessagesService,
-                                   ReadAnswerService readAnswerService, PublisherForEventsImpl eventsPublisher) {
-        this.validateUserResponseService = validateUserResponseService;
-        this.maxAttempts = customProperties.getAskQuestionsMaxAttempts();
-        this.printLocalizedMessagesService = printLocalizedMessagesService;
-        this.readAnswerService = readAnswerService;
-        this.publisherForEvents = eventsPublisher;
-    }
+
 
     @Override
     public void askQuestions(List<Question> questionList) {
@@ -44,12 +30,11 @@ public class AskQuestionsServiceImpl implements AskQuestionsService {
 
             displayAnswers(question.getAnswers());
 
-            question.setPickedAnswer(readAnswer(question));
+            getAnswerOnQuestion(question);
 
             publisherForEvents.publishQuestionsPassed(j, questionsCount);
         }
     }
-
 
     private void displayAnswers(List<Answer> answers) {
         for (int i = 0; i < answers.size(); i++) {
@@ -58,22 +43,13 @@ public class AskQuestionsServiceImpl implements AskQuestionsService {
         }
     }
 
+    private void getAnswerOnQuestion(Question question){
+        Answer answer = readAnswerOnQuestionService.readAnswerForQuestion(question);
 
-    private Answer readAnswer(Question question) {
-
-        String answersCount = String.valueOf(question.getAnswers().size() );
-        for (int i = 0; i < maxAttempts; i++) {
-
-            String userResponse = readAnswerService.readAnswerForQuestion("strings.enter.answer.request",answersCount,String.valueOf(i + 1));
-
-            if (validateUserResponseService.isUserResponseIsValid(question, userResponse)) {
-                int chosenIndex = Integer.parseInt(userResponse) - 1;
-                return question.getAnswers().get(chosenIndex);
-            }
-        }
-
-        return null;
+        question.setPickedAnswer(answer);
     }
+
+
 
 
 }

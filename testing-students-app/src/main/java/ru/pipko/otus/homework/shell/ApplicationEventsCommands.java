@@ -41,8 +41,8 @@ public class ApplicationEventsCommands {
     }
 
     private Student findOutStudentName() {
-        String firstName = readAnswerService.readAnswerForQuestion("strings.first.name", (String[]) null);
-        String lastName = readAnswerService.readAnswerForQuestion("strings.last.name",(String[]) null);
+        String firstName = readAnswerService.readAnswer("strings.first.name", (String[]) null);
+        String lastName = readAnswerService.readAnswer("strings.last.name",(String[]) null);
         Student student = new Student(firstName, lastName);
         publisherForEvents.publishUserAssigned(student);
         return student;

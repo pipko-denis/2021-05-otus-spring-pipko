@@ -1,20 +1,24 @@
 package ru.pipko.otus.homework.service;
 
-import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import ru.pipko.otus.homework.config.CustomProperties;
 import ru.pipko.otus.homework.domain.Question;
 import ru.pipko.otus.homework.domain.Student;
 
 import java.util.List;
 
 @Service
-@RequiredArgsConstructor
 public class DisplayServiceImpl implements DisplayService {
 
 
     private final int minRightResponses;
 
     private final PrintLocalizedMessagesServiceImpl printLocalizedMessagesService;
+
+    public DisplayServiceImpl(PrintService printService, CustomProperties customProperties, PrintLocalizedMessagesServiceImpl printLocalizedMessagesService) {
+        this.minRightResponses = customProperties.getMinPassCount();
+        this.printLocalizedMessagesService = printLocalizedMessagesService;
+    }
 
 
     @Override

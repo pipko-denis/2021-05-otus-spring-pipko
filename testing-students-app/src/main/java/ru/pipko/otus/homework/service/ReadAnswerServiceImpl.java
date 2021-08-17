@@ -13,7 +13,7 @@ public class ReadAnswerServiceImpl implements ReadAnswerService{
 
 
     @Override
-    public String readAnswerForQuestion(String messageId, String... args) {
+    public String readAnswer(String messageId, String... args) {
         printLocalizedMessagesService.printLocalizedMessage(messageId,args);
         return readService.readInput();
     }
