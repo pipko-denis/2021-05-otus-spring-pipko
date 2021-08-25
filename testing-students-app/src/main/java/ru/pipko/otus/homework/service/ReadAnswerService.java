@@ -2,6 +2,6 @@ package ru.pipko.otus.homework.service;
 
 public interface ReadAnswerService {
 
-    String readAnswerForQuestion(String messageId,String... args);
+    String readAnswer(String messageId,String... args);
 
 }

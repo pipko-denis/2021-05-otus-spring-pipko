@@ -1,0 +1,11 @@
+spring:
+  shell:
+    interactive:
+      enabled: false
+application:
+  ask-questions-max-attempts: 3
+  min-pass-count: 3
+  localized-files:
+    ru-RU: questions_without_flag.csv
+    en-EN: questions_en.csv
+  locale-name: ru-RU

@@ -1,5 +1,10 @@
-spring.output.ansi.enabled: always
+spring:
+  output.ansi.enabled: always
+  profiles:
+    active: fun
 application:
+  events:
+    show-half-questions: false
   ask-questions-max-attempts: 3
   min-pass-count: 3
   localized-files:
@@ -7,3 +12,14 @@ application:
     en-EN: questions_en.csv
   locale-name: ru-RU
   #locale: en-EN
+---
+application:
+  profiles: fun
+  events:
+    show-half-questions: true
+---
+application:
+  profiles: calm
+  events:
+    show-half-questions: true
+---

@@ -11,11 +11,6 @@ import ru.pipko.otus.homework.service.*;
 public class App {
     public static void main(String[] args) {
         ConfigurableApplicationContext context = SpringApplication.run(App.class, args);
-
-        InterviewService interviewService = context.getBean("interviewService", InterviewService.class);
-
-        interviewService.takeAnInterview();
-
     }
 
 }

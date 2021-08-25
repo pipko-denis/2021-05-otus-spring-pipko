@@ -12,6 +12,8 @@ public class CustomProperties {
 
     private int askQuestionsMaxAttempts;
     private int minPassCount;
+    private Map<String,String> localizedFiles;
+    private String localeName;
 
     public int getAskQuestionsMaxAttempts() {
         return askQuestionsMaxAttempts;
@@ -30,4 +32,27 @@ public class CustomProperties {
     }
 
 
+
+
+    public String getLocaleName() {
+        return localeName;
+    }
+
+    public Locale getLocale() {
+        return Locale.forLanguageTag(localeName);
+    }
+
+    public void setLocaleName(String locale) {
+        this.localeName = locale;
+    }
+
+
+
+    public String getCsvFileName() {
+        return localizedFiles.get(localeName);
+    }
+
+    public void setLocalizedFiles(Map<String, String> localizedFiles) {
+        this.localizedFiles = localizedFiles;
+    }
 }
