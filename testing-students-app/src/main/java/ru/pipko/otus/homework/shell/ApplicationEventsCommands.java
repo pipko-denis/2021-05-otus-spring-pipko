@@ -69,16 +69,6 @@ public class ApplicationEventsCommands {
         }
     }
 
-    @ShellMethod(key = {"h"}, value = "Hello")
-    public String sayHello(@ShellOption String name){
-        return "Hello "+name;
-    }
-
-    @ShellMethod(value = "Hi")
-    public String sayHi(@ShellOption String name){
-        return "Hi "+name;
-    }
-
     private Availability isResultsAvailable(){
         if ( questionsList == null) {
             String message = localizationService.localizeMessage("strings.shell.results");

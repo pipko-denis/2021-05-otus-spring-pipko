@@ -1,4 +1,7 @@
-spring.shell.interactive.enabled: false
+spring:
+  shell:
+    interactive:
+      enabled: false
 application:
   ask-questions-max-attempts: 3
   min-pass-count: 3
