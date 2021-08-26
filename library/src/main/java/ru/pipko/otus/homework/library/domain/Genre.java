@@ -5,7 +5,6 @@ import lombok.*;
 @Getter
 @Setter
 @AllArgsConstructor
-@NoArgsConstructor
 @ToString
 public class Genre {
 
@@ -13,4 +12,7 @@ public class Genre {
 
     private String name;
 
+    public Genre(String name) {
+        this.name = name;
+    }
 }
