@@ -35,7 +35,7 @@
 		<dependency>
 			<groupId>com.h2database</groupId>
 			<artifactId>h2</artifactId>
-			<scope>runtime</scope>
+			<scope>1.4.200</scope>
 		</dependency>
 		<dependency>
 			<groupId>org.projectlombok</groupId>
