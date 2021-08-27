@@ -1,9 +1,11 @@
 package ru.pipko.otus.homework.library.dao;
 
 import lombok.RequiredArgsConstructor;
-import org.springframework.jdbc.core.RowCallbackHandler;
 import org.springframework.jdbc.core.RowMapper;
+import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcOperations;
+import org.springframework.jdbc.support.GeneratedKeyHolder;
+import org.springframework.jdbc.support.KeyHolder;
 import org.springframework.stereotype.Repository;
 import ru.pipko.otus.homework.library.domain.Author;
 
@@ -21,7 +23,7 @@ public class AuthorJdbcDao implements AuthorDao{
 
     @Override
     public List<Author> getAll() {
-        return null;
+        return jdbc.getJdbcOperations().query("SELECT ID, NAME FROM AUTHORS ORDER BY NAME",new AuthorRowMapper());
     }
 
     @Override
@@ -33,7 +35,12 @@ public class AuthorJdbcDao implements AuthorDao{
 
     @Override
     public int insert(Author book) {
-        return 0;
+        KeyHolder kh = new GeneratedKeyHolder();
+        MapSqlParameterSource params = new MapSqlParameterSource();
+        params.addValue("name",book.getName());
+        int recCount = jdbc.update("INSERT INTO AUTHORS (NAME) VALUES(:name);",params,kh);
+        book.setId(kh.getKey().longValue());
+        return recCount;
     }
 
     @Override
@@ -46,7 +53,7 @@ public class AuthorJdbcDao implements AuthorDao{
         return 0;
     }
 
-    private class AuthorRowMapper implements RowMapper<Author> {
+    private static class AuthorRowMapper implements RowMapper<Author> {
 
         @Override
         public Author mapRow(ResultSet resultSet, int i) throws SQLException {
