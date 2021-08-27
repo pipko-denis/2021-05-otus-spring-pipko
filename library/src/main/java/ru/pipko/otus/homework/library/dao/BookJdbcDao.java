@@ -49,11 +49,11 @@ public class BookJdbcDao implements BookDao {
     }
 
     @Override
-    public int delete(Book book) {
+    public int delete(long id) {
         return 0;
     }
 
-    private class BookRowMapper implements RowMapper<Book> {
+    private static class BookRowMapper implements RowMapper<Book> {
 
         @Override
         public Book mapRow(ResultSet resultSet, int i) throws SQLException {
