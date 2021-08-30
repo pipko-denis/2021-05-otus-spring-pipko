@@ -4,4 +4,6 @@ public interface EvaluatingDataService {
 
     boolean isThereAreOnlyDigitsInText(String text);
 
+    boolean isTextNotNullAndNotBlank(String text);
+
 }

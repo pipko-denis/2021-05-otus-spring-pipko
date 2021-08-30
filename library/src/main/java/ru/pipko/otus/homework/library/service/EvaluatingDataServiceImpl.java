@@ -18,4 +18,9 @@ public class EvaluatingDataServiceImpl implements EvaluatingDataService{
         return patternPositiveInt.matcher(text).matches();
     }
 
+    @Override
+    public boolean isTextNotNullAndNotBlank(String text) {
+        return (text != null) && (! text.isBlank());
+    }
+
 }
