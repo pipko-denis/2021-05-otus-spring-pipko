@@ -23,6 +23,7 @@ import static org.assertj.core.api.Assertions.*;
 class BooksEditorHelperImplTest {
 
     public static final int EXPECTED_DELETED_RECORD_COUNT = 1;
+    public static final String EXPECTED_BOOK_NAME = "ExpectedBookName";
     @Autowired
     private BooksEditorHelper booksEditorHelper;
 
@@ -50,18 +51,26 @@ class BooksEditorHelperImplTest {
     }
 
     @Test
+    @Description("корретно добавялть книгу")
     void addBook() {
-        final Author author1 = new Author(1L, "Author1");
-        final Genre genre1 = new Genre(1L, "Genre1");
-        final Book bookExpected = new Book(1L, "New name", author1, genre1);
+        final Author expectedAuthor = new Author(1L, "Author1");
+        final Genre expectedGenre = new Genre(1L, "Genre1");
 
-       //Mockito.when(bookJdbcDao.getById(Mockito.any())).thenReturn()
+        Mockito.when(authorEditorHelper.getAuthorById("1")).thenReturn(expectedAuthor);
+        Mockito.when(genreEditorHelper.getGenreById("1")).thenReturn(expectedGenre);
+        Mockito.when(bookJdbcDao.insert(Mockito.any())).thenReturn(1);
+        Mockito.when(evaluatingDataService.isTextNotNullAndNotBlank(Mockito.any())).thenReturn(true);
 
-        final Book addedBook = booksEditorHelper.addBook("NewBookForTest", "NewAuthorForTest", "NewGenreForTest");
+        final Book actualBook = booksEditorHelper.addBook(EXPECTED_BOOK_NAME, "1", "1");
+
+        assertThat(actualBook.getAuthor()).as("Все поля автора %s должны совпадать",expectedAuthor).usingRecursiveComparison().isEqualTo(expectedAuthor);
+        assertThat(actualBook.getGenre()).usingRecursiveComparison().isEqualTo(expectedGenre);
+        assertThat(actualBook.getName()).isEqualTo(EXPECTED_BOOK_NAME);
 
     }
 
     @Test
+    @Description("корректно изменять данные книги")
     void editBook() {
         final Author author1 = new Author(1L, "Author1");
         final Genre genre1 = new Genre(1L, "Genre1");
@@ -83,6 +92,7 @@ class BooksEditorHelperImplTest {
     }
 
     @Test
+    @Description("корректно выдавать книгу по идентификатору")
     void getBookById() {
 
         final Author author1 = new Author(1L, "Author1");
