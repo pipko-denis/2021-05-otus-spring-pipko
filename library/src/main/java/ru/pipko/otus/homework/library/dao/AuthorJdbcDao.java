@@ -56,7 +56,7 @@ public class AuthorJdbcDao implements AuthorDao{
 
     @Override
     public int delete(long id) {
-        throw new RuntimeException("Method delete is not implemented");
+        return jdbc.update("DELETE FROM AUTHORS WHERE id = :id",Map.of("id",id));
     }
 
     private static class AuthorRowMapper implements RowMapper<Author> {
