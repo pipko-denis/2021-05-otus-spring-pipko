@@ -6,6 +6,7 @@ import org.springframework.shell.standard.ShellMethod;
 import org.springframework.shell.standard.ShellOption;
 import ru.pipko.otus.homework.library.dao.AuthorDao;
 import ru.pipko.otus.homework.library.domain.Author;
+import ru.pipko.otus.homework.library.service.AuthorEditorHelper;
 
 import java.util.List;
 import java.util.stream.Collectors;
@@ -15,6 +16,7 @@ import java.util.stream.Collectors;
 public class AuthorCommands {
 
     private final AuthorDao authorDao;
+    private final AuthorEditorHelper authorHelper;
 
     @ShellMethod(value = "Adding author command", key = {"aa", "add-author"})
     public String addAuthor(@ShellOption(value = {"name", "n"}) String name) {
@@ -35,6 +37,14 @@ public class AuthorCommands {
                 .collect(Collectors.joining("\n"));
 
         return result;
+    }
+
+    @ShellMethod(value = "Adding author command", key = {"aa", "add-author"})
+    public String deleteAuthor(@ShellOption(value = {"id"}) String authorId) {
+
+        int recCount = authorHelper.deleteAuthorById(authorId);
+
+        return "Author with id = "+authorId+" deleted from Authors. Modified "+recCount+" rows." ;
     }
 
 }
