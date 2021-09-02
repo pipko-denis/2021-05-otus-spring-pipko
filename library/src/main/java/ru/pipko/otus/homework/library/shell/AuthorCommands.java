@@ -18,7 +18,7 @@ public class AuthorCommands {
     private final AuthorDao authorDao;
     private final AuthorEditorHelper authorHelper;
 
-    @ShellMethod(value = "Adding author command", key = {"aa", "add-author"})
+    @ShellMethod(value = "Adding author command", key = {"aa", "author-add"})
     public String addAuthor(@ShellOption(value = {"name", "n"}) String name) {
 
         final Author author = new Author(name);
@@ -39,7 +39,7 @@ public class AuthorCommands {
         return result;
     }
 
-    @ShellMethod(value = "Adding author command", key = {"aa", "add-author"})
+    @ShellMethod(value = "Adding author command", key = {"ad", "author-del"})
     public String deleteAuthor(@ShellOption(value = {"id"}) String authorId) {
 
         int recCount = authorHelper.deleteAuthorById(authorId);
