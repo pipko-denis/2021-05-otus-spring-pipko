@@ -6,7 +6,6 @@ import org.springframework.shell.standard.ShellMethod;
 import org.springframework.shell.standard.ShellOption;
 import ru.pipko.otus.homework.library.dao.BookDao;
 import ru.pipko.otus.homework.library.domain.Book;
-import ru.pipko.otus.homework.library.exceptions.BookEditException;
 import ru.pipko.otus.homework.library.service.BooksEditorHelper;
 
 import java.util.List;
@@ -21,29 +20,30 @@ public class BookCommands {
     private final BookDao bookDao;
 
     @ShellMethod(value = "Adding book with all requisites", key = {"ba", "book-add"})
-    public String addBook(@ShellOption(value = {"book", "b"} ) String bookInput,
-                          @ShellOption(value = {"author", "b"}) String authorInput,
-                          @ShellOption(value = {"genre", "g"}) String genreInput) throws BookEditException {
+    public String addBook(@ShellOption(value = {"book", "b"} ) String bookName,
+                          @ShellOption(value = {"author", "a"}) String authorId,
+                          @ShellOption(value = {"genre", "g"}) String genreId) {
 
-        Book book = booksEditorHelper.addBook(bookInput,authorInput,genreInput);
+        Book book = booksEditorHelper.addBook(bookName,authorId,genreId);
 
-        return "Book added, id: " + book.getId() + ". Genre inserted, id: " + book.getGenre().getId() + ". Author added, id: "+book.getAuthor().getId();
+        return "Book added, id: " + book.getId() + ". Genre id: " + book.getGenre().getId() + ". Author id: "+book.getAuthor().getId();
     }
 
     @ShellMethod(value = "Adding book with all requisites", key = {"bd", "book-del"})
-    public String deleteBook(@ShellOption(value = {"book", "b"} ) String bookInput)  throws BookEditException {
+    public String deleteBook(@ShellOption(value = {"id"} ) String bookId) {
 
-        long id = booksEditorHelper.deleteBookByDescription(bookInput);
+        int recCount = booksEditorHelper.deleteBookById(bookId);
 
-        return "Book with id = "+id+" deleted from Books" ;
+        return "Book with id = "+bookId+" deleted from Books. Modified "+recCount+" rows." ;
     }
 
     @ShellMethod(value = "Edit book's name, author and genre", key = {"be", "book-edit"})
-    public String editBook(@ShellOption(value = {"book", "b"} ) String bookInput,
-                           @ShellOption(value = {"author", "b"}) String authorInput,
-                           @ShellOption(value = {"genre", "g"}) String genreInput) throws BookEditException {
+    public String editBook(@ShellOption(value = {"book-id", "id"} ) String bookId,
+                           @ShellOption(value = {"book", "b"} ) String bookName,
+                           @ShellOption(value = {"author", "a"}) String authorId,
+                           @ShellOption(value = {"genre", "g"}) String genreId) {
 
-        Book book = booksEditorHelper.editBook(bookInput,authorInput,genreInput);
+        Book book = booksEditorHelper.editBook(bookId,bookName,authorId,genreId);
 
         return  "Book with id = "+book.getId()+" modified."  ;
     }
@@ -54,7 +54,7 @@ public class BookCommands {
         final List<Book> bookList = bookDao.getAll();
 
         final String result = "Books list: \n" + bookList.stream().map(book ->
-                "Book: \"" + book.getName() + "\", " +
+                "Book id="+book.getId()+": \"" + book.getName() + "\", " +
                 "author: " + book.getAuthor().getName() +", "+
                 "genre: " + book.getGenre().getName() + " ")
                 .collect(Collectors.joining("\n"));
