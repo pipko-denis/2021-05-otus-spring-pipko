@@ -13,7 +13,6 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.List;
 import java.util.Map;
-import java.util.Optional;
 
 @Repository
 @RequiredArgsConstructor
@@ -27,10 +26,17 @@ public class AuthorJdbcDao implements AuthorDao{
     }
 
     @Override
-    public Optional<Author> getById(long id) {
+    public Author getById(long id) {
         Map<String, Object> params = Map.of("id",id);
         Author result  = jdbc.queryForObject("SELECT ID, NAME FROM AUTHORS WHERE id = :id ORDER BY NAME", params, new AuthorRowMapper());
-        return Optional.of(result) ;
+        return result;
+    }
+
+    @Override
+    public List<Author> getByName(String userInput) {
+        Map<String, Object> params = Map.of("name",userInput);
+        List<Author> result = jdbc.query("SELECT ID, NAME FROM AUTHORS WHERE name = :name ORDER BY NAME", params, new AuthorRowMapper());
+        return result ;
     }
 
     @Override
@@ -45,12 +51,12 @@ public class AuthorJdbcDao implements AuthorDao{
 
     @Override
     public int update(Author book) {
-        return 0;
+        throw new RuntimeException("Method update is not implemented");
     }
 
     @Override
-    public int delete(Author book) {
-        return 0;
+    public int delete(long id) {
+        throw new RuntimeException("Method delete is not implemented");
     }
 
     private static class AuthorRowMapper implements RowMapper<Author> {

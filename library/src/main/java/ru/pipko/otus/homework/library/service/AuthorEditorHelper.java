@@ -6,4 +6,5 @@ public interface AuthorEditorHelper {
 
     Author getAuthorById(String description);
 
+    int deleteAuthorById(String id);
 }
