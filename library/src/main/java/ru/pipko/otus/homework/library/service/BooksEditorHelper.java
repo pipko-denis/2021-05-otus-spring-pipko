@@ -1,16 +1,15 @@
 package ru.pipko.otus.homework.library.service;
 
 import ru.pipko.otus.homework.library.domain.Book;
-import ru.pipko.otus.homework.library.exceptions.BookEditException;
 
 public interface BooksEditorHelper {
 
-    Book addBook(String bookDescription, String authorDescription, String genreDescription) throws BookEditException;
+    Book addBook(String bookName, String authorId, String genreId);
 
-    Book editBook(String bookDescription, String authorDescription, String genreDescription) throws BookEditException;
+    Book editBook(String bookId, String bookName, String authorId, String genreId) ;
 
-    Book getBookByDescription(String bookDescription) throws BookEditException;
+    Book getBookById(String id);
 
-    long deleteBookByDescription(String bookDescription) throws BookEditException;
+    int deleteBookById(String id);
 
 }
