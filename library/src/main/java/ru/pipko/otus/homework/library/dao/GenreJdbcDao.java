@@ -44,15 +44,6 @@ public class GenreJdbcDao implements GenreDao {
         return insertedRecordCount;
     }
 
-    @Override
-    public int update(Genre book) {
-        throw new RuntimeException("Method update is not implemented");
-    }
-
-    @Override
-    public int delete(long id) {
-        throw new RuntimeException("Method delete is not implemented");
-    }
 
     private static class GenreRowMapper implements RowMapper<Genre> {
         @Override

@@ -7,11 +7,13 @@ import ru.pipko.otus.homework.library.dao.AuthorDao;
 import ru.pipko.otus.homework.library.dao.BookDao;
 import ru.pipko.otus.homework.library.domain.Author;
 
+import java.util.List;
+
 @Service
 @RequiredArgsConstructor
-public class AuthorEditorHelperImpl implements AuthorEditorHelper {
+public class AuthorEditorServiceImpl implements AuthorEditorService {
 
-    private final EvaluatingDataServiceImpl evaluatingService;
+    private final EvaluatingDataService evaluatingService;
     private final AuthorDao authorDao;
     private final BookDao bookDao;
 
@@ -38,6 +40,16 @@ public class AuthorEditorHelperImpl implements AuthorEditorHelper {
         final int deletedRecCount = authorDao.delete(authorId);
         if (deletedRecCount == 0) throw new RuntimeException("There are no authors with id="+id);
         return deletedRecCount;
+    }
+
+    @Override
+    public int insert(Author author) {
+        return authorDao.insert(author);
+    }
+
+    @Override
+    public List<Author> getAll() {
+        return authorDao.getAll();
     }
 
 }

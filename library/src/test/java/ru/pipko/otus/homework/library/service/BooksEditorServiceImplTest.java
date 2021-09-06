@@ -18,14 +18,14 @@ import ru.pipko.otus.homework.library.domain.Genre;
 
 import static org.assertj.core.api.Assertions.*;
 
-@DisplayName("BooksEditorHelperImpl должен")
-@SpringBootTest(classes = {BooksEditorHelperImpl.class})
-class BooksEditorHelperImplTest {
+@DisplayName("BooksEditorServiceImpl должен")
+@SpringBootTest(classes = {BooksEditorServiceImpl.class})
+class BooksEditorServiceImplTest {
 
     public static final int EXPECTED_DELETED_RECORD_COUNT = 1;
     public static final String EXPECTED_BOOK_NAME = "ExpectedBookName";
     @Autowired
-    private BooksEditorHelper booksEditorHelper;
+    private BooksEditorService booksEditorService;
 
     @MockBean
     private AuthorDao authorJdbcDao;
@@ -37,10 +37,10 @@ class BooksEditorHelperImplTest {
     private GenreDao genreJdbcDao;
 
     @MockBean
-    private GenreEditorHelper genreEditorHelper;
+    private GenreEditorService genreEditorService;
 
     @MockBean
-    private AuthorEditorHelper authorEditorHelper;
+    private AuthorEditorService authorEditorService;
 
     @MockBean
     private EvaluatingDataService evaluatingDataService;
@@ -56,12 +56,12 @@ class BooksEditorHelperImplTest {
         final Author expectedAuthor = new Author(1L, "Author1");
         final Genre expectedGenre = new Genre(1L, "Genre1");
 
-        Mockito.when(authorEditorHelper.getAuthorById("1")).thenReturn(expectedAuthor);
-        Mockito.when(genreEditorHelper.getGenreById("1")).thenReturn(expectedGenre);
+        Mockito.when(authorEditorService.getAuthorById("1")).thenReturn(expectedAuthor);
+        Mockito.when(genreEditorService.getGenreById("1")).thenReturn(expectedGenre);
         Mockito.when(bookJdbcDao.insert(Mockito.any())).thenReturn(1);
         Mockito.when(evaluatingDataService.isTextNotNullAndNotBlank(Mockito.any())).thenReturn(true);
 
-        final Book actualBook = booksEditorHelper.addBook(EXPECTED_BOOK_NAME, "1", "1");
+        final Book actualBook = booksEditorService.addBook(EXPECTED_BOOK_NAME, "1", "1");
 
         assertThat(actualBook.getAuthor()).as("Все поля автора %s должны совпадать",expectedAuthor).usingRecursiveComparison().isEqualTo(expectedAuthor);
         assertThat(actualBook.getGenre()).usingRecursiveComparison().isEqualTo(expectedGenre);
@@ -80,13 +80,13 @@ class BooksEditorHelperImplTest {
         final Book bookExpected = new Book(1L, "New name", author2, genre2);
 
         Mockito.when(bookJdbcDao.getById(1)).thenReturn(bookForUpdateCheck);
-        Mockito.when(authorEditorHelper.getAuthorById("2")).thenReturn(author2);
-        Mockito.when(genreEditorHelper.getGenreById("2")).thenReturn(genre2);
+        Mockito.when(authorEditorService.getAuthorById("2")).thenReturn(author2);
+        Mockito.when(genreEditorService.getGenreById("2")).thenReturn(genre2);
         Mockito.when(bookJdbcDao.update(bookForUpdateCheck)).thenReturn(1);
         Mockito.when(evaluatingDataService.isTextNotNullAndNotBlank(Mockito.any())).thenReturn(true);
         Mockito.when(evaluatingDataService.isThereAreOnlyDigitsInText(Mockito.any())).thenReturn(true);
 
-        Book bookAfterEditing = booksEditorHelper.editBook("1","New name","2","2");
+        Book bookAfterEditing = booksEditorService.editBook("1","New name","2","2");
 
         assertThat(bookAfterEditing).usingRecursiveComparison().isEqualTo(bookExpected);
     }
@@ -103,9 +103,9 @@ class BooksEditorHelperImplTest {
         Mockito.when(evaluatingDataService.isTextNotNullAndNotBlank(Mockito.any())).thenReturn(true);
         Mockito.when(evaluatingDataService.isThereAreOnlyDigitsInText(Mockito.any())).thenReturn(true);
 
-        Book bookFromHelper = booksEditorHelper.getBookById("1");
+        Book bookFromService = booksEditorService.getBookById("1");
 
-        assertThat(bookFromHelper).usingRecursiveComparison().isEqualTo(bookExpected);
+        assertThat(bookFromService).usingRecursiveComparison().isEqualTo(bookExpected);
 
     }
 
@@ -118,11 +118,11 @@ class BooksEditorHelperImplTest {
         Mockito.when(evaluatingDataService.isThereAreOnlyDigitsInText(Mockito.any())).thenReturn(true);
         Mockito.when(bookJdbcDao.getById(1)).thenThrow(EmptyResultDataAccessException.class);
 
-        int deletedRecCount = booksEditorHelper.deleteBookById("1");
+        int deletedRecCount = booksEditorService.deleteBookById("1");
 
         assertThat(deletedRecCount).usingRecursiveComparison().isEqualTo(EXPECTED_DELETED_RECORD_COUNT);
 
-        assertThatCode( () -> booksEditorHelper.getBookById("1")).isInstanceOf(RuntimeException.class);
+        assertThatCode( () -> booksEditorService.getBookById("1")).isInstanceOf(RuntimeException.class);
 
     }
 }

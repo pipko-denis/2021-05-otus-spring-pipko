@@ -6,7 +6,7 @@ import org.springframework.shell.standard.ShellMethod;
 import org.springframework.shell.standard.ShellOption;
 import ru.pipko.otus.homework.library.dao.BookDao;
 import ru.pipko.otus.homework.library.domain.Book;
-import ru.pipko.otus.homework.library.service.BooksEditorHelper;
+import ru.pipko.otus.homework.library.service.BooksEditorService;
 
 import java.util.List;
 import java.util.stream.Collectors;
@@ -15,7 +15,7 @@ import java.util.stream.Collectors;
 @RequiredArgsConstructor
 public class BookCommands {
 
-    private final BooksEditorHelper booksEditorHelper;
+    private final BooksEditorService booksEditorService;
 
     private final BookDao bookDao;
 
@@ -24,7 +24,7 @@ public class BookCommands {
                           @ShellOption(value = {"author", "a"}) String authorId,
                           @ShellOption(value = {"genre", "g"}) String genreId) {
 
-        Book book = booksEditorHelper.addBook(bookName,authorId,genreId);
+        Book book = booksEditorService.addBook(bookName,authorId,genreId);
 
         return "Book added, id: " + book.getId() + ". Genre id: " + book.getGenre().getId() + ". Author id: "+book.getAuthor().getId();
     }
@@ -32,7 +32,7 @@ public class BookCommands {
     @ShellMethod(value = "Adding book with all requisites", key = {"bd", "book-del"})
     public String deleteBook(@ShellOption(value = {"id"} ) String bookId) {
 
-        int recCount = booksEditorHelper.deleteBookById(bookId);
+        int recCount = booksEditorService.deleteBookById(bookId);
 
         return "Book with id = "+bookId+" deleted from Books. Modified "+recCount+" rows." ;
     }
@@ -43,7 +43,7 @@ public class BookCommands {
                            @ShellOption(value = {"author", "a"}) String authorId,
                            @ShellOption(value = {"genre", "g"}) String genreId) {
 
-        Book book = booksEditorHelper.editBook(bookId,bookName,authorId,genreId);
+        Book book = booksEditorService.editBook(bookId,bookName,authorId,genreId);
 
         return  "Book with id = "+book.getId()+" modified."  ;
     }

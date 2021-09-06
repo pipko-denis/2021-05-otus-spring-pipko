@@ -12,8 +12,4 @@ public interface GenreDao {
 
     int insert(Genre book);
 
-    int update(Genre book);
-
-    int delete(long id);
-
 }

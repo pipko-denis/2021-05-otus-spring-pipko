@@ -8,7 +8,7 @@ import ru.pipko.otus.homework.library.domain.Genre;
 
 @Service
 @RequiredArgsConstructor
-public class GenreEditorHelperImpl implements GenreEditorHelper{
+public class GenreEditorServiceImpl implements GenreEditorService {
 
     private final EvaluatingDataServiceImpl evaluatingService;
     private final GenreDao genreDao;

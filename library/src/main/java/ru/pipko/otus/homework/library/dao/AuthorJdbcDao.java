@@ -50,11 +50,6 @@ public class AuthorJdbcDao implements AuthorDao{
     }
 
     @Override
-    public int update(Author book) {
-        throw new RuntimeException("Method update is not implemented");
-    }
-
-    @Override
     public int delete(long id) {
         return jdbc.update("DELETE FROM AUTHORS WHERE id = :id",Map.of("id",id));
     }

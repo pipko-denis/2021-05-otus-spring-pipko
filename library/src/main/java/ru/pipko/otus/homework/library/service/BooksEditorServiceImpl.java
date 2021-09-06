@@ -10,7 +10,7 @@ import ru.pipko.otus.homework.library.domain.Genre;
 
 @Service
 @RequiredArgsConstructor
-public class BooksEditorHelperImpl implements BooksEditorHelper {
+public class BooksEditorServiceImpl implements BooksEditorService {
 
 
     public static final String BOOK_ID_IS_INCORRECT_IT_SHOULD_CONTAINS_ONLY_DIGITS = "Book id is incorrect! It should contains only digits!";
@@ -18,8 +18,8 @@ public class BooksEditorHelperImpl implements BooksEditorHelper {
     public static final String THERE_ARE_NO_BOOKS_WITH_ID = "There are no books with id=";
 
     private final BookDao bookDao;
-    private final GenreEditorHelper genreEditorHelper;
-    private final AuthorEditorHelper authorHelper;
+    private final GenreEditorService genreEditorService;
+    private final AuthorEditorService authorService;
     private final EvaluatingDataService evaluatingService;
 
 
@@ -28,9 +28,9 @@ public class BooksEditorHelperImpl implements BooksEditorHelper {
 
         if ( ! evaluatingService.isTextNotNullAndNotBlank(bookName) ) throw new RuntimeException(BOOK_NAME_IS_INCORRECT_IT_SHOULD_NOT_BE_EMPTY);
 
-        final Author author = authorHelper.getAuthorById(authorId);
+        final Author author = authorService.getAuthorById(authorId);
 
-        final Genre genre = genreEditorHelper.getGenreById(genreId);
+        final Genre genre = genreEditorService.getGenreById(genreId);
 
         final Book book = new Book(bookName, author, genre);
 
@@ -47,9 +47,9 @@ public class BooksEditorHelperImpl implements BooksEditorHelper {
 
         final Book book = getBookById(id);
 
-        final Author author = authorHelper.getAuthorById(authorId);
+        final Author author = authorService.getAuthorById(authorId);
 
-        final Genre genre = genreEditorHelper.getGenreById(genreId);
+        final Genre genre = genreEditorService.getGenreById(genreId);
 
         book.setName(bookName);
         book.setAuthor(author);

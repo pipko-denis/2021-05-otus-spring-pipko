@@ -2,7 +2,7 @@ package ru.pipko.otus.homework.library.service;
 
 import ru.pipko.otus.homework.library.domain.Book;
 
-public interface BooksEditorHelper {
+public interface BooksEditorService {
 
     Book addBook(String bookName, String authorId, String genreId);
 
