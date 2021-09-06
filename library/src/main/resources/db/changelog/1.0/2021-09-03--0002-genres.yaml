@@ -1,0 +1,19 @@
+databaseChangeLog:
+  - changeSet:
+      id: 2021-09-03-0002-genres
+      author: pipko
+      context: dev or test
+      createTable:
+        tableName: genres
+        columns:
+          - column:
+              name: id
+              type: bigint
+              autoIncrement: true
+              constraints:
+                nullable: false
+                primaryKey: true
+                primaryKeyName: pk_genre
+          - column:
+              name: name
+              type: varchar(255)

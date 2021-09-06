@@ -1,0 +1,33 @@
+databaseChangeLog:
+  - changeSet:
+      id: 2021-09-03-0003-books
+      author: pipko
+      context: dev or test
+      createTable:
+        tableName: books
+        columns:
+          - column:
+              name: id
+              type: bigint
+              autoIncrement: true
+              constraints:
+                nullable: false
+                primaryKey: true
+                primaryKeyName: pk_book
+          - column:
+              name: name
+              type: varchar(255)
+          - column:
+              name: author_id
+              type: bigint
+              constraints:
+                nullable: false
+                foreignKeyName: fk_author_id
+                references: authors(id)
+          - column:
+              name: genre_id
+              type: bigint
+              constraints:
+                nullable: false
+                foreignKeyName: fk_genre_id
+                references: genres(id)
