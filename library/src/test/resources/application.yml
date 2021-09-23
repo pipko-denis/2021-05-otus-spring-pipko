@@ -5,8 +5,14 @@ spring:
   liquibase:
     enabled: true
     contexts: test
+  jpa:
+    generate-ddl: false
+    hibernate:
+      ddl-auto: none
+    show-sql: true
 h2:
   console:
     path: /h2-console
     settings:
       web-allow-others: true
+jpa-dao-enabled: true
