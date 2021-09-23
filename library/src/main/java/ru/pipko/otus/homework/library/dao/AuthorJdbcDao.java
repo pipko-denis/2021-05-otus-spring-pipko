@@ -1,6 +1,7 @@
 package ru.pipko.otus.homework.library.dao;
 
 import lombok.RequiredArgsConstructor;
+import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcOperations;
@@ -16,6 +17,7 @@ import java.util.Map;
 
 @Repository
 @RequiredArgsConstructor
+@ConditionalOnProperty(name = "jpa-dao-enabled", havingValue = "false", matchIfMissing = false)
 public class AuthorJdbcDao implements AuthorDao{
 
     private final NamedParameterJdbcOperations jdbc;
