@@ -38,7 +38,7 @@ public class AuthorCommands {
         return result;
     }
 
-    @ShellMethod(value = "Adding author command", key = {"ad", "author-del"})
+    @ShellMethod(value = "Deleting author command", key = {"ad", "author-del"})
     public String deleteAuthor(@ShellOption(value = {"id"}) String authorId) {
 
         int recCount = authorService.deleteAuthorById(authorId);
