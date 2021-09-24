@@ -7,7 +7,7 @@ import java.util.regex.Pattern;
 @Service
 public class EvaluatingDataServiceImpl implements EvaluatingDataService{
 
-    private final static Pattern patternPositiveInt = Pattern.compile("\\d+");
+    private final static Pattern PATTERN_POSITIVE_INT = Pattern.compile("\\d+");
 
 
     @Override
@@ -15,7 +15,7 @@ public class EvaluatingDataServiceImpl implements EvaluatingDataService{
         if (text == null) {
             return false;
         }
-        return patternPositiveInt.matcher(text).matches();
+        return PATTERN_POSITIVE_INT.matcher(text).matches();
     }
 
     @Override
