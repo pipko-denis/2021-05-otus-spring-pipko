@@ -15,8 +15,10 @@ public class GenreEditorServiceImpl implements GenreEditorService {
 
     @Override
     public Genre getGenreById(String id)  {
-        if ( ! evaluatingService.isThereAreOnlyDigitsInText(id) ) throw new RuntimeException("Genre id is incorrect! It should contains only digits!");
-        final Long genreId = Long.valueOf(id);
+        if ( ! evaluatingService.isThereAreOnlyDigitsInText(id) )
+            throw new RuntimeException("Genre id is incorrect! It should contains only digits!");
+
+        final long genreId = Long.parseLong(id);
         try {
             return genreDao.getById(genreId);
         } catch (IncorrectResultSizeDataAccessException ex){

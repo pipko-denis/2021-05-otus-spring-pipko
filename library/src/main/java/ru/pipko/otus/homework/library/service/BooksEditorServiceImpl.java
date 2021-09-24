@@ -26,7 +26,8 @@ public class BooksEditorServiceImpl implements BooksEditorService {
     @Override
     public Book addBook(String bookName, String authorId, String genreId)  {
 
-        if ( ! evaluatingService.isTextNotNullAndNotBlank(bookName) ) throw new RuntimeException(BOOK_NAME_IS_INCORRECT_IT_SHOULD_NOT_BE_EMPTY);
+        if ( ! evaluatingService.isTextNotNullAndNotBlank(bookName) )
+            throw new RuntimeException(BOOK_NAME_IS_INCORRECT_IT_SHOULD_NOT_BE_EMPTY);
 
         final Author author = authorService.getAuthorById(authorId);
 
@@ -42,8 +43,10 @@ public class BooksEditorServiceImpl implements BooksEditorService {
 
     @Override
     public Book editBook(String id, String bookName, String authorId, String genreId) {
-        if ( ! evaluatingService.isThereAreOnlyDigitsInText(id) ) throw new RuntimeException(BOOK_ID_IS_INCORRECT_IT_SHOULD_CONTAINS_ONLY_DIGITS);
-        if ( ! evaluatingService.isTextNotNullAndNotBlank(bookName) ) throw new RuntimeException(BOOK_NAME_IS_INCORRECT_IT_SHOULD_NOT_BE_EMPTY);
+        if ( ! evaluatingService.isThereAreOnlyDigitsInText(id) )
+            throw new RuntimeException(BOOK_ID_IS_INCORRECT_IT_SHOULD_CONTAINS_ONLY_DIGITS);
+        if ( ! evaluatingService.isTextNotNullAndNotBlank(bookName) )
+            throw new RuntimeException(BOOK_NAME_IS_INCORRECT_IT_SHOULD_NOT_BE_EMPTY);
 
         final Book book = getBookById(id);
 
@@ -56,7 +59,8 @@ public class BooksEditorServiceImpl implements BooksEditorService {
         book.setGenre(genre);
 
         final int updatedRecCount = bookDao.update(book);
-        if (updatedRecCount == 0) throw new RuntimeException(THERE_ARE_NO_BOOKS_WITH_ID+id+". Zero records updated");
+        if (updatedRecCount == 0)
+            throw new RuntimeException(THERE_ARE_NO_BOOKS_WITH_ID+id+". Zero records updated");
 
         return book;
 
@@ -64,8 +68,11 @@ public class BooksEditorServiceImpl implements BooksEditorService {
 
     @Override
     public Book getBookById(String id) {
-        if ( ! evaluatingService.isThereAreOnlyDigitsInText(id) ) throw new RuntimeException(BOOK_ID_IS_INCORRECT_IT_SHOULD_CONTAINS_ONLY_DIGITS);
-        final Long bookId = Long.valueOf(id);
+        if ( ! evaluatingService.isThereAreOnlyDigitsInText(id) )
+            throw new RuntimeException(BOOK_ID_IS_INCORRECT_IT_SHOULD_CONTAINS_ONLY_DIGITS);
+
+        final long bookId = Long.parseLong(id);
+
         try {
             return bookDao.getById(bookId);
         } catch (IncorrectResultSizeDataAccessException ex){
@@ -75,10 +82,15 @@ public class BooksEditorServiceImpl implements BooksEditorService {
 
     @Override
     public int deleteBookById(String id) {
-        if ( ! evaluatingService.isThereAreOnlyDigitsInText(id) ) throw new RuntimeException(BOOK_ID_IS_INCORRECT_IT_SHOULD_CONTAINS_ONLY_DIGITS);
-        final Long bookId = Long.valueOf(id);
+        if ( ! evaluatingService.isThereAreOnlyDigitsInText(id) )
+            throw new RuntimeException(BOOK_ID_IS_INCORRECT_IT_SHOULD_CONTAINS_ONLY_DIGITS);
+
+        final long bookId = Long.parseLong(id);
         final int deletedRecCount = bookDao.delete(bookId);
-        if (deletedRecCount == 0) throw new RuntimeException(THERE_ARE_NO_BOOKS_WITH_ID+id);
+
+        if (deletedRecCount == 0)
+            throw new RuntimeException(THERE_ARE_NO_BOOKS_WITH_ID+id);
+
         return deletedRecCount;
     }
 
