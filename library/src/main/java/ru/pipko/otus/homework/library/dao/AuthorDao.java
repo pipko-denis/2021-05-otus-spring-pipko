@@ -12,7 +12,7 @@ public interface AuthorDao {
 
     List<Author> getByName(String name);
 
-    int insert(Author author);
+    Author insert(Author author);
 
     int delete(long id);
 

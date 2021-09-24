@@ -7,6 +7,7 @@ import ru.pipko.otus.homework.library.domain.Author;
 
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
+import javax.persistence.Query;
 import javax.persistence.TypedQuery;
 import java.util.List;
 
@@ -32,24 +33,32 @@ public class AuthorJpaDao implements AuthorDao{
     @Transactional
     @Override
     public Author getById(long id) {
-        return null;
+        TypedQuery<Author> query = entityManager.createQuery("SELECT e FROM Author e Where id = :id",Author.class);
+        query.setParameter("id",id);
+        return query.getSingleResult();
     }
 
     @Transactional
     @Override
     public List<Author> getByName(String name) {
+
         return null;
     }
 
     @Transactional
     @Override
-    public int insert(Author author) {
-        return 0;
+    public Author insert(Author author) {
+        if (author.getId() == null){
+            entityManager.persist(author);
+        }
+        return author;
     }
 
     @Transactional
     @Override
     public int delete(long id) {
-        return 0;
+        Query query = entityManager.createQuery("DELETE FROM Author WHERE id = :id");
+        query.setParameter("id",id);
+        return query.executeUpdate();
     }
 }

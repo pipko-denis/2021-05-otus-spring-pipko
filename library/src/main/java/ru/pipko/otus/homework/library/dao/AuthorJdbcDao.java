@@ -17,7 +17,7 @@ import java.util.Map;
 
 @Repository
 @RequiredArgsConstructor
-@ConditionalOnProperty(name = "jpa-dao-enabled", havingValue = "false", matchIfMissing = false)
+@ConditionalOnProperty(name = "jpa-dao-enabled", havingValue = "false")
 public class AuthorJdbcDao implements AuthorDao{
 
     private final NamedParameterJdbcOperations jdbc;
@@ -42,13 +42,13 @@ public class AuthorJdbcDao implements AuthorDao{
     }
 
     @Override
-    public int insert(Author book) {
+    public Author insert(Author author) {
         KeyHolder kh = new GeneratedKeyHolder();
         MapSqlParameterSource params = new MapSqlParameterSource();
-        params.addValue("name",book.getName());
+        params.addValue("name",author.getName());
         int recCount = jdbc.update("INSERT INTO AUTHORS (NAME) VALUES(:name);",params,kh);
-        book.setId(kh.getKey().longValue());
-        return recCount;
+        author.setId(kh.getKey().longValue());
+        return author;
     }
 
     @Override

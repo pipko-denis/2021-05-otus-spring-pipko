@@ -19,8 +19,10 @@ public class AuthorEditorServiceImpl implements AuthorEditorService {
 
     @Override
     public Author getAuthorById(String id)  {
-        if ( ! evaluatingService.isThereAreOnlyDigitsInText(id) ) throw new RuntimeException("Author id is incorrect! It should contains only digits!");
-        final Long authorId = Long.valueOf(id);
+        if ( ! evaluatingService.isThereAreOnlyDigitsInText(id) )
+            throw new RuntimeException("Author id is incorrect! It should contains only digits!");
+
+        final long authorId = Long.parseLong(id);
         try {
             return authorDao.getById(authorId);
         } catch (IncorrectResultSizeDataAccessException ex){
@@ -30,20 +32,27 @@ public class AuthorEditorServiceImpl implements AuthorEditorService {
 
     @Override
     public int deleteAuthorById(String id) {
-        if ( ! evaluatingService.isThereAreOnlyDigitsInText(id) ) throw new RuntimeException("Author id is incorrect! It should contains only digits!");
-        final Long authorId = Long.valueOf(id);
+        if ( ! evaluatingService.isThereAreOnlyDigitsInText(id) )
+            throw new RuntimeException("Author id is incorrect! It should contains only digits!");
+
+        final long authorId = Long.parseLong(id);
         Integer authorsBookCount = bookDao.getBooksCountByAuthorId(authorId);
-        if ( authorsBookCount > 0 ) throw new RuntimeException("You can't delete author with id = "+id+"! " +
+
+        if ( authorsBookCount > 0 )
+            throw new RuntimeException("You can't delete author with id = "+id+"! " +
                 "It's used in "+authorsBookCount+" books! " +
                 "Try to delete books or change there's authors first");
 
         final int deletedRecCount = authorDao.delete(authorId);
-        if (deletedRecCount == 0) throw new RuntimeException("There are no authors with id="+id);
+
+        if (deletedRecCount == 0)
+            throw new RuntimeException("There are no authors with id="+id);
+
         return deletedRecCount;
     }
 
     @Override
-    public int insert(Author author) {
+    public Author insert(Author author) {
         return authorDao.insert(author);
     }
 
