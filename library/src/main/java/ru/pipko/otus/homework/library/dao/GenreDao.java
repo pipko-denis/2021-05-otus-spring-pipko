@@ -10,6 +10,6 @@ public interface GenreDao {
 
     Genre getById(long id);
 
-    int insert(Genre book);
+    Genre insert(Genre book);
 
 }

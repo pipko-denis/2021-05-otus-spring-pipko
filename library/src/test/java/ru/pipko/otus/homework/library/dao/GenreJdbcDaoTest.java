@@ -17,7 +17,6 @@ import static org.assertj.core.api.Assertions.assertThat;
 @DisplayName("GenreJdbcDao должен")
 class GenreJdbcDaoTest {
 
-    private static final int EXPECTED_ADDED_ADDED_COUNT = 1;
     @Autowired
     private GenreJdbcDao genreDao;
 
@@ -49,10 +48,9 @@ class GenreJdbcDaoTest {
     @Test
     @DisplayName("добавлять жанр и устанавливать идентификатор переданому в DAO объекту")
     void shouldInsertGenreAndSetId() {
-        final Genre genre = new Genre("Added Genre name");
-        final int addedRecordCount = genreDao.insert(genre);
+        final Genre genre = genreDao.insert(new Genre("Added Genre name"));
 
-        assertThat(addedRecordCount).isEqualTo(EXPECTED_ADDED_ADDED_COUNT);
+        assertThat(genre.getId()).isNotNull().isPositive();
 
         assertThat(genre.getId()).isNotNull().isPositive();
 
