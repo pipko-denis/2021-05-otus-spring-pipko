@@ -20,9 +20,9 @@ public class GenreCommands {
     public String addGenre(@ShellOption(value = {"name", "n"}) String name) {
 
         final Genre genre = new Genre(name);
-        int recCount = genreDao.insert(genre);
+        genreDao.insert(genre);
 
-        return recCount+" records added into Genre table, new genre id is " + genre.getId() + ".";
+        return "Genre added, new genre id is " + genre.getId() + ".";
     }
 
     @ShellMethod(value = "Listing all genres command", key = {"genre-list", "gl"})
