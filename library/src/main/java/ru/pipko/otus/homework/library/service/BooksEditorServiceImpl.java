@@ -3,12 +3,12 @@ package ru.pipko.otus.homework.library.service;
 import lombok.RequiredArgsConstructor;
 import org.springframework.dao.IncorrectResultSizeDataAccessException;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import ru.pipko.otus.homework.library.dao.BookDao;
 import ru.pipko.otus.homework.library.domain.Author;
 import ru.pipko.otus.homework.library.domain.Book;
 import ru.pipko.otus.homework.library.domain.Genre;
 
-import java.util.Arrays;
 import java.util.List;
 
 @Service
@@ -26,26 +26,26 @@ public class BooksEditorServiceImpl implements BooksEditorService {
     private final EvaluatingDataService evaluatingService;
 
 
+    @Transactional
     @Override
-    public Book addBook(String bookName, String authorId, String genreId)  {
+    public Book addBook(String bookName, String authorsInline, String genresInline)  {
 
         if ( ! evaluatingService.isTextNotNullAndNotBlank(bookName) )
             throw new RuntimeException(BOOK_NAME_IS_INCORRECT_IT_SHOULD_NOT_BE_EMPTY);
 
-        final Author author = authorService.getAuthorById(authorId);
+        String[] authorsIds = authorsInline.replaceAll(" ","").split(",");
+        final List<Author> authors = authorService.getAuthorsById(authorsIds);
 
-        final Genre genre = genreEditorService.getGenreById(genreId);
+        final Genre genre = genreEditorService.getGenreById(genresInline);
 
-        final Book book = new Book(bookName, List.of(author), List.of(genre));
+        final Book book = new Book(bookName, authors, List.of(genre));
 
-        bookDao.insert(book);
-
-        return book;
+        return bookDao.insert(book);
     }
 
 
     @Override
-    public Book editBook(String id, String bookName, String authorId, String genreId) {
+    public Book editBook(String id, String bookName, String authorsInline, String genreId) {
         if ( ! evaluatingService.isThereAreOnlyDigitsInText(id) )
             throw new RuntimeException(BOOK_ID_IS_INCORRECT_IT_SHOULD_CONTAINS_ONLY_DIGITS);
         if ( ! evaluatingService.isTextNotNullAndNotBlank(bookName) )
@@ -53,19 +53,16 @@ public class BooksEditorServiceImpl implements BooksEditorService {
 
         final Book book = getBookById(id);
 
-        final Author author = authorService.getAuthorById(authorId);
+        String[] authorsIds = authorsInline.replaceAll(" ","").split(",");
+        final List<Author> authors = authorService.getAuthorsById(authorsIds);
 
         final Genre genre = genreEditorService.getGenreById(genreId);
 
         book.setName(bookName);
-        book.setAuthors(List.of(author));
+        book.setAuthors(authors);
         book.setGenres(List.of(genre));
 
-        final int updatedRecCount = bookDao.update(book);
-        if (updatedRecCount == 0)
-            throw new RuntimeException(THERE_ARE_NO_BOOKS_WITH_ID+id+". Zero records updated");
-
-        return book;
+        return bookDao.update(book);
 
     }
 

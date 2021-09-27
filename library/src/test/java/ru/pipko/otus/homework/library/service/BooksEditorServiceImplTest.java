@@ -16,7 +16,6 @@ import ru.pipko.otus.homework.library.domain.Author;
 import ru.pipko.otus.homework.library.domain.Book;
 import ru.pipko.otus.homework.library.domain.Genre;
 
-import java.util.Arrays;
 import java.util.List;
 
 import static org.assertj.core.api.Assertions.*;
@@ -54,14 +53,14 @@ class BooksEditorServiceImplTest {
     }
 
     @Test
-    @Description("корретно добавялть книгу")
+    @Description("корретно добавлять книгу")
     void addBook() {
         final Author expectedAuthor = new Author(1L, "Author1");
         final Genre expectedGenre = new Genre(1L, "Genre1");
 
         Mockito.when(authorEditorService.getAuthorById("1")).thenReturn(expectedAuthor);
         Mockito.when(genreEditorService.getGenreById("1")).thenReturn(expectedGenre);
-        Mockito.when(bookJdbcDao.insert(Mockito.any())).thenReturn(1);
+        //Mockito.when(bookJdbcDao.insert(Mockito.any())).thenReturn(1L);
         Mockito.when(evaluatingDataService.isTextNotNullAndNotBlank(Mockito.any())).thenReturn(true);
 
         final Book actualBook = booksEditorService.addBook(EXPECTED_BOOK_NAME, "1", "1");
@@ -85,7 +84,7 @@ class BooksEditorServiceImplTest {
         Mockito.when(bookJdbcDao.getById(1)).thenReturn(bookForUpdateCheck);
         Mockito.when(authorEditorService.getAuthorById("2")).thenReturn(author2);
         Mockito.when(genreEditorService.getGenreById("2")).thenReturn(genre2);
-        Mockito.when(bookJdbcDao.update(bookForUpdateCheck)).thenReturn(1);
+        //Mockito.when(bookJdbcDao.update(bookForUpdateCheck)).thenReturn(1);
         Mockito.when(evaluatingDataService.isTextNotNullAndNotBlank(Mockito.any())).thenReturn(true);
         Mockito.when(evaluatingDataService.isThereAreOnlyDigitsInText(Mockito.any())).thenReturn(true);
 

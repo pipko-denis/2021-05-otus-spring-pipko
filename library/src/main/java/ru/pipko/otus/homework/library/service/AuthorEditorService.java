@@ -6,7 +6,9 @@ import java.util.List;
 
 public interface AuthorEditorService {
 
-    Author getAuthorById(String description);
+    Author getAuthorById(String id);
+
+    List<Author> getAuthorsById(String[] ids);
 
     int deleteAuthorById(String id);
 

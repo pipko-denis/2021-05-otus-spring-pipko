@@ -13,12 +13,12 @@ import java.util.List;
 import static org.assertj.core.api.Assertions.assertThat;
 
 @JdbcTest
-@Import(AuthorJdbcDao.class)
+@Import(AuthorJpaDao.class)
 @DisplayName("AuthorJdbcDao должен")
 class AuthorJdbcDaoTest {
 
     @Autowired
-    private AuthorJdbcDao authorDao;
+    private AuthorDao authorDao;
 
     @Test
     @DisplayName("выдавать список авторов правильной длинны, который должен включать одну определённого автора")

@@ -7,7 +7,9 @@ import ru.pipko.otus.homework.library.dao.AuthorDao;
 import ru.pipko.otus.homework.library.dao.BookDao;
 import ru.pipko.otus.homework.library.domain.Author;
 
+import java.util.Arrays;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -30,13 +32,31 @@ public class AuthorEditorServiceImpl implements AuthorEditorService {
         }
     }
 
+    private void checkArrayOnDigitsThrowException(String[] ids){
+        final List<String> idsNotDigits = Arrays.stream(ids).filter(id -> !evaluatingService.isThereAreOnlyDigitsInText(id)).collect(Collectors.toList());
+
+        if (! idsNotDigits.isEmpty()){
+            throw new RuntimeException("Author id is incorrect! It should contains only digits! Wrong ids: "+String.join(",",idsNotDigits));
+        }
+    }
+
+    @Override
+    public List<Author> getAuthorsById(String[] ids)  {
+
+        checkArrayOnDigitsThrowException(ids);
+
+        final List<Long> idsLong = Arrays.stream(ids).map(id -> Long.valueOf(id)).collect(Collectors.toList());
+
+        return authorDao.getById(idsLong);
+    }
+
     @Override
     public int deleteAuthorById(String id) {
         if ( ! evaluatingService.isThereAreOnlyDigitsInText(id) )
             throw new RuntimeException("Author id is incorrect! It should contains only digits!");
 
         final long authorId = Long.parseLong(id);
-        Integer authorsBookCount = bookDao.getBooksCountByAuthorId(authorId);
+        long authorsBookCount = bookDao.getBooksCountByAuthorId(authorId);
 
         if ( authorsBookCount > 0 )
             throw new RuntimeException("You can't delete author with id = "+id+"! " +

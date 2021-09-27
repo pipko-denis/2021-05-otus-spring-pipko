@@ -99,9 +99,9 @@ class BookJdbcDaoTest {
 
 
         final Book book = new Book("Added book name", bookWithAuthorAndGenre.getAuthors(), bookWithAuthorAndGenre.getGenres());
-        final int addedRecordCount = bookDao.insert(book);
+        final Book addedBook = bookDao.insert(book);
 
-        assertThat(addedRecordCount).isEqualTo(EXPECTED_ADDED_BOOKS_COUNT);
+        assertThat(addedBook).isEqualTo(EXPECTED_ADDED_BOOKS_COUNT);
 
         assertThat(book.getId()).isNotNull().isPositive();
 
@@ -145,9 +145,9 @@ class BookJdbcDaoTest {
 
         bookForEditing.setGenres(List.of(newGenre));
 
-        final int updatedRecordCount = bookDao.update(bookForEditing);
+        final Book updatedBook = bookDao.update(bookForEditing);
 
-        assertThat(updatedRecordCount).isEqualTo(EXPECTED_UPDATED_BOOKS_COUNT);
+        assertThat(updatedBook).isEqualTo(EXPECTED_UPDATED_BOOKS_COUNT);
 
         final Book bookToCompare = bookDao.getById(bookForEditing.getId());
 

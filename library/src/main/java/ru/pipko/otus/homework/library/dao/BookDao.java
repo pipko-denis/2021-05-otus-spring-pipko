@@ -12,16 +12,16 @@ public interface BookDao {
 
     /**
      * After execution of the insertion, method "getId()" will return id of the inserted book
-     * @param book
+     * @param book - book entity
      * @return - inserted record count
      */
-    int insert(Book book);
+    Book insert(Book book);
 
     /**
-     * @param book
+     * @param book - book entity
      * @return updated record count
      */
-    int update(Book book);
+    Book update(Book book);
 
     /**
      * @param id key value from the database
@@ -29,5 +29,5 @@ public interface BookDao {
      */
     int delete(long id);
 
-    Integer getBooksCountByAuthorId(long authorId);
+    long getBooksCountByAuthorId(long authorId);
 }

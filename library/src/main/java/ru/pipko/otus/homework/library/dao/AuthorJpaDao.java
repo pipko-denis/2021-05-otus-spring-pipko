@@ -38,11 +38,19 @@ public class AuthorJpaDao implements AuthorDao{
         return query.getSingleResult();
     }
 
+    @Override
+    public List<Author> getById(List<Long> ids) {
+        TypedQuery<Author> query = entityManager.createQuery("SELECT e FROM Author e Where id IN :id",Author.class);
+        query.setParameter("id",ids);
+        return query.getResultList();
+    }
+
     @Transactional
     @Override
     public List<Author> getByName(String name) {
-
-        return null;
+        TypedQuery<Author> query = entityManager.createQuery("SELECT e FROM Author e Where e.name like '%:name%' order by e.name",Author.class);
+        query.setParameter("name",name);
+        return query.getResultList();
     }
 
     @Transactional

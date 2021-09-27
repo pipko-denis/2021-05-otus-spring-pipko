@@ -13,12 +13,12 @@ import java.util.List;
 import static org.assertj.core.api.Assertions.assertThat;
 
 @JdbcTest
-@Import(GenreJdbcDao.class)
+@Import(GenreJpaDao.class)
 @DisplayName("GenreJdbcDao должен")
 class GenreJdbcDaoTest {
 
     @Autowired
-    private GenreJdbcDao genreDao;
+    private GenreDao genreDao;
 
     @Test
     @DisplayName("выдавать список жанров правильной длинны, который должен включать одну определённую жанр")
