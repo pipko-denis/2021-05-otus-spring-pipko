@@ -1,0 +1,32 @@
+databaseChangeLog:
+  - changeSet:
+      id: 2021-09-25-0001-books_drop_column_genre_id
+      author: pipko
+      context: dev or test
+      changes:
+        - dropColumn:
+            tableName: books
+            columns:
+              - column:
+                  name: genre_id
+  - changeSet:
+      id: 2021-09-25-0002-books_genres
+      author: pipko
+      context: dev or test
+      createTable:
+        tableName: books_genres
+        columns:
+          - column:
+              name: book_id
+              type: bigint
+              constraints:
+                nullable: false
+                foreignKeyName: fk_books_genres_book_id
+                references: books(id)
+          - column:
+              name: genre_id
+              type: bigint
+              constraints:
+                nullable: false
+                foreignKeyName: fk_books_genres_genre_id
+                references: genres(id)

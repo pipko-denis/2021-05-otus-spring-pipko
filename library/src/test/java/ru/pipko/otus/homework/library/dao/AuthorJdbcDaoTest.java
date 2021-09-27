@@ -17,7 +17,6 @@ import static org.assertj.core.api.Assertions.assertThat;
 @DisplayName("AuthorJdbcDao должен")
 class AuthorJdbcDaoTest {
 
-    private static final int EXPECTED_ADDED_ADDED_COUNT = 1;
     @Autowired
     private AuthorJdbcDao authorDao;
 
@@ -50,9 +49,7 @@ class AuthorJdbcDaoTest {
     @DisplayName("добавлять автора и устанавливать идентификатор переданому в DAO объекту")
     void shouldInsertAuthorAndSetId() {
         final Author author = new Author("Added Author name");
-        final int addedRecordCount = authorDao.insert(author);
-
-        assertThat(addedRecordCount).isEqualTo(EXPECTED_ADDED_ADDED_COUNT);
+        final Author addedAuthor = authorDao.insert(author);
 
         assertThat(author.getId()).isNotNull().isPositive();
 

@@ -8,6 +8,9 @@ import ru.pipko.otus.homework.library.domain.Author;
 import ru.pipko.otus.homework.library.domain.Book;
 import ru.pipko.otus.homework.library.domain.Genre;
 
+import java.util.Arrays;
+import java.util.List;
+
 @Service
 @RequiredArgsConstructor
 public class BooksEditorServiceImpl implements BooksEditorService {
@@ -33,7 +36,7 @@ public class BooksEditorServiceImpl implements BooksEditorService {
 
         final Genre genre = genreEditorService.getGenreById(genreId);
 
-        final Book book = new Book(bookName, author, genre);
+        final Book book = new Book(bookName, List.of(author), List.of(genre));
 
         bookDao.insert(book);
 
@@ -55,8 +58,8 @@ public class BooksEditorServiceImpl implements BooksEditorService {
         final Genre genre = genreEditorService.getGenreById(genreId);
 
         book.setName(bookName);
-        book.setAuthor(author);
-        book.setGenre(genre);
+        book.setAuthors(List.of(author));
+        book.setGenres(List.of(genre));
 
         final int updatedRecCount = bookDao.update(book);
         if (updatedRecCount == 0)
@@ -77,6 +80,15 @@ public class BooksEditorServiceImpl implements BooksEditorService {
             return bookDao.getById(bookId);
         } catch (IncorrectResultSizeDataAccessException ex){
             throw new RuntimeException(THERE_ARE_NO_BOOKS_WITH_ID +id);
+        }
+    }
+
+    @Override
+    public List<Book> getAllBooks() {
+        try {
+            return bookDao.getAll();
+        } catch (IncorrectResultSizeDataAccessException ex){
+            throw new RuntimeException("Book fetch error");
         }
     }
 

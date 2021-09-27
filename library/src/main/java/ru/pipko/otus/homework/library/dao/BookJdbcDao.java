@@ -1,6 +1,7 @@
 package ru.pipko.otus.homework.library.dao;
 
 import lombok.RequiredArgsConstructor;
+import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcOperations;
@@ -13,11 +14,13 @@ import ru.pipko.otus.homework.library.domain.Genre;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
 
 @Repository
 @RequiredArgsConstructor
+@ConditionalOnProperty(name = "jpa-dao-enabled", havingValue = "false")
 public class BookJdbcDao implements BookDao {
 
     private final NamedParameterJdbcOperations namedJdbc;
@@ -37,7 +40,7 @@ public class BookJdbcDao implements BookDao {
 
     @Override
     public Book getById(long id) {
-        Map<String, Object> params = Map.of("id", id);
+        final Map<String, Object> params = Map.of("id", id);
         Book book = namedJdbc.queryForObject("SELECT " +
                 "B.id, B.name as BOOK_name, " +
                 "A.id as author_id, A.name as author_name, " +
@@ -52,11 +55,11 @@ public class BookJdbcDao implements BookDao {
 
     @Override
     public int insert(Book book) {
-        KeyHolder kh = new GeneratedKeyHolder();
-        MapSqlParameterSource params = new MapSqlParameterSource();
+        final KeyHolder kh = new GeneratedKeyHolder();
+        final MapSqlParameterSource params = new MapSqlParameterSource();
         params.addValue("name", book.getName());
-        params.addValue("genre_id", book.getGenre().getId());
-        params.addValue("author_id", book.getAuthor().getId());
+        params.addValue("genre_id", book.getGenres().get(0).getId());
+        params.addValue("author_id", book.getAuthors().get(0).getId());
 
         int result = namedJdbc.update("INSERT INTO BOOKS (name,genre_id,author_id) values (:name, :genre_id, :author_id) ", params, kh);
         book.setId(kh.getKey().longValue());
@@ -72,14 +75,14 @@ public class BookJdbcDao implements BookDao {
                 " author_id = :author_id " +
                 " Where id = :id  ", Map.of(
                 "name", book.getName(),
-                "genre_id", book.getGenre().getId(),
-                "author_id", book.getAuthor().getId(),
+                "genre_id", book.getGenres().get(0).getId(),
+                "author_id", book.getAuthors().get(0).getId(),
                 "id", book.getId()));
     }
 
     @Override
     public int delete(long id) {
-        int recordCount = namedJdbc.update("DELETE FROM BOOKS WHERE id = :id", Map.of("id", id));
+        final int recordCount = namedJdbc.update("DELETE FROM BOOKS WHERE id = :id", Map.of("id", id));
         return recordCount;
     }
 
@@ -88,8 +91,8 @@ public class BookJdbcDao implements BookDao {
         @Override
         public Book mapRow(ResultSet resultSet, int i) throws SQLException {
             return new Book(resultSet.getLong("id"), resultSet.getString("name")
-                    , new Author(resultSet.getLong("author_id"), resultSet.getString("author_name"))
-                    , new Genre(resultSet.getLong("genre_id"), resultSet.getString("genre_name"))
+                    , List.of(new Author(resultSet.getLong("author_id"), resultSet.getString("author_name")))
+                    , List.of(new Genre(resultSet.getLong("genre_id"), resultSet.getString("genre_name")))
             );
         }
     }
@@ -97,9 +100,9 @@ public class BookJdbcDao implements BookDao {
 
     @Override
     public Integer getBooksCountByAuthorId(long authorId) {
-        MapSqlParameterSource params = new MapSqlParameterSource();
+        final MapSqlParameterSource params = new MapSqlParameterSource();
         params.addValue("authorId", authorId);
-        Integer count = namedJdbc.queryForObject("SELECT COUNT (id) FROM BOOKS as B Where B.author_id = :authorId; ", params, Integer.class);
+        final Integer count = namedJdbc.queryForObject("SELECT COUNT (id) FROM BOOKS as B Where B.author_id = :authorId; ", params, Integer.class);
         return count;
     }
 

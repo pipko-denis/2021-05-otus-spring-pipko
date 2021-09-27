@@ -19,11 +19,9 @@ public class AuthorCommands {
 
     @ShellMethod(value = "Adding author command", key = {"aa", "author-add"})
     public String addAuthor(@ShellOption(value = {"name", "n"}) String name) {
+        final Author author = authorService.insert(new Author(name));
 
-        final Author author = new Author(name);
-        int recCount = authorService.insert(author);
-
-        return recCount+" records added into Author table, new author id is " + author.getId() + ".";
+        return "Author added into to database, new author id is " + author.getId() + ".";
     }
 
     @ShellMethod(value = "Listing all authors command", key = {"authors-list", "al"})

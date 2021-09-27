@@ -1,6 +1,7 @@
 package ru.pipko.otus.homework.library.dao;
 
 import lombok.RequiredArgsConstructor;
+import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcOperations;
@@ -16,6 +17,7 @@ import java.util.Map;
 
 @Repository
 @RequiredArgsConstructor
+@ConditionalOnProperty(name = "jpa-dao-enabled", havingValue = "false")
 public class GenreJdbcDao implements GenreDao {
 
     private final NamedParameterJdbcOperations namedJdbc;
@@ -27,15 +29,15 @@ public class GenreJdbcDao implements GenreDao {
 
     @Override
     public Genre getById(long id) {
-        Map<String, Object> params = Map.of("id", id);
+        final Map<String, Object> params = Map.of("id", id);
         Genre result = namedJdbc.queryForObject("SELECT ID, NAME FROM GENRES WHERE id = :id ORDER BY NAME", params, new GenreRowMapper());
         return result;
     }
 
     @Override
     public Genre insert(Genre genre) {
-        KeyHolder kh = new GeneratedKeyHolder();
-        MapSqlParameterSource params = new MapSqlParameterSource();
+        final KeyHolder kh = new GeneratedKeyHolder();
+        final MapSqlParameterSource params = new MapSqlParameterSource();
         params.addValue("name", genre.getName());
 
         namedJdbc.update("INSERT INTO GENRES (name) values (:name) ", params, kh);

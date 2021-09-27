@@ -4,7 +4,9 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.shell.standard.ShellComponent;
 import org.springframework.shell.standard.ShellMethod;
 import org.springframework.shell.standard.ShellOption;
+import org.springframework.transaction.annotation.Transactional;
 import ru.pipko.otus.homework.library.dao.BookDao;
+import ru.pipko.otus.homework.library.domain.Author;
 import ru.pipko.otus.homework.library.domain.Book;
 import ru.pipko.otus.homework.library.service.BooksEditorService;
 
@@ -26,7 +28,7 @@ public class BookCommands {
 
         Book book = booksEditorService.addBook(bookName,authorId,genreId);
 
-        return "Book added, id: " + book.getId() + ". Genre id: " + book.getGenre().getId() + ". Author id: "+book.getAuthor().getId();
+        return "Book added, id: " + book.getId() + ". Genre id: " + book.getGenres().get(0).getId() + ". Author id: "+book.getAuthors().get(0).getId();
     }
 
     @ShellMethod(value = "Adding book with all requisites", key = {"bd", "book-del"})
@@ -48,15 +50,16 @@ public class BookCommands {
         return  "Book with id = "+book.getId()+" modified."  ;
     }
 
+    @Transactional
     @ShellMethod(value = "Listing all books", key = {"books-list", "bl"})
     public String getBooksList() {
 
-        final List<Book> bookList = bookDao.getAll();
+        final List<Book> bookList = booksEditorService.getAllBooks();
 
         final String result = "Books list: \n" + bookList.stream().map(book ->
                 "Book id="+book.getId()+": \"" + book.getName() + "\", " +
-                "author: " + book.getAuthor().getName() +", "+
-                "genre: " + book.getGenre().getName() + " ")
+                "authors: " + book.getAuthors().stream().map(Author::getName).collect(Collectors.joining(",")) +", "+
+                "genre: " + book.getGenres().get(0).getName() + " ")
                 .collect(Collectors.joining("\n"));
 
         return result;

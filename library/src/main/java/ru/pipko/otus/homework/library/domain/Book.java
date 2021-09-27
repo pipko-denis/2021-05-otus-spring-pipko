@@ -3,6 +3,7 @@ package ru.pipko.otus.homework.library.domain;
 import lombok.*;
 
 import javax.persistence.*;
+import java.util.List;
 
 @Entity
 @Table(name = "books")
@@ -20,17 +21,17 @@ public class Book {
     @Column(name = "name")
     private String name;
 
-    @OneToOne
-    @JoinColumn(name = "author_id")
-    private Author author;
+    @ManyToMany(targetEntity = Author.class, cascade = {CascadeType.ALL }, fetch = FetchType.LAZY)
+    @JoinTable(name = "books_authors", joinColumns = {@JoinColumn(name = "book_id")}, inverseJoinColumns = {@JoinColumn(name = "author_id")})
+    private List<Author> authors;
 
-    @OneToOne
-    @JoinColumn(name = "genre_id")
-    private Genre genre;
+    @ManyToMany(targetEntity = Genre.class, cascade = {CascadeType.ALL }, fetch = FetchType.LAZY)
+    @JoinTable(name = "books_genres", joinColumns = { @JoinColumn(name = "book_id")}, inverseJoinColumns = {@JoinColumn(name = "genre_id")})
+    private List<Genre> genres;
 
-    public Book(String name, Author author, Genre genre) {
+    public Book(String name, List<Author> authors, List<Genre> genres) {
         this.name = name;
-        this.author = author;
-        this.genre = genre;
+        this.authors = authors;
+        this.genres = genres;
     }
 }
