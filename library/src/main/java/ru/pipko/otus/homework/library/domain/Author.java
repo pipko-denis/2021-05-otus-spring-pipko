@@ -15,10 +15,10 @@ public class Author {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "id",nullable = false,unique = true)
+    @Column(name = "id")
     private Long id;
 
-    @Column(name = "name",unique = true)
+    @Column(name = "name", unique = true, nullable = false)
     private String name;
 
     public Author(String name) {

@@ -3,6 +3,7 @@ package ru.pipko.otus.homework.library.service;
 import lombok.RequiredArgsConstructor;
 import org.springframework.dao.IncorrectResultSizeDataAccessException;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import ru.pipko.otus.homework.library.dao.AuthorDao;
 import ru.pipko.otus.homework.library.dao.BookDao;
 import ru.pipko.otus.homework.library.domain.Author;
@@ -19,6 +20,7 @@ public class AuthorEditorServiceImpl implements AuthorEditorService {
     private final AuthorDao authorDao;
     private final BookDao bookDao;
 
+    @Transactional
     @Override
     public Author getAuthorById(String id)  {
         if ( ! evaluatingService.isThereAreOnlyDigitsInText(id) )
@@ -32,24 +34,18 @@ public class AuthorEditorServiceImpl implements AuthorEditorService {
         }
     }
 
-    private void checkArrayOnDigitsThrowException(String[] ids){
-        final List<String> idsNotDigits = Arrays.stream(ids).filter(id -> !evaluatingService.isThereAreOnlyDigitsInText(id)).collect(Collectors.toList());
-
-        if (! idsNotDigits.isEmpty()){
-            throw new RuntimeException("Author id is incorrect! It should contains only digits! Wrong ids: "+String.join(",",idsNotDigits));
-        }
-    }
-
+    @Transactional
     @Override
     public List<Author> getAuthorsById(String[] ids)  {
 
-        checkArrayOnDigitsThrowException(ids);
+        evaluatingService.checkArrayOnDigitsThrowException("Author", ids);
 
         final List<Long> idsLong = Arrays.stream(ids).map(id -> Long.valueOf(id)).collect(Collectors.toList());
 
         return authorDao.getById(idsLong);
     }
 
+    @Transactional
     @Override
     public int deleteAuthorById(String id) {
         if ( ! evaluatingService.isThereAreOnlyDigitsInText(id) )
@@ -71,11 +67,13 @@ public class AuthorEditorServiceImpl implements AuthorEditorService {
         return deletedRecCount;
     }
 
+    @Transactional
     @Override
     public Author insert(Author author) {
         return authorDao.insert(author);
     }
 
+    @Transactional
     @Override
     public List<Author> getAll() {
         return authorDao.getAll();
