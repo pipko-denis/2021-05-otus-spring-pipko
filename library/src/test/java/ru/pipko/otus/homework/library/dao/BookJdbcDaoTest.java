@@ -14,10 +14,7 @@ import ru.pipko.otus.homework.library.domain.Author;
 import ru.pipko.otus.homework.library.domain.Book;
 import ru.pipko.otus.homework.library.domain.Genre;
 
-import java.util.Arrays;
-import java.util.Comparator;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
 import java.util.function.Predicate;
 import java.util.stream.Collectors;
 
@@ -50,7 +47,10 @@ class BookJdbcDaoTest {
 
         assertThat(listBooks).hasSizeGreaterThan(0);
 
-        final Book expectedBook = new Book(1L, "Book1", List.of(new Author(1L, "Author1")), List.of(new Genre(1L, "Genre1")));
+        final Book expectedBook = new Book(1L, "Book1"
+                , List.of(new Author(1L, "Author1"))
+                , List.of(new Genre(1L, "Genre1"))
+                , Collections.emptyList());
 
         assertThat(listBooks)
                 .usingRecursiveFieldByFieldElementComparator()
@@ -62,7 +62,10 @@ class BookJdbcDaoTest {
     @DisplayName("возвращать книгу по идентификатору")
     @DirtiesContext(methodMode = DirtiesContext.MethodMode.BEFORE_METHOD)
     void shouldGetBookById() {
-        final Book expectedBook = new Book(1L, "Book1", List.of(new Author(1L, "Author1")), List.of(new Genre(1L, "Genre1")));
+        final Book expectedBook = new Book(1L, "Book1"
+                , List.of(new Author(1L, "Author1"))
+                , List.of(new Genre(1L, "Genre1"))
+                , Collections.emptyList());
 
         final Book bookFromDb = bookDao.getById(1);
 

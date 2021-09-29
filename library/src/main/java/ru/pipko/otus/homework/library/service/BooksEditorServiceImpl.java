@@ -33,17 +33,19 @@ public class BooksEditorServiceImpl implements BooksEditorService {
         if ( ! evaluatingService.isTextNotNullAndNotBlank(bookName) )
             throw new RuntimeException(BOOK_NAME_IS_INCORRECT_IT_SHOULD_NOT_BE_EMPTY);
 
-        String[] authorsIds = authorsInline.replaceAll(" ","").split(",");
+        final String[] authorsIds = authorsInline.replaceAll(" ","").split(",");
         final List<Author> authors = authorService.getAuthorsById(authorsIds);
 
-        final Genre genre = genreEditorService.getGenreById(genresInline);
+        final String[] genreIds = authorsInline.replaceAll(" ","").split(",");
+        final List<Genre> genres = genreEditorService.getGenresById(genreIds);
 
-        final Book book = new Book(bookName, authors, List.of(genre));
+        final Book book = new Book(bookName, authors, genres);
 
         return bookDao.insert(book);
     }
 
 
+    @Transactional
     @Override
     public Book editBook(String id, String bookName, String authorsInline, String genreId) {
         if ( ! evaluatingService.isThereAreOnlyDigitsInText(id) )
@@ -66,6 +68,7 @@ public class BooksEditorServiceImpl implements BooksEditorService {
 
     }
 
+    @Transactional
     @Override
     public Book getBookById(String id) {
         if ( ! evaluatingService.isThereAreOnlyDigitsInText(id) )
@@ -80,6 +83,7 @@ public class BooksEditorServiceImpl implements BooksEditorService {
         }
     }
 
+    @Transactional
     @Override
     public List<Book> getAllBooks() {
         try {
@@ -89,6 +93,7 @@ public class BooksEditorServiceImpl implements BooksEditorService {
         }
     }
 
+    @Transactional
     @Override
     public int deleteBookById(String id) {
         if ( ! evaluatingService.isThereAreOnlyDigitsInText(id) )

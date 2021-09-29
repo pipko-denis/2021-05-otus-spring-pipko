@@ -2,7 +2,6 @@ package ru.pipko.otus.homework.library.dao;
 
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.stereotype.Repository;
-import org.springframework.transaction.annotation.Transactional;
 import ru.pipko.otus.homework.library.domain.Book;
 
 import javax.persistence.EntityManager;
@@ -23,19 +22,16 @@ public class BookJpaDao implements BookDao{
     }
 
 
-    @Transactional
     @Override
     public List<Book> getAll() {
         return em.createQuery("SELECT e FROM Book e ORDER BY e.name",Book.class).getResultList();
     }
 
-    @Transactional
     @Override
     public Book getById(long id) {
         return em.createQuery("SELECT e FROM Book e WHERE e.id = :id ",Book.class).setParameter("id",id).getSingleResult();
     }
 
-    @Transactional
     @Override
     public Book insert(Book book) {
         if (book.getId() == null){
@@ -44,7 +40,6 @@ public class BookJpaDao implements BookDao{
         return  book;
     }
 
-    @Transactional
     @Override
     public Book update(Book book) {
         if (book.getId() == null){
@@ -54,7 +49,6 @@ public class BookJpaDao implements BookDao{
         }
     }
 
-    @Transactional
     @Override
     public int delete(long id) {
         Query query = em.createQuery("DELETE FROM Books WHERE id = :id");
@@ -62,10 +56,11 @@ public class BookJpaDao implements BookDao{
         return query.executeUpdate();
     }
 
-    @Transactional
     @Override
     public long getBooksCountByAuthorId(long authorId) {
-        TypedQuery<Long> query = em.createQuery("SELECT COUNT(e) FROM Books e WHERE e.authors.id = :authorId", Long.class);
+        TypedQuery<Long> query = em.createQuery("SELECT COUNT(e) FROM Book e " +
+                "JOIN e.authors as a " +
+                "WHERE a.id = :authorId", Long.class);
         query.setParameter("authorId",authorId);
         return query.getSingleResult();
     }
