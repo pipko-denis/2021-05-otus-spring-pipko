@@ -6,4 +6,5 @@ public interface EvaluatingDataService {
 
     boolean isTextNotNullAndNotBlank(String text);
 
+    void checkArrayOnDigitsThrowException(String nameOfEntityForMessage, String[] ids);
 }
