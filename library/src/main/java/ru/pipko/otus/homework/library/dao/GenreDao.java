@@ -10,6 +10,8 @@ public interface GenreDao {
 
     Genre getById(long id);
 
+    List<Genre> getById(List<Long> ids);
+
     Genre insert(Genre book);
 
 }
