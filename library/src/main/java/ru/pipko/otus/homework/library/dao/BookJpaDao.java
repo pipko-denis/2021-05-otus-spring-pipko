@@ -3,12 +3,14 @@ package ru.pipko.otus.homework.library.dao;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.stereotype.Repository;
 import ru.pipko.otus.homework.library.domain.Book;
+import ru.pipko.otus.homework.library.dto.BookComment;
 
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import javax.persistence.Query;
 import javax.persistence.TypedQuery;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Repository
 @ConditionalOnProperty(name = "jpa-dao-enabled", havingValue = "true", matchIfMissing = true)
@@ -63,5 +65,18 @@ public class BookJpaDao implements BookDao{
                 "WHERE a.id = :authorId", Long.class);
         query.setParameter("authorId",authorId);
         return query.getSingleResult();
+    }
+
+    @Override
+    public List<BookComment> getBookCommentsCount(int limit){
+        new BookComment("",3);
+        TypedQuery<BookComment> query = em
+                .createQuery("SELECT new ru.pipko.otus.homework.library.dto.BookComment(e.name, COUNT(c)) " +
+                                "FROM Book e " +
+                                "left join e.comments c " +
+                                "GROUP BY e " +
+                                "ORDER BY COUNT(c) desc"
+                        ,BookComment.class);
+        return query.getResultList().stream().limit(limit).collect(Collectors.toList());
     }
 }

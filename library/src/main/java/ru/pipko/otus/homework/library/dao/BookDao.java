@@ -1,6 +1,7 @@
 package ru.pipko.otus.homework.library.dao;
 
 import ru.pipko.otus.homework.library.domain.Book;
+import ru.pipko.otus.homework.library.dto.BookComment;
 
 import java.util.List;
 
@@ -30,4 +31,6 @@ public interface BookDao {
     int delete(long id);
 
     long getBooksCountByAuthorId(long authorId);
+
+    List<BookComment> getBookCommentsCount(int limit);
 }

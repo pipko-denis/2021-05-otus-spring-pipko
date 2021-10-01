@@ -10,6 +10,7 @@ import ru.pipko.otus.homework.library.domain.Author;
 import ru.pipko.otus.homework.library.domain.Book;
 import ru.pipko.otus.homework.library.domain.Comment;
 import ru.pipko.otus.homework.library.domain.Genre;
+import ru.pipko.otus.homework.library.dto.BookComment;
 import ru.pipko.otus.homework.library.service.BooksEditorService;
 
 import java.util.List;
@@ -102,6 +103,17 @@ public class BookCommands {
                 "Authors: " + book.getAuthors().stream().map(Author::getName).collect(Collectors.joining(", ")) + "\n" +
                 "Genres: " + book.getGenres().stream().map(Genre::getName).collect(Collectors.joining(", ")) + "\n" +
                 "Comments: " + book.getComments().stream().map(Comment::getText).collect(Collectors.joining(", "));
+        return result;
+    }
+
+    @Transactional
+    @ShellMethod(value = "Get books list with theirs comments count", key = {"book-comments-count", "bcc"})
+    public String getBookComments(@ShellOption(value = {"limit","l"}, defaultValue = "5") String limit) {
+
+        final List<BookComment> bookComments = booksEditorService.getBookCommentsCnt(limit);
+
+        final String result = bookComments.stream().map(book ->
+                "Book name: \"" + book.getBookName() + ", comments count: " + book.getCommentsCount()).collect(Collectors.joining("\n"));
         return result;
     }
 

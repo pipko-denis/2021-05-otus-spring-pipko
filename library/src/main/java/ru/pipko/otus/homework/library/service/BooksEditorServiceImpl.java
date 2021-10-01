@@ -8,6 +8,7 @@ import ru.pipko.otus.homework.library.dao.BookDao;
 import ru.pipko.otus.homework.library.domain.Author;
 import ru.pipko.otus.homework.library.domain.Book;
 import ru.pipko.otus.homework.library.domain.Genre;
+import ru.pipko.otus.homework.library.dto.BookComment;
 
 import java.util.List;
 
@@ -80,6 +81,20 @@ public class BooksEditorServiceImpl implements BooksEditorService {
             return bookDao.getById(bookId);
         } catch (IncorrectResultSizeDataAccessException ex){
             throw new RuntimeException(THERE_ARE_NO_BOOKS_WITH_ID +id);
+        }
+    }
+
+    @Transactional
+    @Override
+    public List<BookComment> getBookCommentsCnt(String limit) {
+        if ( ! evaluatingService.isThereAreOnlyDigitsInText(limit) ) limit = "5";
+
+        final int limitInt = Integer.parseInt(limit);
+
+        try {
+            return bookDao.getBookCommentsCount(limitInt);
+        } catch (IncorrectResultSizeDataAccessException ex){
+            throw new RuntimeException();
         }
     }
 
