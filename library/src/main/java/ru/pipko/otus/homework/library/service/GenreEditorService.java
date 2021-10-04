@@ -10,4 +10,7 @@ public interface GenreEditorService {
 
     List<Genre> getGenresById(String[] idsInline);
 
+    Genre addGenre(Genre genre);
+
+    List<Genre> getAll();
 }

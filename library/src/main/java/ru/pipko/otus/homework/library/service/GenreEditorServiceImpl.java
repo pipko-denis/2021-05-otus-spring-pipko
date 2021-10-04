@@ -41,7 +41,21 @@ public class GenreEditorServiceImpl implements GenreEditorService {
         return genreDao.getById(idsLong);
     }
 
+    @Override
+    public Genre addGenre(Genre genre) {
+        if (genre == null) {
+            throw new RuntimeException("Service error: genre is null!");
+        }
+        if ( ! evaluatingService.isTextNotNullAndNotBlank(genre.getName()) )
+            throw new RuntimeException("Genre name should not be empty");
 
+        return genreDao.insert(genre);
+    }
+
+    @Override
+    public List<Genre> getAll() {
+        return genreDao.getAll();
+    }
 
 
 }
