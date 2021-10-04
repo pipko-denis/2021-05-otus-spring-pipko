@@ -16,10 +16,10 @@ import java.util.stream.Collectors;
 @ConditionalOnProperty(name = "jpa-dao-enabled", havingValue = "true", matchIfMissing = true)
 public class BookJpaDao implements BookDao{
 
+    @PersistenceContext
     private EntityManager em;
 
-    @PersistenceContext
-    public void setEm(EntityManager em){
+    public void setEntityManager(EntityManager em){
         this.em = em;
     }
 
@@ -38,6 +38,8 @@ public class BookJpaDao implements BookDao{
     public Book insert(Book book) {
         if (book.getId() == null){
             em.persist(book);
+        } else{
+            throw new RuntimeException("Attempt to add existing record, id = "+book.getId());
         }
         return  book;
     }
