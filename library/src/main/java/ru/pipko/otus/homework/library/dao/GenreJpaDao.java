@@ -13,9 +13,9 @@ import java.util.List;
 @ConditionalOnProperty(name = "jpa-dao-enabled", havingValue = "true", matchIfMissing = true)
 public class GenreJpaDao implements GenreDao{
 
+    @PersistenceContext
     private EntityManager entityManager;
 
-    @PersistenceContext
     public void setEntityManager(EntityManager entityManager){
         this.entityManager = entityManager;
     }
@@ -45,6 +45,8 @@ public class GenreJpaDao implements GenreDao{
     public Genre insert(Genre genre) {
         if (genre.getId() == null) {
             entityManager.persist(genre);
+        } else {
+            throw new RuntimeException("Attempt to add existing record, id = "+genre.getId());
         }
         return genre;
     }
