@@ -12,7 +12,7 @@ public interface AuthorEditorService {
 
     int deleteAuthorById(String id);
 
-    Author insert(Author author);
+    Author addAuthor(Author author);
 
     List<Author> getAll();
 }

@@ -16,6 +16,8 @@ import java.util.stream.Collectors;
 @RequiredArgsConstructor
 public class AuthorEditorServiceImpl implements AuthorEditorService {
 
+    public static final String AUTHOR_ID_IS_INCORRECT_IT_SHOULD_CONTAINS_ONLY_DIGITS = "Author id is incorrect! It should contains only digits!";
+    public static final String THERE_ARE_NO_AUTHORS_WITH_ID = "There are no authors with id=";
     private final EvaluatingDataService evaluatingService;
     private final AuthorDao authorDao;
     private final BookDao bookDao;
@@ -24,13 +26,13 @@ public class AuthorEditorServiceImpl implements AuthorEditorService {
     @Override
     public Author getAuthorById(String id)  {
         if ( ! evaluatingService.isThereAreOnlyDigitsInText(id) )
-            throw new RuntimeException("Author id is incorrect! It should contains only digits!");
+            throw new RuntimeException(AUTHOR_ID_IS_INCORRECT_IT_SHOULD_CONTAINS_ONLY_DIGITS);
 
         final long authorId = Long.parseLong(id);
         try {
             return authorDao.getById(authorId);
         } catch (IncorrectResultSizeDataAccessException ex){
-            throw new RuntimeException("There are no authors with id="+id+"!");
+            throw new RuntimeException(THERE_ARE_NO_AUTHORS_WITH_ID +id+"!");
         }
     }
 
@@ -49,7 +51,7 @@ public class AuthorEditorServiceImpl implements AuthorEditorService {
     @Override
     public int deleteAuthorById(String id) {
         if ( ! evaluatingService.isThereAreOnlyDigitsInText(id) )
-            throw new RuntimeException("Author id is incorrect! It should contains only digits!");
+            throw new RuntimeException(AUTHOR_ID_IS_INCORRECT_IT_SHOULD_CONTAINS_ONLY_DIGITS);
 
         final long authorId = Long.parseLong(id);
         long authorsBookCount = bookDao.getBooksCountByAuthorId(authorId);
@@ -62,14 +64,20 @@ public class AuthorEditorServiceImpl implements AuthorEditorService {
         final int deletedRecCount = authorDao.delete(authorId);
 
         if (deletedRecCount == 0)
-            throw new RuntimeException("There are no authors with id="+id);
+            throw new RuntimeException(THERE_ARE_NO_AUTHORS_WITH_ID+id);
 
         return deletedRecCount;
     }
 
     @Transactional
     @Override
-    public Author insert(Author author) {
+    public Author addAuthor(Author author) {
+        if (author == null) {
+            throw new RuntimeException("Service error: author is null!");
+        }
+        if ( ! evaluatingService.isTextNotNullAndNotBlank(author.getName()) )
+            throw new RuntimeException("Author name should not be empty");
+
         return authorDao.insert(author);
     }
 
