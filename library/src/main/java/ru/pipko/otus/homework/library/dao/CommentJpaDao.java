@@ -11,18 +11,19 @@ import java.util.List;
 @Repository
 public class CommentJpaDao implements CommentDao {
 
+    @PersistenceContext
     private EntityManager em;
 
-    @PersistenceContext
     public void setEntityManager(EntityManager em){
         this.em = em;
     }
-
 
     @Override
     public Comment insert(Comment comment) {
         if (comment.getId() == null){
             em.persist(comment);
+        }else{
+            throw new RuntimeException("Attempt to add existing record, id = "+comment.getId());
         }
         return comment;
     }
