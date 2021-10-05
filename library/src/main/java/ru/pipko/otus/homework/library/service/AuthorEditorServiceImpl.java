@@ -42,9 +42,17 @@ public class AuthorEditorServiceImpl implements AuthorEditorService {
 
         evaluatingService.checkArrayOnDigitsThrowException("Author", ids);
 
-        final List<Long> idsLong = Arrays.stream(ids).map(id -> Long.valueOf(id)).collect(Collectors.toList());
+        final List<Long> idsLong = Arrays.stream(ids).map(Long::valueOf).collect(Collectors.toList());
 
-        return authorDao.getById(idsLong);
+        List<Author> result = authorDao.getById(idsLong);
+
+        if (result.size() != ids.length){
+            throw new RuntimeException("Results count doesn't match requested authors count:\n" +
+                    "ids: "+List.of(ids)+"\n" +
+                    "results: "+result.stream().map(author -> author.getId().toString()).collect(Collectors.joining(",")));
+        }
+
+        return result;
     }
 
     @Transactional

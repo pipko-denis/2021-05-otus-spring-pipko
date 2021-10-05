@@ -36,9 +36,17 @@ public class GenreEditorServiceImpl implements GenreEditorService {
     public List<Genre> getGenresById(String[] idsInline) {
         evaluatingService.checkArrayOnDigitsThrowException("Genre", idsInline);
 
-        final List<Long> idsLong = Arrays.stream(idsInline).map(id -> Long.valueOf(id)).collect(Collectors.toList());
+        final List<Long> idsLong = Arrays.stream(idsInline).map(Long::valueOf).collect(Collectors.toList());
 
-        return genreDao.getById(idsLong);
+        List<Genre> result = genreDao.getById(idsLong);
+
+        if (result.size() != idsInline.length){
+            throw new RuntimeException("Results count doesn't match requested authors count:\n" +
+                    "ids: "+List.of(idsInline)+"\n" +
+                    "results: "+result.stream().map(author -> author.getId().toString()).collect(Collectors.joining(",")));
+        }
+
+        return result;
     }
 
     @Override
