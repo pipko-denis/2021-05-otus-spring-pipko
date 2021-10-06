@@ -9,6 +9,7 @@ import org.springframework.test.annotation.DirtiesContext;
 import ru.pipko.otus.homework.library.domain.Author;
 
 import java.util.List;
+import java.util.Optional;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
@@ -39,7 +40,11 @@ class AuthorJdbcDaoTest {
     void shouldGetAuthorById() {
         final Author expectedAuthor = new Author(1L, "Author1");
 
-        final Author authorFromDb = authorDao.getById(1);
+        Optional<Author> authorOptional = authorDao.getById(1);
+
+        assertThat(authorOptional.isEmpty()).isEqualTo(false);
+
+        var authorFromDb = authorOptional.get();
 
         assertThat(authorFromDb).usingRecursiveComparison().isEqualTo(expectedAuthor);
     }
@@ -48,14 +53,17 @@ class AuthorJdbcDaoTest {
     @Test
     @DisplayName("добавлять автора и устанавливать идентификатор переданому в DAO объекту")
     void shouldInsertAuthorAndSetId() {
-        final Author author = new Author("Added Author name");
-        final Author addedAuthor = authorDao.insert(author);
+        final Author addedAuthor = authorDao.insert(new Author("Added Author name"));
 
-        assertThat(author.getId()).isNotNull().isPositive();
+        assertThat(addedAuthor.getId()).isNotNull().isPositive();
 
-        final Author authorFromDb = authorDao.getById(author.getId());
+        final var authorOptional = authorDao.getById(addedAuthor.getId());
 
-        assertThat(authorFromDb).usingRecursiveComparison().isEqualTo(author);
+        assertThat(authorOptional.isEmpty()).isEqualTo(false);
+
+        final Author authorFromDb = authorOptional.get();
+
+        assertThat(authorFromDb).usingRecursiveComparison().isEqualTo(addedAuthor);
     }
 
 

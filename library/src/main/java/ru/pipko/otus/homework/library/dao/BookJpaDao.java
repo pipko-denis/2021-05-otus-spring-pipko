@@ -10,6 +10,7 @@ import javax.persistence.PersistenceContext;
 import javax.persistence.Query;
 import javax.persistence.TypedQuery;
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Repository
@@ -30,8 +31,8 @@ public class BookJpaDao implements BookDao{
     }
 
     @Override
-    public Book getById(long id) {
-        return em.createQuery("SELECT e FROM Book e WHERE e.id = :id ",Book.class).setParameter("id",id).getSingleResult();
+    public Optional<Book> getById(long id) {
+        return Optional.ofNullable(em.find(Book.class,id));
     }
 
     @Override

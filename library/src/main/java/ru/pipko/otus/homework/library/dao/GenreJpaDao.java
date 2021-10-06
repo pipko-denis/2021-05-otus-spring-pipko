@@ -8,35 +8,34 @@ import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import javax.persistence.TypedQuery;
 import java.util.List;
+import java.util.Optional;
 
 @Repository
 @ConditionalOnProperty(name = "jpa-dao-enabled", havingValue = "true", matchIfMissing = true)
 public class GenreJpaDao implements GenreDao{
 
     @PersistenceContext
-    private EntityManager entityManager;
+    private EntityManager em;
 
-    public void setEntityManager(EntityManager entityManager){
-        this.entityManager = entityManager;
+    public void setEntityManager(EntityManager em){
+        this.em = em;
     }
 
 
     @Override
     public List<Genre> getAll() {
-        TypedQuery<Genre> query = entityManager.createQuery("SELECT e FROM Genre e ORDER BY e.name",Genre.class);
+        TypedQuery<Genre> query = em.createQuery("SELECT e FROM Genre e ORDER BY e.name",Genre.class);
         return query.getResultList();
     }
 
     @Override
-    public Genre getById(long id) {
-        TypedQuery<Genre> query = entityManager.createQuery("SELECT e FROM Genre e Where e.id = :id",Genre.class);
-        query.setParameter("id",id);
-        return query.getSingleResult();
+    public Optional<Genre> getById(long id) {
+        return Optional.ofNullable(em.find(Genre.class,id));
     }
 
     @Override
     public List<Genre> getById(List<Long> ids) {
-        TypedQuery<Genre> query = entityManager.createQuery("SELECT e FROM Genre e Where id IN :id",Genre.class);
+        TypedQuery<Genre> query = em.createQuery("SELECT e FROM Genre e Where id IN :id",Genre.class);
         query.setParameter("id",ids);
         return query.getResultList();
     }
@@ -44,7 +43,7 @@ public class GenreJpaDao implements GenreDao{
     @Override
     public Genre insert(Genre genre) {
         if (genre.getId() == null) {
-            entityManager.persist(genre);
+            em.persist(genre);
         } else {
             throw new RuntimeException("Attempt to add existing record, id = "+genre.getId());
         }

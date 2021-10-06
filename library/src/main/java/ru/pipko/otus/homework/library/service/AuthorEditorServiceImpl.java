@@ -10,6 +10,7 @@ import ru.pipko.otus.homework.library.domain.Author;
 
 import java.util.Arrays;
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Service
@@ -29,11 +30,14 @@ public class AuthorEditorServiceImpl implements AuthorEditorService {
             throw new RuntimeException(AUTHOR_ID_IS_INCORRECT_IT_SHOULD_CONTAINS_ONLY_DIGITS);
 
         final long authorId = Long.parseLong(id);
-        try {
-            return authorDao.getById(authorId);
-        } catch (IncorrectResultSizeDataAccessException ex){
+
+        Optional<Author> authorOptional = authorDao.getById(authorId);
+
+        if (authorOptional.isEmpty())
             throw new RuntimeException(THERE_ARE_NO_AUTHORS_WITH_ID +id+"!");
-        }
+
+        return authorOptional.get();
+
     }
 
     @Transactional

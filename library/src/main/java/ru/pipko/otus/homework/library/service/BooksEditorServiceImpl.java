@@ -11,6 +11,7 @@ import ru.pipko.otus.homework.library.domain.Genre;
 import ru.pipko.otus.homework.library.dto.BookComment;
 
 import java.util.List;
+import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor
@@ -77,11 +78,13 @@ public class BooksEditorServiceImpl implements BooksEditorService {
 
         final long bookId = Long.parseLong(id);
 
-        try {
-            return bookDao.getById(bookId);
-        } catch (IncorrectResultSizeDataAccessException ex){
+        Optional<Book> optionalBook = bookDao.getById(bookId);
+
+        if (optionalBook.isEmpty())
             throw new RuntimeException(THERE_ARE_NO_BOOKS_WITH_ID +id);
-        }
+
+        return optionalBook.get();
+
     }
 
     @Transactional

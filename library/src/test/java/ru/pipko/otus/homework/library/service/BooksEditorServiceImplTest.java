@@ -82,7 +82,7 @@ class BooksEditorServiceImplTest {
         final Book bookForUpdateCheck = new Book(1L, "Book1", List.of(author1) , List.of(genre1), Collections.emptyList());
         final Book bookExpected = new Book(1L, "New name", List.of(author2), List.of(genre2), Collections.emptyList());
 
-        Mockito.when(bookJdbcDao.getById(1)).thenReturn(bookForUpdateCheck);
+        Mockito.when(bookJdbcDao.getById(1).get()).thenReturn(bookForUpdateCheck);
         Mockito.when(authorEditorService.getAuthorById("2")).thenReturn(author2);
         Mockito.when(genreEditorService.getGenreById("2")).thenReturn(genre2);
         //Mockito.when(bookJdbcDao.update(bookForUpdateCheck)).thenReturn(1);
@@ -102,7 +102,7 @@ class BooksEditorServiceImplTest {
         final Genre genre1 = new Genre(1L, "Genre1");
         final Book bookExpected = new Book(1L, "Book1", List.of(author1), List.of(genre1), Collections.emptyList());
 
-        Mockito.when(bookJdbcDao.getById(1)).thenReturn(bookExpected);
+        Mockito.when(bookJdbcDao.getById(1).get()).thenReturn(bookExpected);
         Mockito.when(evaluatingDataService.isTextNotNullAndNotBlank(Mockito.any())).thenReturn(true);
         Mockito.when(evaluatingDataService.isThereAreOnlyDigitsInText(Mockito.any())).thenReturn(true);
 

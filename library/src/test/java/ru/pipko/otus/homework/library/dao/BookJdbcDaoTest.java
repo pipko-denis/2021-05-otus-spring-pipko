@@ -67,7 +67,7 @@ class BookJdbcDaoTest {
                 , List.of(new Genre(1L, "Genre1"))
                 , Collections.emptyList());
 
-        final Book bookFromDb = bookDao.getById(1);
+        final Book bookFromDb = bookDao.getById(1).get();
 
         assertThat(bookFromDb).usingRecursiveComparison().isEqualTo(expectedBook);
     }
@@ -108,7 +108,7 @@ class BookJdbcDaoTest {
 
         assertThat(book.getId()).isNotNull().isPositive();
 
-        final Book bookFromDb = bookDao.getById(book.getId());
+        final Book bookFromDb = bookDao.getById(book.getId()).get();
 
         assertThat(bookFromDb).usingRecursiveComparison().isEqualTo(book);
     }
@@ -152,7 +152,7 @@ class BookJdbcDaoTest {
 
         assertThat(updatedBook).isEqualTo(EXPECTED_UPDATED_BOOKS_COUNT);
 
-        final Book bookToCompare = bookDao.getById(bookForEditing.getId());
+        final Book bookToCompare = bookDao.getById(bookForEditing.getId()).get();
 
         assertThat(bookToCompare)
                 .usingRecursiveComparison()

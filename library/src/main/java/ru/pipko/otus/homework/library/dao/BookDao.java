@@ -4,12 +4,13 @@ import ru.pipko.otus.homework.library.domain.Book;
 import ru.pipko.otus.homework.library.dto.BookComment;
 
 import java.util.List;
+import java.util.Optional;
 
 public interface BookDao {
 
     List<Book> getAll();
 
-    Book getById(long id);
+    Optional<Book> getById(long id);
 
     /**
      * After execution of the insertion, method "getId()" will return id of the inserted book

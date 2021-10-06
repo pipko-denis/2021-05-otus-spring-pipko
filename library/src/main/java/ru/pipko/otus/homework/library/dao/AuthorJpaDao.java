@@ -8,7 +8,9 @@ import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import javax.persistence.Query;
 import javax.persistence.TypedQuery;
+import javax.swing.text.html.Option;
 import java.util.List;
+import java.util.Optional;
 
 @Repository
 @ConditionalOnProperty(name = "jpa-dao-enabled", havingValue = "true", matchIfMissing = true)
@@ -29,10 +31,8 @@ public class AuthorJpaDao implements AuthorDao{
     }
 
     @Override
-    public Author getById(long id) {
-        TypedQuery<Author> query = em.createQuery("SELECT e FROM Author e Where id = :id",Author.class);
-        query.setParameter("id",id);
-        return query.getSingleResult();
+    public Optional<Author> getById(long id) {
+        return Optional.ofNullable(em.find(Author.class,id));
     }
 
     @Override

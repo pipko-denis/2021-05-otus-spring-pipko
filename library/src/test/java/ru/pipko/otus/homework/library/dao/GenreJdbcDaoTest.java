@@ -39,7 +39,7 @@ class GenreJdbcDaoTest {
     void shouldGetGenreById() {
         final Genre expectedGenre = new Genre(1L, "Genre1");
 
-        final Genre genreFromDb = genreDao.getById(1);
+        final Genre genreFromDb = genreDao.getById(1).get();
 
         assertThat(genreFromDb).usingRecursiveComparison().isEqualTo(expectedGenre);
     }
@@ -54,7 +54,7 @@ class GenreJdbcDaoTest {
 
         assertThat(genre.getId()).isNotNull().isPositive();
 
-        final Genre genreFromDb = genreDao.getById(genre.getId());
+        final Genre genreFromDb = genreDao.getById(genre.getId()).get();
 
         assertThat(genreFromDb).usingRecursiveComparison().isEqualTo(genre);
     }
