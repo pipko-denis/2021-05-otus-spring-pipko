@@ -43,7 +43,7 @@ public class AuthorJpaDao implements AuthorDao{
     }
 
     @Override
-    public List<Author> getByName(String name) {
+    public List<Author> findByName(String name) {
         TypedQuery<Author> query = em.createQuery("SELECT e FROM Author e Where e.name like '%:name%' order by e.name",Author.class);
         query.setParameter("name",name);
         return query.getResultList();

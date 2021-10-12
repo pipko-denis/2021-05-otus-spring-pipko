@@ -13,7 +13,7 @@ public interface AuthorDao {
 
     List<Author> getById(List<Long> ids);
 
-    List<Author> getByName(String name);
+    List<Author> findByName(String name);
 
     Author insert(Author author);
 
