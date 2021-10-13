@@ -21,6 +21,7 @@ class AuthorJpaDaoTest {
 
     public static final long GET_BY_ID_PRIMARY_KEY = 1L;
     public static final String INSERT_TEST_AUTHOR_NAME = "Insert test author name";
+    public static final String DELETE_TEST_AUTHOR_NAME = "DELETE TEST AUTHOR NAME";
     @Autowired
     private AuthorJpaDao authorDao;
 
@@ -73,8 +74,8 @@ class AuthorJpaDaoTest {
     @DisplayName("корректно получать список авторов по его части имени")
     void getByName() {
         final Author authorFromEntityManager = em.find(Author.class, GET_BY_ID_PRIMARY_KEY);
-        final List<Author> students = authorDao.findByName(authorFromEntityManager.getName());
-        assertThat(students).containsOnlyOnce(authorFromEntityManager);
+        final List<Author> authors = authorDao.findByName(authorFromEntityManager.getName());
+        assertThat(authors).containsOnlyOnce(authorFromEntityManager);
     }
 
     @Test
@@ -93,13 +94,14 @@ class AuthorJpaDaoTest {
     @Test
     @DisplayName("корректно удалять автора по его идентификатору")
     void delete() {
-        final Author authorFromEntityManager = em.find(Author.class, GET_BY_ID_PRIMARY_KEY);
-        assertThat(authorFromEntityManager).isNotNull();
+
+        final Author authorFromEntityManager = em.persist(new Author(DELETE_TEST_AUTHOR_NAME));
+        assertThat(authorFromEntityManager.getId()).isNotNull().isGreaterThan(0);
         em.detach(authorFromEntityManager);
 
-        authorDao.delete(GET_BY_ID_PRIMARY_KEY);
-        Author deletedStudent = em.find(Author.class, GET_BY_ID_PRIMARY_KEY);
+        authorDao.delete(authorFromEntityManager.getId());
+        Author deletedAuthor = em.find(Author.class, authorFromEntityManager.getId());
+        assertThat(deletedAuthor).isNull();
 
-        assertThat(deletedStudent).isNull();
     }
 }

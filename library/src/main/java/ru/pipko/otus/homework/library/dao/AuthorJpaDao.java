@@ -44,8 +44,8 @@ public class AuthorJpaDao implements AuthorDao{
 
     @Override
     public List<Author> findByName(String name) {
-        TypedQuery<Author> query = em.createQuery("SELECT e FROM Author e Where e.name like '%:name%' order by e.name",Author.class);
-        query.setParameter("name",name);
+        TypedQuery<Author> query = em.createQuery("SELECT e FROM Author e Where e.name like :name order by e.name",Author.class);
+        query.setParameter("name","%"+name+"%");
         return query.getResultList();
     }
 
@@ -54,7 +54,7 @@ public class AuthorJpaDao implements AuthorDao{
         if (author.getId() == null){
             em.persist(author);
         } else {
-            throw new RuntimeException("Attempt to add existing record, id = "+author.getId());
+            throw new RuntimeException("Attempting to add existing record, id = "+author.getId());
         }
         return author;
     }
