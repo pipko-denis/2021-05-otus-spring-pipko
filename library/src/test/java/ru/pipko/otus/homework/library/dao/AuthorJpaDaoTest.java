@@ -10,6 +10,7 @@ import ru.pipko.otus.homework.library.domain.Author;
 
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
@@ -19,6 +20,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 class AuthorJpaDaoTest {
 
     public static final long GET_BY_ID_PRIMARY_KEY = 1L;
+    public static final String INSERT_TEST_AUTHOR_NAME = "Insert test author name";
     @Autowired
     private AuthorJpaDao authorDao;
 
@@ -43,7 +45,28 @@ class AuthorJpaDaoTest {
     @Test
     @DisplayName("корректно получать список авторов по их идентификаторам")
     void getAuthorsListByIds() {
+        List<Author> allAuthorsFromDao = authorDao.getAll();
+        assertThat(allAuthorsFromDao).isNotEmpty().hasSizeGreaterThan(1);
 
+
+        List<Long> authorIds = allAuthorsFromDao.stream()
+                .map(Author::getId)
+                .filter(authorId -> authorId % 2 != 0)
+                .limit(2)
+                .collect(Collectors.toList());
+
+        List<Author> authorsFromDaoToCheck = authorDao.getById(authorIds);
+        authorsFromDaoToCheck.forEach( authorFromDao ->
+                //em.find(Author.class,author.getId()).getName().equals(author.getName())
+                {
+                    Author authorFromEm = em.find(Author.class, authorFromDao.getId());
+                    assertThat(authorFromEm).isNotNull()
+                            .matches(e -> e.getName() != null)
+                            .matches(e -> ! e.getName().equals(""))
+                            .matches(e -> e.getName().equals(authorFromDao.getName()));
+
+                }
+        );
     }
 
     @Test
@@ -57,11 +80,26 @@ class AuthorJpaDaoTest {
     @Test
     @DisplayName("корректно добавлять автора")
     void insert() {
+        Author author = new Author(INSERT_TEST_AUTHOR_NAME);
 
+        authorDao.insert(author);
+        assertThat(author.getId()).isNotNull().isGreaterThan(0);
+
+        final Author authorFromEntityManager = em.find(Author.class, author.getId());
+
+        assertThat(authorFromEntityManager).isNotNull().hasNoNullFieldsOrProperties().matches(s -> !s.getName().equals(""));
     }
 
     @Test
     @DisplayName("корректно удалять автора по его идентификатору")
     void delete() {
+        final Author authorFromEntityManager = em.find(Author.class, GET_BY_ID_PRIMARY_KEY);
+        assertThat(authorFromEntityManager).isNotNull();
+        em.detach(authorFromEntityManager);
+
+        authorDao.delete(GET_BY_ID_PRIMARY_KEY);
+        Author deletedStudent = em.find(Author.class, GET_BY_ID_PRIMARY_KEY);
+
+        assertThat(deletedStudent).isNull();
     }
 }
