@@ -1,6 +1,5 @@
 package ru.pipko.otus.homework.library.dao;
 
-import lombok.val;
 import org.hibernate.SessionFactory;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -15,6 +14,7 @@ import java.util.Optional;
 import java.util.stream.Collectors;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThatCode;
 
 @DataJpaTest
 @Import(AuthorJpaDao.class)
@@ -106,7 +106,7 @@ class AuthorJpaDaoTest {
     }
 
     @Test
-    @DisplayName("корректно удалять автора по его идентификатору")
+    @DisplayName("корректно удалять автора по его идентификатору если нет с ним книг и бросать исключение, если с автором есть книга")
     void delete() {
         final Author authorFromEntityManager = em.persist(new Author(DELETE_TEST_AUTHOR_NAME));
         assertThat(authorFromEntityManager.getId()).isNotNull().isGreaterThan(0);
@@ -115,5 +115,7 @@ class AuthorJpaDaoTest {
         authorDao.delete(authorFromEntityManager.getId());
         Author deletedAuthor = em.find(Author.class, authorFromEntityManager.getId());
         assertThat(deletedAuthor).isNull();
+
+        assertThatCode( () -> authorDao.delete(GET_BY_ID_PRIMARY_KEY)).isInstanceOf(Throwable.class);
     }
 }
