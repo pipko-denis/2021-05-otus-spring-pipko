@@ -1,5 +1,7 @@
 package ru.pipko.otus.homework.library.dao;
 
+import lombok.val;
+import org.hibernate.SessionFactory;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -22,6 +24,8 @@ class AuthorJpaDaoTest {
     public static final long GET_BY_ID_PRIMARY_KEY = 1L;
     public static final String INSERT_TEST_AUTHOR_NAME = "Insert test author name";
     public static final String DELETE_TEST_AUTHOR_NAME = "DELETE TEST AUTHOR NAME";
+    public static final int EXPECTED_QUERIES_COUNT = 1;
+    public static final int EXPECTED_AUTHORS_COUNT = 4;
     @Autowired
     private AuthorJpaDao authorDao;
 
@@ -31,13 +35,23 @@ class AuthorJpaDaoTest {
     @Test
     @DisplayName("должен загрузить все записи с правильным количеством запросов")
     void shouldLoadAllRecordsWithCorrectQueriesCount(){
+        SessionFactory sessionFactory = em.getEntityManager().getEntityManagerFactory()
+                .unwrap(SessionFactory.class);
+        sessionFactory.getStatistics().setStatisticsEnabled(true);
 
+        List<Author> authors = authorDao.getAll();
+        assertThat(authors)
+                .isNotNull()
+                .hasSize(EXPECTED_AUTHORS_COUNT)
+                .allMatch(author -> author.getName() != null)
+                .allMatch(author -> !author.getName().equals(""));
+        assertThat(sessionFactory.getStatistics().getPrepareStatementCount()).isEqualTo(EXPECTED_QUERIES_COUNT);
     }
 
 
     @Test
     @DisplayName("корректно получать автора по идентификатору")
-    void getById() {
+    void shouldGetAuthorById() {
         final Author authorFromEntityManager = em.find(Author.class, GET_BY_ID_PRIMARY_KEY);
         final Optional<Author> authorFromDao = authorDao.getById(GET_BY_ID_PRIMARY_KEY);
         assertThat(authorFromDao).isNotEmpty().get().usingRecursiveComparison().isEqualTo(authorFromEntityManager);
@@ -47,7 +61,7 @@ class AuthorJpaDaoTest {
     @DisplayName("корректно получать список авторов по их идентификаторам")
     void getAuthorsListByIds() {
         List<Author> allAuthorsFromDao = authorDao.getAll();
-        assertThat(allAuthorsFromDao).isNotEmpty().hasSizeGreaterThan(1);
+        assertThat(allAuthorsFromDao).isNotEmpty().hasSizeGreaterThan(EXPECTED_QUERIES_COUNT);
 
 
         List<Long> authorIds = allAuthorsFromDao.stream()
@@ -94,7 +108,6 @@ class AuthorJpaDaoTest {
     @Test
     @DisplayName("корректно удалять автора по его идентификатору")
     void delete() {
-
         final Author authorFromEntityManager = em.persist(new Author(DELETE_TEST_AUTHOR_NAME));
         assertThat(authorFromEntityManager.getId()).isNotNull().isGreaterThan(0);
         em.detach(authorFromEntityManager);
@@ -102,6 +115,5 @@ class AuthorJpaDaoTest {
         authorDao.delete(authorFromEntityManager.getId());
         Author deletedAuthor = em.find(Author.class, authorFromEntityManager.getId());
         assertThat(deletedAuthor).isNull();
-
     }
 }
