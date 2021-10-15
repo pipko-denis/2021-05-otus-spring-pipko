@@ -14,7 +14,10 @@ import ru.pipko.otus.homework.library.domain.Author;
 import ru.pipko.otus.homework.library.domain.Book;
 import ru.pipko.otus.homework.library.domain.Genre;
 
-import java.util.*;
+import java.util.Collections;
+import java.util.Comparator;
+import java.util.List;
+import java.util.Set;
 import java.util.function.Predicate;
 import java.util.stream.Collectors;
 
@@ -131,18 +134,11 @@ class BookJdbcDaoTest {
         final Long actualAuthorId = bookForEditing.getAuthors().get(0).getId();
         final Long actualGenreId = bookForEditing.getGenres().get(0).getId();
 
-        //final Author newAuthor = listBookWithAuthorAndGenre.stream().filter(book -> book.getAuthors().)
-                //.filter(book -> !actualAuthorId.equals(book.getAuthors().getId())).findFirst().get().getAuthors();
-
         final Author newAuthor = getAuthorsOfBooks(listBooks).stream()
                 .filter(author -> !actualAuthorId.equals(author.getId())).findFirst().get();
 
         final Genre newGenre = getGenresOfBooks(listBooks).stream()
                 .filter(genre -> !actualGenreId.equals(genre.getId())).findFirst().get();
-
-
-//        final Genre newGenre = listBookWithAuthorAndGenre.stream()
-//                .filter(book -> !actualGenreId.equals(book.getGenres().get(0).getId())).findFirst().get().getGenres();
 
         bookForEditing.setAuthors(List.of(newAuthor));
 
