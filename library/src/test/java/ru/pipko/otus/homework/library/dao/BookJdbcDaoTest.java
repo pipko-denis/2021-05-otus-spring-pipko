@@ -14,7 +14,7 @@ import ru.pipko.otus.homework.library.domain.Author;
 import ru.pipko.otus.homework.library.domain.Book;
 import ru.pipko.otus.homework.library.domain.Genre;
 
-import java.util.Arrays;
+import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
 import java.util.Set;
@@ -50,7 +50,10 @@ class BookJdbcDaoTest {
 
         assertThat(listBooks).hasSizeGreaterThan(0);
 
-        final Book expectedBook = new Book(1L, "Book1", List.of(new Author(1L, "Author1")), List.of(new Genre(1L, "Genre1")));
+        final Book expectedBook = new Book(1L, "Book1"
+                , List.of(new Author(1L, "Author1"))
+                , List.of(new Genre(1L, "Genre1"))
+                , Collections.emptyList());
 
         assertThat(listBooks)
                 .usingRecursiveFieldByFieldElementComparator()
@@ -62,9 +65,12 @@ class BookJdbcDaoTest {
     @DisplayName("возвращать книгу по идентификатору")
     @DirtiesContext(methodMode = DirtiesContext.MethodMode.BEFORE_METHOD)
     void shouldGetBookById() {
-        final Book expectedBook = new Book(1L, "Book1", List.of(new Author(1L, "Author1")), List.of(new Genre(1L, "Genre1")));
+        final Book expectedBook = new Book(1L, "Book1"
+                , List.of(new Author(1L, "Author1"))
+                , List.of(new Genre(1L, "Genre1"))
+                , Collections.emptyList());
 
-        final Book bookFromDb = bookDao.getById(1);
+        final Book bookFromDb = bookDao.getById(1).get();
 
         assertThat(bookFromDb).usingRecursiveComparison().isEqualTo(expectedBook);
     }
@@ -99,13 +105,13 @@ class BookJdbcDaoTest {
 
 
         final Book book = new Book("Added book name", bookWithAuthorAndGenre.getAuthors(), bookWithAuthorAndGenre.getGenres());
-        final int addedRecordCount = bookDao.insert(book);
+        final Book addedBook = bookDao.insert(book);
 
-        assertThat(addedRecordCount).isEqualTo(EXPECTED_ADDED_BOOKS_COUNT);
+        assertThat(addedBook).isEqualTo(EXPECTED_ADDED_BOOKS_COUNT);
 
         assertThat(book.getId()).isNotNull().isPositive();
 
-        final Book bookFromDb = bookDao.getById(book.getId());
+        final Book bookFromDb = bookDao.getById(book.getId()).get();
 
         assertThat(bookFromDb).usingRecursiveComparison().isEqualTo(book);
     }
@@ -128,28 +134,21 @@ class BookJdbcDaoTest {
         final Long actualAuthorId = bookForEditing.getAuthors().get(0).getId();
         final Long actualGenreId = bookForEditing.getGenres().get(0).getId();
 
-        //final Author newAuthor = listBookWithAuthorAndGenre.stream().filter(book -> book.getAuthors().)
-                //.filter(book -> !actualAuthorId.equals(book.getAuthors().getId())).findFirst().get().getAuthors();
-
         final Author newAuthor = getAuthorsOfBooks(listBooks).stream()
                 .filter(author -> !actualAuthorId.equals(author.getId())).findFirst().get();
 
         final Genre newGenre = getGenresOfBooks(listBooks).stream()
                 .filter(genre -> !actualGenreId.equals(genre.getId())).findFirst().get();
 
-
-//        final Genre newGenre = listBookWithAuthorAndGenre.stream()
-//                .filter(book -> !actualGenreId.equals(book.getGenres().get(0).getId())).findFirst().get().getGenres();
-
         bookForEditing.setAuthors(List.of(newAuthor));
 
         bookForEditing.setGenres(List.of(newGenre));
 
-        final int updatedRecordCount = bookDao.update(bookForEditing);
+        final Book updatedBook = bookDao.update(bookForEditing);
 
-        assertThat(updatedRecordCount).isEqualTo(EXPECTED_UPDATED_BOOKS_COUNT);
+        assertThat(updatedBook).isEqualTo(EXPECTED_UPDATED_BOOKS_COUNT);
 
-        final Book bookToCompare = bookDao.getById(bookForEditing.getId());
+        final Book bookToCompare = bookDao.getById(bookForEditing.getId()).get();
 
         assertThat(bookToCompare)
                 .usingRecursiveComparison()

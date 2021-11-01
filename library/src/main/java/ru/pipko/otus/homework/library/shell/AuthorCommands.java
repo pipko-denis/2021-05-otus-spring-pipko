@@ -4,7 +4,6 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.shell.standard.ShellComponent;
 import org.springframework.shell.standard.ShellMethod;
 import org.springframework.shell.standard.ShellOption;
-import ru.pipko.otus.homework.library.dao.AuthorDao;
 import ru.pipko.otus.homework.library.domain.Author;
 import ru.pipko.otus.homework.library.service.AuthorEditorService;
 
@@ -19,7 +18,7 @@ public class AuthorCommands {
 
     @ShellMethod(value = "Adding author command", key = {"aa", "author-add"})
     public String addAuthor(@ShellOption(value = {"name", "n"}) String name) {
-        final Author author = authorService.insert(new Author(name));
+        final Author author = authorService.addAuthor(new Author(name));
 
         return "Author added into to database, new author id is " + author.getId() + ".";
     }

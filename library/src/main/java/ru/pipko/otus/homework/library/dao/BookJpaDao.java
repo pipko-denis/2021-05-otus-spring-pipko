@@ -2,58 +2,84 @@ package ru.pipko.otus.homework.library.dao;
 
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.stereotype.Repository;
-import org.springframework.transaction.annotation.Transactional;
 import ru.pipko.otus.homework.library.domain.Book;
+import ru.pipko.otus.homework.library.dto.BookComment;
 
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
+import javax.persistence.Query;
+import javax.persistence.TypedQuery;
 import java.util.List;
+import java.util.Optional;
+import java.util.stream.Collectors;
 
 @Repository
 @ConditionalOnProperty(name = "jpa-dao-enabled", havingValue = "true", matchIfMissing = true)
 public class BookJpaDao implements BookDao{
 
-    private EntityManager entityManager;
-
     @PersistenceContext
-    public void setEntityManager(EntityManager entityManager){
-        this.entityManager = entityManager;
+    private EntityManager em;
+
+    public void setEntityManager(EntityManager em){
+        this.em = em;
     }
 
 
-    @Transactional
     @Override
     public List<Book> getAll() {
-        return entityManager.createQuery("SELECT e FROM Book e ORDER BY e.name",Book.class).getResultList();
+        return em.createQuery("SELECT e FROM Book e ORDER BY e.name",Book.class).getResultList();
     }
 
-    @Transactional
     @Override
-    public Book getById(long id) {
-        return null;
+    public Optional<Book> getById(long id) {
+        return Optional.ofNullable(em.find(Book.class,id));
     }
 
-    @Transactional
     @Override
-    public int insert(Book book) {
-        return 0;
+    public Book insert(Book book) {
+        if (book.getId() == null){
+            em.persist(book);
+        } else{
+            throw new RuntimeException("Attempt to add existing record, id = "+book.getId());
+        }
+        return  book;
     }
 
-    @Transactional
     @Override
-    public int update(Book book) {
-        return 0;
+    public Book update(Book book) {
+        if (book.getId() == null){
+            throw new RuntimeException("Book should have an id!");
+        }else{
+            return em.merge(book);
+        }
     }
 
-    @Transactional
     @Override
     public int delete(long id) {
-        return 0;
+        Query query = em.createQuery("DELETE FROM Books WHERE id = :id");
+        query.setParameter("id",id);
+        return query.executeUpdate();
     }
 
-    @Transactional
     @Override
-    public Integer getBooksCountByAuthorId(long authorId) {
-        return null;
+    public long getBooksCountByAuthorId(long authorId) {
+        TypedQuery<Long> query = em.createQuery("SELECT COUNT(e) FROM Book e " +
+                "JOIN e.authors as a " +
+                "WHERE a.id = :authorId", Long.class);
+        query.setParameter("authorId",authorId);
+        return query.getSingleResult();
+    }
+
+    @Override
+    public List<BookComment> getBookCommentsCount(int limit){
+        new BookComment("",3);
+        TypedQuery<BookComment> query = em
+                .createQuery("SELECT new ru.pipko.otus.homework.library.dto.BookComment(e.name, COUNT(c)) " +
+                                "FROM Book e " +
+                                "left join e.comments c " +
+                                "GROUP BY e " +
+                                "ORDER BY COUNT(c) desc"
+                        ,BookComment.class);
+        return query.getResultList().stream().limit(limit).collect(Collectors.toList());
     }
 }

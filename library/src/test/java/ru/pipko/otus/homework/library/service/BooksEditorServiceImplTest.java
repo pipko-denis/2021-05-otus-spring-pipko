@@ -16,7 +16,7 @@ import ru.pipko.otus.homework.library.domain.Author;
 import ru.pipko.otus.homework.library.domain.Book;
 import ru.pipko.otus.homework.library.domain.Genre;
 
-import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
 
 import static org.assertj.core.api.Assertions.*;
@@ -54,14 +54,14 @@ class BooksEditorServiceImplTest {
     }
 
     @Test
-    @Description("корретно добавялть книгу")
+    @Description("корретно добавлять книгу")
     void addBook() {
         final Author expectedAuthor = new Author(1L, "Author1");
         final Genre expectedGenre = new Genre(1L, "Genre1");
 
         Mockito.when(authorEditorService.getAuthorById("1")).thenReturn(expectedAuthor);
         Mockito.when(genreEditorService.getGenreById("1")).thenReturn(expectedGenre);
-        Mockito.when(bookJdbcDao.insert(Mockito.any())).thenReturn(1);
+        //Mockito.when(bookJdbcDao.insert(Mockito.any())).thenReturn(1L);
         Mockito.when(evaluatingDataService.isTextNotNullAndNotBlank(Mockito.any())).thenReturn(true);
 
         final Book actualBook = booksEditorService.addBook(EXPECTED_BOOK_NAME, "1", "1");
@@ -79,13 +79,13 @@ class BooksEditorServiceImplTest {
         final Genre genre1 = new Genre(1L, "Genre1");
         final Author author2 = new Author(2L, "Author2");
         final Genre genre2 = new Genre(2L, "Genre2");
-        final Book bookForUpdateCheck = new Book(1L, "Book1", List.of(author1) , List.of(genre1));
-        final Book bookExpected = new Book(1L, "New name", List.of(author2), List.of(genre2));
+        final Book bookForUpdateCheck = new Book(1L, "Book1", List.of(author1) , List.of(genre1), Collections.emptyList());
+        final Book bookExpected = new Book(1L, "New name", List.of(author2), List.of(genre2), Collections.emptyList());
 
-        Mockito.when(bookJdbcDao.getById(1)).thenReturn(bookForUpdateCheck);
+        Mockito.when(bookJdbcDao.getById(1).get()).thenReturn(bookForUpdateCheck);
         Mockito.when(authorEditorService.getAuthorById("2")).thenReturn(author2);
         Mockito.when(genreEditorService.getGenreById("2")).thenReturn(genre2);
-        Mockito.when(bookJdbcDao.update(bookForUpdateCheck)).thenReturn(1);
+        //Mockito.when(bookJdbcDao.update(bookForUpdateCheck)).thenReturn(1);
         Mockito.when(evaluatingDataService.isTextNotNullAndNotBlank(Mockito.any())).thenReturn(true);
         Mockito.when(evaluatingDataService.isThereAreOnlyDigitsInText(Mockito.any())).thenReturn(true);
 
@@ -100,9 +100,9 @@ class BooksEditorServiceImplTest {
 
         final Author author1 = new Author(1L, "Author1");
         final Genre genre1 = new Genre(1L, "Genre1");
-        final Book bookExpected = new Book(1L, "Book1", List.of(author1), List.of(genre1));
+        final Book bookExpected = new Book(1L, "Book1", List.of(author1), List.of(genre1), Collections.emptyList());
 
-        Mockito.when(bookJdbcDao.getById(1)).thenReturn(bookExpected);
+        Mockito.when(bookJdbcDao.getById(1).get()).thenReturn(bookExpected);
         Mockito.when(evaluatingDataService.isTextNotNullAndNotBlank(Mockito.any())).thenReturn(true);
         Mockito.when(evaluatingDataService.isThereAreOnlyDigitsInText(Mockito.any())).thenReturn(true);
 

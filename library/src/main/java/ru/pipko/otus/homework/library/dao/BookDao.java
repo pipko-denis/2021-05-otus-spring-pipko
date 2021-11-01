@@ -1,27 +1,29 @@
 package ru.pipko.otus.homework.library.dao;
 
 import ru.pipko.otus.homework.library.domain.Book;
+import ru.pipko.otus.homework.library.dto.BookComment;
 
 import java.util.List;
+import java.util.Optional;
 
 public interface BookDao {
 
     List<Book> getAll();
 
-    Book getById(long id);
+    Optional<Book> getById(long id);
 
     /**
      * After execution of the insertion, method "getId()" will return id of the inserted book
-     * @param book
+     * @param book - book entity
      * @return - inserted record count
      */
-    int insert(Book book);
+    Book insert(Book book);
 
     /**
-     * @param book
+     * @param book - book entity
      * @return updated record count
      */
-    int update(Book book);
+    Book update(Book book);
 
     /**
      * @param id key value from the database
@@ -29,5 +31,7 @@ public interface BookDao {
      */
     int delete(long id);
 
-    Integer getBooksCountByAuthorId(long authorId);
+    long getBooksCountByAuthorId(long authorId);
+
+    List<BookComment> getBookCommentsCount(int limit);
 }
