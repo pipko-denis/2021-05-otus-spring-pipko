@@ -8,7 +8,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 import org.springframework.boot.test.autoconfigure.orm.jpa.TestEntityManager;
 import org.springframework.context.annotation.Import;
-import ru.pipko.otus.homework.library.domain.Author;
 import ru.pipko.otus.homework.library.domain.Book;
 
 import java.util.List;
@@ -42,21 +41,21 @@ class BookJpaDaoTest {
                 .unwrap(SessionFactory.class);
         sessionFactory.getStatistics().setStatisticsEnabled(true);
 
-        List<Book> authors = bookDao.getAll();
-        assertThat(authors)
+        List<Book> books = bookDao.getAll();
+        assertThat(books)
                 .isNotNull()
                 .hasSize(EXPECTED_BOOKS_COUNT)
-                .allMatch(author -> author.getName() != null)
-                .allMatch(author -> !author.getName().equals(""));
+                .allMatch(book -> book.getName() != null)
+                .allMatch(book -> !book.getName().equals(""));
         assertThat(sessionFactory.getStatistics().getPrepareStatementCount()).isEqualTo(EXPECTED_QUERIES_COUNT);
     }
 
     @Test
     @DisplayName("корректно получать автора по идентификатору")
-    void shouldGetAuthorById() {
-        final Book authorFromEntityManager = em.find(Book.class, GET_BY_ID_PRIMARY_KEY);
-        final Optional<Book> authorFromDao = bookDao.getById(GET_BY_ID_PRIMARY_KEY);
-        assertThat(authorFromDao).isNotEmpty().get().usingRecursiveComparison().isEqualTo(authorFromEntityManager);
+    void shouldGetBookById() {
+        final Book bookFromEntityManager = em.find(Book.class, GET_BY_ID_PRIMARY_KEY);
+        final Optional<Book> bookFromDao = bookDao.getById(GET_BY_ID_PRIMARY_KEY);
+        assertThat(bookFromDao).isNotEmpty().get().usingRecursiveComparison().isEqualTo(bookFromEntityManager);
     }
 
 
@@ -78,32 +77,32 @@ class BookJpaDaoTest {
     @Test
     @DisplayName("корректно добавлять автора")
     void insert() {
-        Book author = new Book(INSERT_TEST_BOOK_NAME, Lists.emptyList(),Lists.emptyList());
+        Book book = new Book(INSERT_TEST_BOOK_NAME, Lists.emptyList(),Lists.emptyList());
 
-        bookDao.insert(author);
-        assertThat(author.getId()).isNotNull().isGreaterThan(0);
+        bookDao.insert(book);
+        assertThat(book.getId()).isNotNull().isGreaterThan(0);
 
-        final Author authorFromEntityManager = em.find(Author.class, author.getId());
+        final Book bookFromEntityManager = em.find(Book.class, book.getId());
 
-        assertThat(authorFromEntityManager).isNotNull().hasNoNullFieldsOrProperties().matches(s -> !s.getName().equals(""));
+        assertThat(bookFromEntityManager).isNotNull().hasNoNullFieldsOrProperties().matches(s -> !s.getName().equals(""));
     }
 
     @Test
     @DisplayName("корректно удалять автора по его идентификатору, но не трогать жанры и авторов")
     void delete() {
-        final Author authorFromEntityManager = em.persist(new Author(DELETE_TEST_BOOK_NAME));
-        assertThat(authorFromEntityManager.getId()).isNotNull().isGreaterThan(0);
-        em.detach(authorFromEntityManager);
+        final Book bookFromEntityManager = em.persist(new Book(DELETE_TEST_BOOK_NAME,Lists.emptyList(),Lists.emptyList()));
+        assertThat(bookFromEntityManager.getId()).isNotNull().isGreaterThan(0);
+        em.detach(bookFromEntityManager);
 
-        bookDao.delete(authorFromEntityManager.getId());
-        Author deletedAuthor = em.find(Author.class, authorFromEntityManager.getId());
-        assertThat(deletedAuthor).isNull();
+        bookDao.delete(bookFromEntityManager.getId());
+        Book deletedBook = em.find(Book.class, bookFromEntityManager.getId());
+        assertThat(deletedBook).isNull();
 
         assertThatCode( () -> bookDao.delete(GET_BY_ID_PRIMARY_KEY)).isInstanceOf(Throwable.class);
     }
 
     @Test
-    void getBooksCountByAuthorId() {
+    void getBooksCountByBookId() {
     }
 
     @Test
