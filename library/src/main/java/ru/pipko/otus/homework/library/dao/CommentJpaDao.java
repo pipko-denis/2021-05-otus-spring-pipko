@@ -37,8 +37,12 @@ public class CommentJpaDao implements CommentDao {
 
     @Override
     public List<Comment> getByBookId(long id) {
-        TypedQuery<Comment> query = em.createQuery("SELECT e FROM Comment e WHERE e.book.id = :id", Comment.class)
+        TypedQuery<Comment> query = em.createQuery(
+                "SELECT e FROM Comment e " +
+                        "join fetch e.book " +
+                        "WHERE e.book.id = :id", Comment.class)
                 .setParameter("id",id);
+
         return query.getResultList();
     }
 }
