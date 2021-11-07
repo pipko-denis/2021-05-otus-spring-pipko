@@ -56,14 +56,14 @@ public class BookJpaDao implements BookDao{
 
     @Override
     public int delete(long id) {
-        Query query = em.createQuery("DELETE FROM Books WHERE id = :id");
+        final Query query = em.createQuery("DELETE FROM Book e WHERE e.id = :id");
         query.setParameter("id",id);
         return query.executeUpdate();
     }
 
     @Override
     public long getBooksCountByAuthorId(long authorId) {
-        TypedQuery<Long> query = em.createQuery("SELECT COUNT(e) FROM Book e " +
+        final TypedQuery<Long> query = em.createQuery("SELECT COUNT(e) FROM Book e " +
                 "JOIN e.authors as a " +
                 "WHERE a.id = :authorId", Long.class);
         query.setParameter("authorId",authorId);
@@ -72,8 +72,7 @@ public class BookJpaDao implements BookDao{
 
     @Override
     public List<BookComment> getBookCommentsCount(int limit){
-        new BookComment("",3);
-        TypedQuery<BookComment> query = em
+        final TypedQuery<BookComment> query = em
                 .createQuery("SELECT new ru.pipko.otus.homework.library.dto.BookComment(e.name, COUNT(c)) " +
                                 "FROM Book e " +
                                 "left join e.comments c " +
