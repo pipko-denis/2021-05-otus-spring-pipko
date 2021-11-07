@@ -1,14 +1,12 @@
 package ru.pipko.otus.homework.library.dao;
 
+import org.hibernate.graph.GraphSemantic;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.stereotype.Repository;
 import ru.pipko.otus.homework.library.domain.Book;
 import ru.pipko.otus.homework.library.dto.BookComment;
 
-import javax.persistence.EntityManager;
-import javax.persistence.PersistenceContext;
-import javax.persistence.Query;
-import javax.persistence.TypedQuery;
+import javax.persistence.*;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -27,12 +25,26 @@ public class BookJpaDao implements BookDao{
 
     @Override
     public List<Book> getAll() {
-        return em.createQuery("SELECT e FROM Book e ORDER BY e.name",Book.class).getResultList();
+        EntityGraph<?> egAuthors = em.getEntityGraph("graph-authors");
+
+        TypedQuery<Book> query = em.createQuery("SELECT e " +
+                "FROM Book e " +
+//                "join fetch e.comments " +
+                "ORDER BY e.name", Book.class);
+        query.setHint(GraphSemantic.FETCH.getJpaHintName(), egAuthors);
+
+        return query.getResultList();
     }
 
     @Override
     public Optional<Book> getById(long id) {
-        return Optional.ofNullable(em.find(Book.class,id));
+        TypedQuery<Book> query = em.createQuery("SELECT b " +
+                "FROM Book b " +
+                "join fetch b.authors as a "+
+                "Where b.id = :id "+
+                "ORDER BY b.name", Book.class);
+        query.setParameter("id",id);
+        return Optional.ofNullable(query.getSingleResult());
     }
 
     @Override
