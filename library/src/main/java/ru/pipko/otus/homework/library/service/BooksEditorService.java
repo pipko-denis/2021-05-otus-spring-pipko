@@ -14,10 +14,9 @@ public interface BooksEditorService {
 
     Book getBookById(String id);
 
-    @Transactional
     List<BookComment> getBookCommentsCnt(String limit);
 
-    List<Book> getAllBooks();
+    List<Book> getAll();
 
     int deleteBookById(String id);
 

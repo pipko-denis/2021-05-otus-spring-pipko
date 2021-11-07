@@ -47,7 +47,6 @@ public class BooksEditorServiceImpl implements BooksEditorService {
     }
 
 
-    @Transactional
     @Override
     public Book editBook(String id, String bookName, String authorsInline, String genreId) {
         if ( ! evaluatingService.isThereAreOnlyDigitsInText(id) )
@@ -70,7 +69,6 @@ public class BooksEditorServiceImpl implements BooksEditorService {
 
     }
 
-    @Transactional
     @Override
     public Book getBookById(String id) {
         if ( ! evaluatingService.isThereAreOnlyDigitsInText(id) )
@@ -87,7 +85,6 @@ public class BooksEditorServiceImpl implements BooksEditorService {
 
     }
 
-    @Transactional
     @Override
     public List<BookComment> getBookCommentsCnt(String limit) {
         if ( ! evaluatingService.isThereAreOnlyDigitsInText(limit) ) limit = "5";
@@ -101,9 +98,8 @@ public class BooksEditorServiceImpl implements BooksEditorService {
         }
     }
 
-    @Transactional
     @Override
-    public List<Book> getAllBooks() {
+    public List<Book> getAll() {
         try {
             return bookDao.getAll();
         } catch (IncorrectResultSizeDataAccessException ex){

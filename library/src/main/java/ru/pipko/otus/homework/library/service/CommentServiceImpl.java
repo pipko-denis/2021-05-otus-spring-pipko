@@ -3,6 +3,7 @@ package ru.pipko.otus.homework.library.service;
 import lombok.RequiredArgsConstructor;
 import org.springframework.dao.IncorrectResultSizeDataAccessException;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import ru.pipko.otus.homework.library.dao.CommentDao;
 import ru.pipko.otus.homework.library.domain.Book;
 import ru.pipko.otus.homework.library.domain.Comment;
@@ -23,6 +24,7 @@ public class CommentServiceImpl implements CommentService {
 
     private final BooksEditorService booksService;
 
+    @Transactional
     @Override
     public void deleteComment(String id) {
         if ( ! evaluatingService.isThereAreOnlyDigitsInText(id) )
@@ -36,6 +38,7 @@ public class CommentServiceImpl implements CommentService {
 
     }
 
+    @Transactional
     @Override
     public Comment addComment(String bookId, String commentText) {
         if ( ! evaluatingService.isTextNotNullAndNotBlank(commentText) )
@@ -54,6 +57,7 @@ public class CommentServiceImpl implements CommentService {
         return commentDao.insert(comment);
     }
 
+    @Transactional(readOnly = true)
     @Override
     public List<Comment> getByBookId(String id) {
 

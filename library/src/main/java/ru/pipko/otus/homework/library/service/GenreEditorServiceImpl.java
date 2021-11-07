@@ -19,7 +19,7 @@ public class GenreEditorServiceImpl implements GenreEditorService {
     private final EvaluatingDataServiceImpl evaluatingService;
     private final GenreDao genreDao;
 
-    @Transactional
+    @Transactional(readOnly = true)
     @Override
     public Genre getGenreById(String id)  {
         if ( ! evaluatingService.isThereAreOnlyDigitsInText(id) )
@@ -35,6 +35,7 @@ public class GenreEditorServiceImpl implements GenreEditorService {
         return optionalGenre.get();
     }
 
+    @Transactional(readOnly = true)
     @Override
     public List<Genre> getGenresById(String[] idsInline) {
         evaluatingService.checkArrayOnDigitsThrowException("Genre", idsInline);
@@ -52,6 +53,7 @@ public class GenreEditorServiceImpl implements GenreEditorService {
         return result;
     }
 
+    @Transactional
     @Override
     public Genre addGenre(Genre genre) {
         if (genre == null) {
@@ -63,6 +65,7 @@ public class GenreEditorServiceImpl implements GenreEditorService {
         return genreDao.insert(genre);
     }
 
+    @Transactional(readOnly = true)
     @Override
     public List<Genre> getAll() {
         return genreDao.getAll();
