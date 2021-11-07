@@ -1,7 +1,6 @@
 package ru.pipko.otus.homework.library.service;
 
 import lombok.RequiredArgsConstructor;
-import org.springframework.dao.IncorrectResultSizeDataAccessException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import ru.pipko.otus.homework.library.dao.AuthorDao;
@@ -23,7 +22,7 @@ public class AuthorEditorServiceImpl implements AuthorEditorService {
     private final AuthorDao authorDao;
     private final BookDao bookDao;
 
-    @Transactional
+    @Transactional(readOnly = true)
     @Override
     public Author getAuthorById(String id)  {
         if ( ! evaluatingService.isThereAreOnlyDigitsInText(id) )
@@ -40,7 +39,7 @@ public class AuthorEditorServiceImpl implements AuthorEditorService {
 
     }
 
-    @Transactional
+    @Transactional(readOnly = true)
     @Override
     public List<Author> getAuthorsById(String[] ids)  {
 
@@ -93,7 +92,7 @@ public class AuthorEditorServiceImpl implements AuthorEditorService {
         return authorDao.insert(author);
     }
 
-    @Transactional
+    @Transactional(readOnly = true)
     @Override
     public List<Author> getAll() {
         return authorDao.getAll();
