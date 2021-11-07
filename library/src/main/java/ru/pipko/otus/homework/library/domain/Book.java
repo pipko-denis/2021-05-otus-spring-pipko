@@ -1,6 +1,9 @@
 package ru.pipko.otus.homework.library.domain;
 
 import lombok.*;
+import org.hibernate.annotations.BatchSize;
+import org.hibernate.annotations.Fetch;
+import org.hibernate.annotations.FetchMode;
 
 import javax.persistence.*;
 import java.util.List;
@@ -12,6 +15,7 @@ import java.util.List;
 @AllArgsConstructor
 @NoArgsConstructor
 @ToString
+@NamedEntityGraph(name = "graph-authors", attributeNodes = {@NamedAttributeNode("authors")})
 public class Book {
 
     @Id
@@ -19,7 +23,7 @@ public class Book {
     @Column(name = "id")
     private Long id;
 
-    @Column(name = "name", unique = true, nullable = false, length = 255)
+    @Column(name = "name", unique = true, nullable = false)
     private String name;
 
     @ManyToMany(targetEntity = Author.class, cascade = {CascadeType.ALL }, fetch = FetchType.LAZY)
@@ -27,12 +31,15 @@ public class Book {
     @ToString.Exclude
     private List<Author> authors;
 
-    @ManyToMany(targetEntity = Genre.class, cascade = {CascadeType.ALL }, fetch = FetchType.LAZY)
+    @Fetch(FetchMode.SUBSELECT)
+    @ManyToMany(targetEntity = Genre.class, cascade = {CascadeType.ALL}, fetch = FetchType.LAZY)
     @JoinTable(name = "books_genres", joinColumns = { @JoinColumn(name = "book_id")}, inverseJoinColumns = {@JoinColumn(name = "genre_id")})
     @ToString.Exclude
     private List<Genre> genres;
 
-    @OneToMany(targetEntity = Comment.class,cascade = CascadeType.ALL )
+    @Fetch(FetchMode.SELECT)
+    @BatchSize(size = 5)
+    @OneToMany(targetEntity = Comment.class,cascade = CascadeType.ALL , fetch = FetchType.LAZY)
     @JoinColumn(name = "book_id")
     @ToString.Exclude
     private List<Comment> comments;
