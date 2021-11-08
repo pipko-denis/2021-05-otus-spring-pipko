@@ -6,6 +6,7 @@ import org.hibernate.annotations.Fetch;
 import org.hibernate.annotations.FetchMode;
 
 import javax.persistence.*;
+import java.util.ArrayList;
 import java.util.List;
 
 @Entity
@@ -48,5 +49,6 @@ public class Book {
         this.name = name;
         this.authors = authors;
         this.genres = genres;
+        this.comments = new ArrayList<>();
     }
 }
