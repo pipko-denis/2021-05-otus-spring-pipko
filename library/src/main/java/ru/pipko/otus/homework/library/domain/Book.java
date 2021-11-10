@@ -49,6 +49,5 @@ public class Book {
         this.name = name;
         this.authors = authors;
         this.genres = genres;
-        this.comments = new ArrayList<>();
     }
 }

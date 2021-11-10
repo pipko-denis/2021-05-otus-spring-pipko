@@ -51,7 +51,7 @@ class BookJpaDaoTest {
     }
 
     @Test
-    @DisplayName("корректно получать автора по идентификатору")
+    @DisplayName("корректно получать книгу по идентификатору")
     void shouldGetBookById() {
         final Book bookFromEntityManager = em.find(Book.class, GET_BY_ID_PRIMARY_KEY);
         final Optional<Book> bookFromDao = bookDao.getById(GET_BY_ID_PRIMARY_KEY);
@@ -75,9 +75,10 @@ class BookJpaDaoTest {
     }
 
     @Test
-    @DisplayName("корректно добавлять автора")
+    @DisplayName("корректно добавлять книгу")
     void insert() {
         Book book = new Book(INSERT_TEST_BOOK_NAME, Lists.emptyList(),Lists.emptyList());
+        book.setComments(Lists.emptyList());
 
         bookDao.insert(book);
         assertThat(book.getId()).isNotNull().isGreaterThan(0);
@@ -88,7 +89,7 @@ class BookJpaDaoTest {
     }
 
     @Test
-    @DisplayName("корректно удалять автора по его идентификатору, но не трогать жанры и авторов")
+    @DisplayName("корректно удалять книгу по её идентификатору, но не трогать жанры и авторов")
     void delete() {
         final Book bookFromEntityManager = em.persist(new Book(DELETE_TEST_BOOK_NAME,Lists.emptyList(),Lists.emptyList()));
         assertThat(bookFromEntityManager.getId()).isNotNull().isGreaterThan(0);

@@ -28,4 +28,9 @@ public class Comment {
         this.text = text;
         this.book = book;
     }
+
+    public Comment(Long id, String text) {
+        this.id = id;
+        this.text = text;
+    }
 }
