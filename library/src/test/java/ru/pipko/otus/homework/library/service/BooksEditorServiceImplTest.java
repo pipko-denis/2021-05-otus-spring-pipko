@@ -5,14 +5,12 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
-import org.springframework.boot.test.autoconfigure.orm.jpa.TestEntityManager;
+import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Description;
 import org.springframework.context.annotation.Import;
 import org.springframework.dao.EmptyResultDataAccessException;
-import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
 import ru.pipko.otus.homework.library.dao.AuthorDao;
 import ru.pipko.otus.homework.library.dao.BookDao;
 import ru.pipko.otus.homework.library.dao.GenreDao;
@@ -28,9 +26,8 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatCode;
 
 @DisplayName("Сервис BooksEditorServiceImpl должен")
-@DataJpaTest
+@SpringBootTest
 @Import({BooksEditorServiceImpl.class})
-@EnableJpaRepositories
 class BooksEditorServiceImplTest {
 
     public static final int EXPECTED_DELETED_RECORD_COUNT = 1;
@@ -39,8 +36,6 @@ class BooksEditorServiceImplTest {
     public static final String GENRE_1 = "Genre1";
     public static final String COMMENT_1 = "Comment1";
 
-    @Autowired
-    private TestEntityManager em;
 
     @Autowired
     private BooksEditorService booksEditorService;
@@ -71,10 +66,6 @@ class BooksEditorServiceImplTest {
     @Test
     @Description("корретно добавлять книгу")
     void addBook() {
-        System.out.println("_________________________________");
-        System.out.print(booksEditorService.getAll());
-        System.out.println("_________________________________");
-
         final Author expectedAuthor = new Author(1L, AUTHOR_1);
         final Genre expectedGenre = new Genre(1L, GENRE_1);
         final Book expectedBook = new Book(EXPECTED_BOOK_NAME, Lists.list(expectedAuthor), Lists.list(expectedGenre));
@@ -109,9 +100,9 @@ class BooksEditorServiceImplTest {
         Mockito.when(evaluatingDataService.isTextNotNullAndNotBlank(Mockito.any())).thenReturn(true);
         Mockito.when(evaluatingDataService.isThereAreOnlyDigitsInText(Mockito.any())).thenReturn(true);
 
-        Book bookAfterEditing = booksEditorService.editBook("1","New name","2","2");
+        Book actualBook = booksEditorService.editBook("1","New name","2","2");
 
-        assertThat(bookAfterEditing).usingRecursiveComparison().isEqualTo(bookExpected);
+        assertThat(actualBook).usingRecursiveComparison().isEqualTo(bookExpected);
     }
 
     @Test
@@ -122,7 +113,7 @@ class BooksEditorServiceImplTest {
         final Genre genre1 = new Genre(1L, GENRE_1);
         final Book bookExpected = new Book(1L, "Book1", List.of(author1), List.of(genre1), Collections.emptyList());
 
-        Mockito.when(bookJpaDao.getById(Mockito.anyLong())).thenReturn(Optional.of(bookExpected));
+        Mockito.when(bookJpaDao.getById(1L)).thenReturn(Optional.of(bookExpected));
         Mockito.when(evaluatingDataService.isTextNotNullAndNotBlank(Mockito.any())).thenReturn(true);
         Mockito.when(evaluatingDataService.isThereAreOnlyDigitsInText(Mockito.any())).thenReturn(true);
 
