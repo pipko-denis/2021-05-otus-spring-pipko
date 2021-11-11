@@ -59,11 +59,12 @@ public class BooksEditorServiceImpl implements BooksEditorService {
         String[] authorsIds = authorsInline.replaceAll(" ","").split(",");
         final List<Author> authors = authorService.getAuthorsById(authorsIds);
 
-        final Genre genre = genreEditorService.getGenreById(genreId);
+        String[] genreIds = authorsInline.replaceAll(" ","").split(",");
+        final List<Genre> genres = genreEditorService.getGenresById(genreIds);
 
         book.setName(bookName);
         book.setAuthors(authors);
-        book.setGenres(List.of(genre));
+        book.setGenres(genres);
 
         return bookDao.update(book);
 
