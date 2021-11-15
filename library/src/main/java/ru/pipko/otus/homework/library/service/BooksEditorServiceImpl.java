@@ -32,15 +32,14 @@ public class BooksEditorServiceImpl implements BooksEditorService {
 
     @Transactional
     @Override
-    public Book addBook(String bookName, String authorsInline, String genresInline)  {
+    public Book addBook(String bookName, String authorsInline, String genreIdsInline)  {
 
-        if ( ! evaluatingService.isTextNotNullAndNotBlank(bookName) )
-            throw new ServiceRuntimeException(BOOK_NAME_IS_INCORRECT_IT_SHOULD_NOT_BE_EMPTY);
+        evaluatingService.isTextNotNullAndNotBlank(bookName,BOOK_NAME_IS_INCORRECT_IT_SHOULD_NOT_BE_EMPTY);
 
         final String[] authorsIds = authorsInline.replaceAll(" ","").split(",");
         final List<Author> authors = authorService.getAuthorsById(authorsIds);
 
-        final String[] genreIds = authorsInline.replaceAll(" ","").split(",");
+        final String[] genreIds = genreIdsInline.replaceAll(" ","").split(",");
         final List<Genre> genres = genreEditorService.getGenresById(genreIds);
 
         final Book book = new Book(bookName, authors, genres);
@@ -50,18 +49,17 @@ public class BooksEditorServiceImpl implements BooksEditorService {
 
 
     @Override
-    public Book editBook(String id, String bookName, String authorsInline, String genreId) {
+    public Book editBook(String id, String bookName, String authorsInline, String genreIdsInline) {
         evaluatingService.throwExceptionIfNotOnlyDigitsInText(id,BOOK_ID_IS_INCORRECT_IT_SHOULD_CONTAINS_ONLY_DIGITS);
 
-        if ( ! evaluatingService.isTextNotNullAndNotBlank(bookName) )
-            throw new ServiceRuntimeException(BOOK_NAME_IS_INCORRECT_IT_SHOULD_NOT_BE_EMPTY);
+        evaluatingService.isTextNotNullAndNotBlank(bookName,BOOK_NAME_IS_INCORRECT_IT_SHOULD_NOT_BE_EMPTY);
 
         final Book book = getBookById(id);
 
         String[] authorsIds = authorsInline.replaceAll(" ","").split(",");
         final List<Author> authors = authorService.getAuthorsById(authorsIds);
 
-        String[] genreIds = authorsInline.replaceAll(" ","").split(",");
+        String[] genreIds = genreIdsInline.replaceAll(" ","").split(",");
         final List<Genre> genres = genreEditorService.getGenresById(genreIds);
 
         book.setName(bookName);

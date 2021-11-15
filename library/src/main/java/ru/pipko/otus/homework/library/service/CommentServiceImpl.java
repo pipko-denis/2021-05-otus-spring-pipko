@@ -41,8 +41,7 @@ public class CommentServiceImpl implements CommentService {
     @Transactional
     @Override
     public Comment addComment(String bookId, String commentText) {
-        if ( ! evaluatingService.isTextNotNullAndNotBlank(commentText) )
-            throw new ServiceRuntimeException(COMMENT_IS_INCORRECT_IT_SHOULD_NOT_BE_EMPTY);
+        evaluatingService.isTextNotNullAndNotBlank(commentText,COMMENT_IS_INCORRECT_IT_SHOULD_NOT_BE_EMPTY);
         evaluatingService.throwExceptionIfNotOnlyDigitsInText(bookId, ID_IS_INCORRECT_IT_SHOULD_CONTAIN_ONLY_DIGITS);
 
         final Book book = booksService.getBookById(bookId);

@@ -23,14 +23,16 @@ public class EvaluatingDataServiceImpl implements EvaluatingDataService{
 
     @Override
     public void throwExceptionIfNotOnlyDigitsInText(String text, String exceptionMessage) {
-        if ( (text == null)|| (PATTERN_POSITIVE_INT.matcher(text).matches())) {
-            throw new EvaluatingException(exceptionMessage);
+        if ( (text == null)|| (!PATTERN_POSITIVE_INT.matcher(text).matches())) {
+            throw new EvaluatingException( (exceptionMessage == null) ? "Incorrect parameter \""+text+"\" it should contain only digits!" : exceptionMessage );
         }
     }
 
     @Override
-    public boolean isTextNotNullAndNotBlank( String text) {
-        return (text != null) && (! text.isBlank());
+    public void isTextNotNullAndNotBlank( String text, String exceptionMessage) {
+        if ((text == null) || (text.isBlank()) ) {
+            throw new EvaluatingException( (exceptionMessage == null) ? "Text \""+text+"\" is incorrect! It should not be blank." : exceptionMessage);
+        }
     }
 
     @Override

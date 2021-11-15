@@ -16,6 +16,7 @@ import java.util.stream.Collectors;
 @RequiredArgsConstructor
 public class GenreEditorServiceImpl implements GenreEditorService {
 
+    public static final String GENRE_NAME_SHOULD_NOT_BE_EMPTY = "Genre name should not be empty";
     private final EvaluatingDataServiceImpl evaluatingService;
     private final GenreDao genreDao;
 
@@ -58,8 +59,7 @@ public class GenreEditorServiceImpl implements GenreEditorService {
         if (genre == null) {
             throw new ServiceRuntimeException("Service error: genre is null!");
         }
-        if ( ! evaluatingService.isTextNotNullAndNotBlank(genre.getName()) )
-            throw new ServiceRuntimeException("Genre name should not be empty");
+        evaluatingService.isTextNotNullAndNotBlank(genre.getName(), GENRE_NAME_SHOULD_NOT_BE_EMPTY);
 
         return genreDao.insert(genre);
     }

@@ -85,8 +85,8 @@ public class AuthorEditorServiceImpl implements AuthorEditorService {
         if (author == null) {
             throw new ServiceRuntimeException("Service error: author is null!");
         }
-        if ( ! evaluatingService.isTextNotNullAndNotBlank(author.getName()) )
-            throw new ServiceRuntimeException("Author name should not be empty");
+
+        evaluatingService.isTextNotNullAndNotBlank(author.getName(),"Author name should not be empty");
 
         return authorDao.insert(author);
     }
