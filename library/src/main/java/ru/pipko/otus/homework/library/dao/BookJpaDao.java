@@ -3,6 +3,7 @@ package ru.pipko.otus.homework.library.dao;
 import org.hibernate.graph.GraphSemantic;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.stereotype.Repository;
+import ru.pipko.otus.homework.library.exceptions.DaoRuntimeException;
 import ru.pipko.otus.homework.library.domain.Book;
 import ru.pipko.otus.homework.library.dto.BookComment;
 
@@ -52,7 +53,7 @@ public class BookJpaDao implements BookDao{
         if (book.getId() == null){
             em.persist(book);
         } else{
-            throw new RuntimeException("Attempt to add existing record, id = "+book.getId());
+            throw new DaoRuntimeException("Attempt to add existing record, id = "+book.getId());
         }
         return  book;
     }
@@ -60,7 +61,7 @@ public class BookJpaDao implements BookDao{
     @Override
     public Book update(Book book) {
         if (book.getId() == null){
-            throw new RuntimeException("Book should have an id!");
+            throw new DaoRuntimeException("Book should have an id!");
         }else{
             return em.merge(book);
         }

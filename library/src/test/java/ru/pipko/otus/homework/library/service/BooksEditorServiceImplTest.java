@@ -17,6 +17,8 @@ import ru.pipko.otus.homework.library.dao.GenreDao;
 import ru.pipko.otus.homework.library.domain.Author;
 import ru.pipko.otus.homework.library.domain.Book;
 import ru.pipko.otus.homework.library.domain.Genre;
+import ru.pipko.otus.homework.library.exceptions.EvaluatingException;
+import ru.pipko.otus.homework.library.exceptions.ServiceRuntimeException;
 
 import java.util.Collections;
 import java.util.List;
@@ -27,7 +29,7 @@ import static org.assertj.core.api.Assertions.assertThatCode;
 
 @DisplayName("Сервис BooksEditorServiceImpl должен")
 @SpringBootTest
-@Import({BooksEditorServiceImpl.class})
+@Import({BooksEditorServiceImpl.class, EvaluatingDataServiceImpl.class})
 class BooksEditorServiceImplTest {
 
     public static final int EXPECTED_DELETED_RECORD_COUNT = 1;
@@ -35,10 +37,16 @@ class BooksEditorServiceImplTest {
     public static final String AUTHOR_1 = "Author1";
     public static final String GENRE_1 = "Genre1";
     public static final String COMMENT_1 = "Comment1";
+    public static final String TEXT_TO_PRODUCE_ERROR = "text to produce error";
+    public static final String NOT_BLANK_BOOK_NAME = "Not blank book name";
+    public static final String BLANK_TEXT_TO_PRODUCE_ERROR = "";
 
 
     @Autowired
     private BooksEditorService booksEditorService;
+
+    @Autowired
+    private EvaluatingDataService evaluatingDataService;
 
     @MockBean
     private AuthorDao authorJdbcDao;
@@ -55,9 +63,6 @@ class BooksEditorServiceImplTest {
     @MockBean
     private AuthorEditorService authorEditorService;
 
-    @MockBean
-    private EvaluatingDataService evaluatingDataService;
-
     @Configuration
     static class Config {
 
@@ -70,10 +75,9 @@ class BooksEditorServiceImplTest {
         final Genre expectedGenre = new Genre(1L, GENRE_1);
         final Book expectedBook = new Book(EXPECTED_BOOK_NAME, Lists.list(expectedAuthor), Lists.list(expectedGenre));
 
-        Mockito.when(authorEditorService.getAuthorById("1")).thenReturn(expectedAuthor);
-        Mockito.when(genreEditorService.getGenreById("1")).thenReturn(expectedGenre);
+        Mockito.when(authorJdbcDao.getById(Mockito.anyList())).thenReturn(Lists.list(expectedAuthor));
+        Mockito.when(genreJdbcDao.getById(Mockito.anyList())).thenReturn(Lists.list(expectedGenre));
         Mockito.when(bookJpaDao.insert(Mockito.any())).thenReturn(expectedBook);
-        Mockito.when(evaluatingDataService.isTextNotNullAndNotBlank(Mockito.any())).thenReturn(true);
 
         final Book actualBook = booksEditorService.addBook(EXPECTED_BOOK_NAME, "1", "1");
 
@@ -84,9 +88,33 @@ class BooksEditorServiceImplTest {
     }
 
     @Test
-    @Description("корректно изменять данные книги")
+    @Description("не позволять сохранять не корректные данные")
     void editBook() {
+/**/
         final Author author1 = new Author(1L, AUTHOR_1);
+        final Genre genre1 = new Genre(1L, GENRE_1);
+        final Author author2 = new Author(2L, "Author2");
+        final Genre genre2 = new Genre(2L, "Genre2");
+        final Book bookForUpdateCheck = new Book(1L, "Book1", List.of(author1) , List.of(genre1), Collections.emptyList());
+        final Book bookExpected = new Book(1L, "New name", List.of(author2), List.of(genre2), Collections.emptyList());
+
+        Mockito.when(bookJpaDao.getById(Mockito.anyLong())).thenReturn(Optional.of(bookForUpdateCheck));
+        Mockito.when(authorJdbcDao.getById(Mockito.anyList())).thenReturn(List.of(author2));
+        Mockito.when(genreJdbcDao.getById(Mockito.anyList())).thenReturn(List.of(genre2));
+
+        assertThatCode( () -> booksEditorService.editBook(TEXT_TO_PRODUCE_ERROR,NOT_BLANK_BOOK_NAME,"2","2")).isInstanceOf(EvaluatingException.class);
+
+        assertThatCode( () -> booksEditorService.editBook(BLANK_TEXT_TO_PRODUCE_ERROR, NOT_BLANK_BOOK_NAME,"2","2")).isInstanceOf(EvaluatingException.class);
+
+        assertThatCode( () -> booksEditorService.editBook("1", BLANK_TEXT_TO_PRODUCE_ERROR,"2","2")).isInstanceOf(EvaluatingException.class);
+
+        //booksEditorService.editBook("1",NOT_BLANK_BOOK_NAME, TEXT_TO_PRODUCE_ERROR,"2");
+
+        assertThatCode( () -> booksEditorService.editBook("1",NOT_BLANK_BOOK_NAME, TEXT_TO_PRODUCE_ERROR,"2")).isInstanceOf(EvaluatingException.class);
+
+        assertThatCode( () -> booksEditorService.editBook("1",NOT_BLANK_BOOK_NAME, "2",TEXT_TO_PRODUCE_ERROR)).isInstanceOf(EvaluatingException.class);
+
+        /*final Author author1 = new Author(1L, AUTHOR_1);
         final Genre genre1 = new Genre(1L, GENRE_1);
         final Author author2 = new Author(2L, "Author2");
         final Genre genre2 = new Genre(2L, "Genre2");
@@ -102,7 +130,7 @@ class BooksEditorServiceImplTest {
 
         Book actualBook = booksEditorService.editBook("1","New name","2","2");
 
-        assertThat(actualBook).usingRecursiveComparison().isEqualTo(bookExpected);
+        assertThat(actualBook).usingRecursiveComparison().isEqualTo(bookExpected);*/
     }
 
     @Test
@@ -115,7 +143,6 @@ class BooksEditorServiceImplTest {
 
         Mockito.when(bookJpaDao.getById(1L)).thenReturn(Optional.of(bookExpected));
         Mockito.when(evaluatingDataService.isTextNotNullAndNotBlank(Mockito.any())).thenReturn(true);
-        Mockito.when(evaluatingDataService.isThereAreOnlyDigitsInText(Mockito.any())).thenReturn(true);
 
         Book bookFromService = booksEditorService.getBookById("1");
 
@@ -129,7 +156,6 @@ class BooksEditorServiceImplTest {
 
         Mockito.when(bookJpaDao.delete(1)).thenReturn(1);
         Mockito.when(evaluatingDataService.isTextNotNullAndNotBlank(Mockito.any())).thenReturn(true);
-        Mockito.when(evaluatingDataService.isThereAreOnlyDigitsInText(Mockito.any())).thenReturn(true);
         Mockito.when(bookJpaDao.getById(1)).thenThrow(EmptyResultDataAccessException.class);
 
         int deletedRecCount = booksEditorService.deleteBookById("1");

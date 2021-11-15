@@ -1,6 +1,7 @@
 package ru.pipko.otus.homework.library.dao;
 
 import org.springframework.stereotype.Repository;
+import ru.pipko.otus.homework.library.exceptions.DaoRuntimeException;
 import ru.pipko.otus.homework.library.domain.Comment;
 
 import javax.persistence.EntityManager;
@@ -23,7 +24,7 @@ public class CommentJpaDao implements CommentDao {
         if (comment.getId() == null){
             em.persist(comment);
         }else{
-            throw new RuntimeException("Attempt to add existing record, id = "+comment.getId());
+            throw new DaoRuntimeException("Attempt to add existing record, id = "+comment.getId());
         }
         return comment;
     }

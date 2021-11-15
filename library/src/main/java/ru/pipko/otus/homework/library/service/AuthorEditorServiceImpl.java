@@ -6,6 +6,7 @@ import org.springframework.transaction.annotation.Transactional;
 import ru.pipko.otus.homework.library.dao.AuthorDao;
 import ru.pipko.otus.homework.library.dao.BookDao;
 import ru.pipko.otus.homework.library.domain.Author;
+import ru.pipko.otus.homework.library.exceptions.ServiceRuntimeException;
 
 import java.util.Arrays;
 import java.util.List;
@@ -25,15 +26,14 @@ public class AuthorEditorServiceImpl implements AuthorEditorService {
     @Transactional(readOnly = true)
     @Override
     public Author getAuthorById(String id)  {
-        if ( ! evaluatingService.isThereAreOnlyDigitsInText(id) )
-            throw new RuntimeException(AUTHOR_ID_IS_INCORRECT_IT_SHOULD_CONTAINS_ONLY_DIGITS);
+        evaluatingService.throwExceptionIfNotOnlyDigitsInText(id,AUTHOR_ID_IS_INCORRECT_IT_SHOULD_CONTAINS_ONLY_DIGITS);
 
         final long authorId = Long.parseLong(id);
 
         Optional<Author> authorOptional = authorDao.getById(authorId);
 
         if (authorOptional.isEmpty())
-            throw new RuntimeException(THERE_ARE_NO_AUTHORS_WITH_ID +id+"!");
+            throw new ServiceRuntimeException(THERE_ARE_NO_AUTHORS_WITH_ID +id+"!");
 
         return authorOptional.get();
 
@@ -50,7 +50,7 @@ public class AuthorEditorServiceImpl implements AuthorEditorService {
         List<Author> result = authorDao.getById(idsLong);
 
         if (result.size() != ids.length){
-            throw new RuntimeException("Results count doesn't match requested authors count:\n" +
+            throw new ServiceRuntimeException("Results count doesn't match requested authors count:\n" +
                     "ids: "+List.of(ids)+"\n" +
                     "results: "+result.stream().map(author -> author.getId().toString()).collect(Collectors.joining(",")));
         }
@@ -61,21 +61,20 @@ public class AuthorEditorServiceImpl implements AuthorEditorService {
     @Transactional
     @Override
     public int deleteAuthorById(String id) {
-        if ( ! evaluatingService.isThereAreOnlyDigitsInText(id) )
-            throw new RuntimeException(AUTHOR_ID_IS_INCORRECT_IT_SHOULD_CONTAINS_ONLY_DIGITS);
+        evaluatingService.throwExceptionIfNotOnlyDigitsInText(id,AUTHOR_ID_IS_INCORRECT_IT_SHOULD_CONTAINS_ONLY_DIGITS);
 
         final long authorId = Long.parseLong(id);
         long authorsBookCount = bookDao.getBooksCountByAuthorId(authorId);
 
         if ( authorsBookCount > 0 )
-            throw new RuntimeException("You can't delete author with id = "+id+"! " +
+            throw new ServiceRuntimeException("You can't delete author with id = "+id+"! " +
                 "It's used in "+authorsBookCount+" books! " +
                 "Try to delete books or change there's authors first");
 
         final int deletedRecCount = authorDao.delete(authorId);
 
         if (deletedRecCount == 0)
-            throw new RuntimeException(THERE_ARE_NO_AUTHORS_WITH_ID+id);
+            throw new ServiceRuntimeException(THERE_ARE_NO_AUTHORS_WITH_ID+id);
 
         return deletedRecCount;
     }
@@ -84,10 +83,10 @@ public class AuthorEditorServiceImpl implements AuthorEditorService {
     @Override
     public Author addAuthor(Author author) {
         if (author == null) {
-            throw new RuntimeException("Service error: author is null!");
+            throw new ServiceRuntimeException("Service error: author is null!");
         }
         if ( ! evaluatingService.isTextNotNullAndNotBlank(author.getName()) )
-            throw new RuntimeException("Author name should not be empty");
+            throw new ServiceRuntimeException("Author name should not be empty");
 
         return authorDao.insert(author);
     }

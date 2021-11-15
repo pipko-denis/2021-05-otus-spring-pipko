@@ -2,13 +2,13 @@ package ru.pipko.otus.homework.library.dao;
 
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.stereotype.Repository;
+import ru.pipko.otus.homework.library.exceptions.DaoRuntimeException;
 import ru.pipko.otus.homework.library.domain.Author;
 
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import javax.persistence.Query;
 import javax.persistence.TypedQuery;
-import javax.swing.text.html.Option;
 import java.util.List;
 import java.util.Optional;
 
@@ -54,7 +54,7 @@ public class AuthorJpaDao implements AuthorDao{
         if (author.getId() == null){
             em.persist(author);
         } else {
-            throw new RuntimeException("Attempting to add existing record, id = "+author.getId());
+            throw new DaoRuntimeException("Attempting to add existing record, id = "+author.getId());
         }
         return author;
     }

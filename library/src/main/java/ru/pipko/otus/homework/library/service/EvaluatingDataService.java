@@ -2,7 +2,7 @@ package ru.pipko.otus.homework.library.service;
 
 public interface EvaluatingDataService {
 
-    boolean isThereAreOnlyDigitsInText(String text);
+    void throwExceptionIfNotOnlyDigitsInText(String text, String exceptionMessage);
 
     boolean isTextNotNullAndNotBlank(String text);
 

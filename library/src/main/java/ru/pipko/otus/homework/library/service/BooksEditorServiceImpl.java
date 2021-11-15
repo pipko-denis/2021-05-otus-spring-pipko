@@ -9,6 +9,8 @@ import ru.pipko.otus.homework.library.domain.Author;
 import ru.pipko.otus.homework.library.domain.Book;
 import ru.pipko.otus.homework.library.domain.Genre;
 import ru.pipko.otus.homework.library.dto.BookComment;
+import ru.pipko.otus.homework.library.exceptions.EvaluatingException;
+import ru.pipko.otus.homework.library.exceptions.ServiceRuntimeException;
 
 import java.util.List;
 import java.util.Optional;
@@ -33,7 +35,7 @@ public class BooksEditorServiceImpl implements BooksEditorService {
     public Book addBook(String bookName, String authorsInline, String genresInline)  {
 
         if ( ! evaluatingService.isTextNotNullAndNotBlank(bookName) )
-            throw new RuntimeException(BOOK_NAME_IS_INCORRECT_IT_SHOULD_NOT_BE_EMPTY);
+            throw new ServiceRuntimeException(BOOK_NAME_IS_INCORRECT_IT_SHOULD_NOT_BE_EMPTY);
 
         final String[] authorsIds = authorsInline.replaceAll(" ","").split(",");
         final List<Author> authors = authorService.getAuthorsById(authorsIds);
@@ -49,10 +51,10 @@ public class BooksEditorServiceImpl implements BooksEditorService {
 
     @Override
     public Book editBook(String id, String bookName, String authorsInline, String genreId) {
-        if ( ! evaluatingService.isThereAreOnlyDigitsInText(id) )
-            throw new RuntimeException(BOOK_ID_IS_INCORRECT_IT_SHOULD_CONTAINS_ONLY_DIGITS);
+        evaluatingService.throwExceptionIfNotOnlyDigitsInText(id,BOOK_ID_IS_INCORRECT_IT_SHOULD_CONTAINS_ONLY_DIGITS);
+
         if ( ! evaluatingService.isTextNotNullAndNotBlank(bookName) )
-            throw new RuntimeException(BOOK_NAME_IS_INCORRECT_IT_SHOULD_NOT_BE_EMPTY);
+            throw new ServiceRuntimeException(BOOK_NAME_IS_INCORRECT_IT_SHOULD_NOT_BE_EMPTY);
 
         final Book book = getBookById(id);
 
@@ -72,15 +74,14 @@ public class BooksEditorServiceImpl implements BooksEditorService {
 
     @Override
     public Book getBookById(String id) {
-        if ( ! evaluatingService.isThereAreOnlyDigitsInText(id) )
-            throw new RuntimeException(BOOK_ID_IS_INCORRECT_IT_SHOULD_CONTAINS_ONLY_DIGITS);
+        evaluatingService.throwExceptionIfNotOnlyDigitsInText(id,BOOK_ID_IS_INCORRECT_IT_SHOULD_CONTAINS_ONLY_DIGITS);
 
         final long bookId = Long.parseLong(id);
 
         Optional<Book> optionalBook = bookDao.getById(bookId);
 
         if (optionalBook.isEmpty())
-            throw new RuntimeException(THERE_ARE_NO_BOOKS_WITH_ID +id);
+            throw new ServiceRuntimeException(THERE_ARE_NO_BOOKS_WITH_ID +id);
 
         return optionalBook.get();
 
@@ -88,14 +89,15 @@ public class BooksEditorServiceImpl implements BooksEditorService {
 
     @Override
     public List<BookComment> getBookCommentsCnt(String limit) {
-        if ( ! evaluatingService.isThereAreOnlyDigitsInText(limit) ) limit = "5";
+
+        evaluatingService.throwExceptionIfNotOnlyDigitsInText(limit, "Incorrect limit value: "+limit);
 
         final int limitInt = Integer.parseInt(limit);
 
         try {
             return bookDao.getBookCommentsCount(limitInt);
         } catch (IncorrectResultSizeDataAccessException ex){
-            throw new RuntimeException();
+            throw new ServiceRuntimeException(ex.getMessage(),ex);
         }
     }
 
@@ -104,21 +106,20 @@ public class BooksEditorServiceImpl implements BooksEditorService {
         try {
             return bookDao.getAll();
         } catch (IncorrectResultSizeDataAccessException ex){
-            throw new RuntimeException("Book fetch error");
+            throw new ServiceRuntimeException("Book fetch error",ex);
         }
     }
 
     @Transactional
     @Override
     public int deleteBookById(String id) {
-        if ( ! evaluatingService.isThereAreOnlyDigitsInText(id) )
-            throw new RuntimeException(BOOK_ID_IS_INCORRECT_IT_SHOULD_CONTAINS_ONLY_DIGITS);
+        evaluatingService.throwExceptionIfNotOnlyDigitsInText(id,BOOK_ID_IS_INCORRECT_IT_SHOULD_CONTAINS_ONLY_DIGITS);
 
         final long bookId = Long.parseLong(id);
         final int deletedRecCount = bookDao.delete(bookId);
 
         if (deletedRecCount == 0)
-            throw new RuntimeException(THERE_ARE_NO_BOOKS_WITH_ID+id);
+            throw new ServiceRuntimeException(THERE_ARE_NO_BOOKS_WITH_ID+id);
 
         return deletedRecCount;
     }

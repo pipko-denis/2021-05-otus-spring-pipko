@@ -2,6 +2,7 @@ package ru.pipko.otus.homework.library.dao;
 
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.stereotype.Repository;
+import ru.pipko.otus.homework.library.exceptions.DaoRuntimeException;
 import ru.pipko.otus.homework.library.domain.Genre;
 
 import javax.persistence.EntityManager;
@@ -45,7 +46,7 @@ public class GenreJpaDao implements GenreDao{
         if (genre.getId() == null) {
             em.persist(genre);
         } else {
-            throw new RuntimeException("Attempt to add existing record, id = "+genre.getId());
+            throw new DaoRuntimeException("Attempt to add existing record, id = "+genre.getId());
         }
         return genre;
     }
