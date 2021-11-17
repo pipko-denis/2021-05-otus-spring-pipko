@@ -13,7 +13,7 @@ public class EvaluatingDataServiceImpl implements EvaluatingDataService{
 
     private final static Pattern PATTERN_POSITIVE_INT = Pattern.compile("\\d+");
 
-    public boolean isThereAreOnlyDigitsInText(String text) {
+    private boolean isThereAreOnlyDigitsInText(String text) {
         if (text == null) {
             return false;
         }
