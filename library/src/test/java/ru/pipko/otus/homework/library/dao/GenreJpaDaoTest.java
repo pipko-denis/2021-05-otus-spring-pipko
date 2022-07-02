@@ -25,10 +25,10 @@ class GenreJpaDaoTest {
     private static final long GET_BY_ID_PRIMARY_KEY = 1;
     private static final String INSERT_TEST_GENRE_NAME = "Insert test genre name";
     @Autowired
-    GenreJpaDao genreJpaDao;
+    private GenreJpaDao genreJpaDao;
 
     @Autowired
-    TestEntityManager em;
+    private TestEntityManager em;
 
     @Test
     @DisplayName("должен загрузить все записи с правильным количеством запросов")

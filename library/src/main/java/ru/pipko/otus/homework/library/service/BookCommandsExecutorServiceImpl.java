@@ -19,7 +19,7 @@ public class BookCommandsExecutorServiceImpl implements BookCommandsExecutorServ
 
     private final int outCommentsCount;
 
-    public BookCommandsExecutorServiceImpl(BooksEditorService booksEditorService,  @Value("${book.out.comments.count}") int outCommentsCount) {
+    public BookCommandsExecutorServiceImpl(BooksEditorService booksEditorService, @Value("${book.out.comments.count}") int outCommentsCount) {
         this.booksEditorService = booksEditorService;
         this.outCommentsCount = outCommentsCount;
     }
@@ -54,8 +54,8 @@ public class BookCommandsExecutorServiceImpl implements BookCommandsExecutorServ
         return "Book id: " + book.getId() + "\n" +
                 "Book name: \"" + book.getName() + "\".\n" +
                 "Authors: " + book.getAuthors().stream().map(Author::getName).collect(Collectors.joining(", ")) + "\n"
-                +"Genres: " + book.getGenres().stream().map(Genre::getName).collect(Collectors.joining(", ")) + "\n"
-                +"Comments: " + book.getComments().stream().map(Comment::getText).collect(Collectors.joining(", "))
+                + "Genres: " + book.getGenres().stream().map(Genre::getName).collect(Collectors.joining(", ")) + "\n"
+                + "Comments: " + book.getComments().stream().map(Comment::getText).collect(Collectors.joining(", "))
                 ;
     }
 
@@ -75,14 +75,15 @@ public class BookCommandsExecutorServiceImpl implements BookCommandsExecutorServ
         final List<Book> bookList = booksEditorService.getAll();
 
         return "Books list: \n" + bookList.stream().map(book ->
-                        "Book id:" + book.getId() + ": \"" + book.getName() + "\", " +
-                                "authors: " + book.getAuthors().stream().map(Author::getName).collect(Collectors.joining(",")) + ", " +
-                                "genres: " + book.getGenres().stream().map(Genre::getName).collect(Collectors.joining(",")) + " "+
-                                "comments: " + book.getComments().stream()
-                                .map(comment -> getCommentPart(comment))
-                                .limit(outCommentsCount)
-                                .collect(Collectors.joining(",")) + " "
-        ).collect(Collectors.joining("\n"));
+                        "\"" + book.getName() + "\" (art:" + book.getId()+"):\n" +
+                        " - authors: " + book.getAuthors().stream().map(Author::getName).collect(Collectors.joining(",")) + " \n" +
+                        " - genres: " + book.getGenres().stream().map(Genre::getName).collect(Collectors.joining(",")) + " \n" +
+                        " - comments: " + book.getComments().stream()
+                        .map(comment -> getCommentPart(comment))
+                        .limit(outCommentsCount)
+                        .collect(Collectors.joining(","))
+                        + ((book.getComments().size() > outCommentsCount) ? " (" + (book.getComments().size() - outCommentsCount) + " more)" : "")
+        ).collect(Collectors.joining("\n\n"));
 
     }
 

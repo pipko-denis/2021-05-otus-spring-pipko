@@ -6,7 +6,6 @@ import org.hibernate.annotations.Fetch;
 import org.hibernate.annotations.FetchMode;
 
 import javax.persistence.*;
-import java.util.ArrayList;
 import java.util.List;
 
 @Entity
@@ -16,7 +15,6 @@ import java.util.List;
 @AllArgsConstructor
 @NoArgsConstructor
 @ToString
-@NamedEntityGraph(name = "graph-authors", attributeNodes = {@NamedAttributeNode("authors")})
 public class Book {
 
     @Id
@@ -27,21 +25,21 @@ public class Book {
     @Column(name = "name", unique = true, nullable = false)
     private String name;
 
-    @ManyToMany(targetEntity = Author.class, cascade = {CascadeType.ALL }, fetch = FetchType.LAZY)
+    @Fetch(FetchMode.SUBSELECT)
+    @ManyToMany(targetEntity = Author.class, cascade = {CascadeType.ALL}, fetch = FetchType.LAZY)
     @JoinTable(name = "books_authors", joinColumns = {@JoinColumn(name = "book_id")}, inverseJoinColumns = {@JoinColumn(name = "author_id")})
     @ToString.Exclude
     private List<Author> authors;
 
     @Fetch(FetchMode.SUBSELECT)
     @ManyToMany(targetEntity = Genre.class, cascade = {CascadeType.ALL}, fetch = FetchType.LAZY)
-    @JoinTable(name = "books_genres", joinColumns = { @JoinColumn(name = "book_id")}, inverseJoinColumns = {@JoinColumn(name = "genre_id")})
+    @JoinTable(name = "books_genres", joinColumns = {@JoinColumn(name = "book_id")}, inverseJoinColumns = {@JoinColumn(name = "genre_id")})
     @ToString.Exclude
     private List<Genre> genres;
 
     @Fetch(FetchMode.SELECT)
     @BatchSize(size = 5)
-    @OneToMany(targetEntity = Comment.class,cascade = CascadeType.ALL , fetch = FetchType.LAZY)
-    @JoinColumn(name = "book_id")
+    @OneToMany(targetEntity = Comment.class, cascade = CascadeType.ALL, fetch = FetchType.LAZY, mappedBy = "book")
     @ToString.Exclude
     private List<Comment> comments;
 

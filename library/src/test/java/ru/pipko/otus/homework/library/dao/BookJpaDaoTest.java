@@ -32,7 +32,7 @@ class BookJpaDaoTest {
     private TestEntityManager em;
 
     @Autowired
-    BookJpaDao bookDao;
+    private BookJpaDao bookDao;
 
     @Test
     @DisplayName("должен загрузить все записи с правильным количеством запросов")

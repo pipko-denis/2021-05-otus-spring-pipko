@@ -26,6 +26,7 @@ class AuthorJpaDaoTest {
     public static final String DELETE_TEST_AUTHOR_NAME = "DELETE TEST AUTHOR NAME";
     public static final int EXPECTED_QUERIES_COUNT = 1;
     public static final int EXPECTED_AUTHORS_COUNT = 4;
+
     @Autowired
     private AuthorJpaDao authorDao;
 

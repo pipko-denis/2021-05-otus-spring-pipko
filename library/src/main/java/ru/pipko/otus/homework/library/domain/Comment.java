@@ -21,7 +21,7 @@ public class Comment {
     @Column(name = "text",nullable = false)
     private String text;
 
-    @ManyToOne(targetEntity = Book.class)
+    @ManyToOne(targetEntity = Book.class, fetch = FetchType.LAZY)
     private Book book;
 
     public Comment(String text, Book book) {

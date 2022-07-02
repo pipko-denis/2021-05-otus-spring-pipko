@@ -1,5 +1,6 @@
 package ru.pipko.otus.homework.library.dao;
 
+import lombok.RequiredArgsConstructor;
 import org.hibernate.graph.GraphSemantic;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.stereotype.Repository;
@@ -13,39 +14,24 @@ import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Repository
-@ConditionalOnProperty(name = "jpa-dao-enabled", havingValue = "true", matchIfMissing = true)
+@RequiredArgsConstructor
 public class BookJpaDao implements BookDao{
 
     @PersistenceContext
-    private EntityManager em;
-
-    public void setEntityManager(EntityManager em){
-        this.em = em;
-    }
-
+    private final EntityManager em;
 
     @Override
     public List<Book> getAll() {
-        EntityGraph<?> egAuthors = em.getEntityGraph("graph-authors");
-
         TypedQuery<Book> query = em.createQuery("SELECT e " +
                 "FROM Book e " +
-//                "join fetch e.comments " +
                 "ORDER BY e.name", Book.class);
-        query.setHint(GraphSemantic.FETCH.getJpaHintName(), egAuthors);
 
         return query.getResultList();
     }
 
     @Override
     public Optional<Book> getById(long id) {
-        TypedQuery<Book> query = em.createQuery("SELECT b " +
-                "FROM Book b " +
-                "join fetch b.authors as a "+
-                "Where b.id = :id "+
-                "ORDER BY b.name", Book.class);
-        query.setParameter("id",id);
-        return Optional.ofNullable(query.getSingleResult());
+        return Optional.ofNullable(em.find(Book.class,id));
     }
 
     @Override

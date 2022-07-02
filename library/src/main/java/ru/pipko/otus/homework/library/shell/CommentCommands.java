@@ -26,7 +26,7 @@ public class CommentCommands {
     }
 
     @ShellMethod(value = "Adding comment command", key = {"ca", "comment-add"})
-    public String addComment(@ShellOption(value = {"text", "t"}) String bookId, @ShellOption(value = {"text", "t"}) String text) {
+    public String addComment(@ShellOption(value = {"bi", "b"}) String bookId, @ShellOption(value = {"text", "t"}) String text) {
 
         Comment comment = commentService.addComment(bookId, text);
 
@@ -34,7 +34,7 @@ public class CommentCommands {
     }
 
     @ShellMethod(value = "Deleting comment command", key = {"cd", "comment-del"})
-    public String deleteAuthor(@ShellOption(value = {"id"}) String commentId) {
+    public String deleteComment(@ShellOption(value = {"id"}) String commentId) {
 
         commentService.deleteComment(commentId);
 

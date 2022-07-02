@@ -1,5 +1,6 @@
 package ru.pipko.otus.homework.library.dao;
 
+import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Repository;
 import ru.pipko.otus.homework.library.exceptions.DaoRuntimeException;
 import ru.pipko.otus.homework.library.domain.Comment;
@@ -10,14 +11,11 @@ import javax.persistence.TypedQuery;
 import java.util.List;
 
 @Repository
+@RequiredArgsConstructor
 public class CommentJpaDao implements CommentDao {
 
     @PersistenceContext
-    private EntityManager em;
-
-    public void setEntityManager(EntityManager em){
-        this.em = em;
-    }
+    private final EntityManager em;
 
     @Override
     public Comment insert(Comment comment) {

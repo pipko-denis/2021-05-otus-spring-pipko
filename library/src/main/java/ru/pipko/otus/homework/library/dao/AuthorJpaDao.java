@@ -1,5 +1,6 @@
 package ru.pipko.otus.homework.library.dao;
 
+import lombok.RequiredArgsConstructor;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.stereotype.Repository;
 import ru.pipko.otus.homework.library.exceptions.DaoRuntimeException;
@@ -13,16 +14,11 @@ import java.util.List;
 import java.util.Optional;
 
 @Repository
-@ConditionalOnProperty(name = "jpa-dao-enabled", havingValue = "true", matchIfMissing = true)
+@RequiredArgsConstructor
 public class AuthorJpaDao implements AuthorDao{
 
     @PersistenceContext
-    private EntityManager em;
-
-    public void setEntityManager(EntityManager em){
-        this.em = em;
-    }
-
+    private final EntityManager em;
 
     @Override
     public List<Author> getAll() {
