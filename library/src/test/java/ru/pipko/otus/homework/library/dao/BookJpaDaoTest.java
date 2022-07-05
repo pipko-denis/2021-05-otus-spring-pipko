@@ -21,7 +21,7 @@ import static org.assertj.core.api.Assertions.assertThatCode;
 @DisplayName("Репозиторий BookJpaDao для получения книг должен")
 class BookJpaDaoTest {
 
-    private static final int EXPECTED_QUERIES_COUNT = 1;
+    private static final int EXPECTED_QUERIES_COUNT = 2;
     private static final int EXPECTED_BOOKS_COUNT = 4;
     private static final String DELETE_TEST_BOOK_NAME = "Delete test book name";
     private static final long GET_BY_ID_PRIMARY_KEY = 1;
@@ -92,14 +92,15 @@ class BookJpaDaoTest {
     @DisplayName("корректно удалять книгу по её идентификатору, но не трогать жанры и авторов")
     void delete() {
         final Book bookFromEntityManager = em.persist(new Book(DELETE_TEST_BOOK_NAME,Lists.emptyList(),Lists.emptyList()));
-        assertThat(bookFromEntityManager.getId()).isNotNull().isGreaterThan(0);
+        Long deletedBookId = bookFromEntityManager.getId();
+        assertThat(deletedBookId).isNotNull().isGreaterThan(0);
         em.detach(bookFromEntityManager);
 
-        bookDao.delete(bookFromEntityManager.getId());
-        Book deletedBook = em.find(Book.class, bookFromEntityManager.getId());
+        bookDao.delete(deletedBookId);
+        Book deletedBook = em.find(Book.class, deletedBookId);
         assertThat(deletedBook).isNull();
 
-        assertThatCode( () -> bookDao.delete(GET_BY_ID_PRIMARY_KEY)).isInstanceOf(Throwable.class);
+        assertThatCode( () -> bookDao.delete(deletedBookId)).isInstanceOf(Throwable.class);
     }
 
     @Test

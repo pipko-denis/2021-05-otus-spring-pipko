@@ -1,21 +1,21 @@
 package ru.pipko.otus.homework.library.dao;
 
 import lombok.RequiredArgsConstructor;
-import org.hibernate.graph.GraphSemantic;
-import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.stereotype.Repository;
-import ru.pipko.otus.homework.library.exceptions.DaoRuntimeException;
 import ru.pipko.otus.homework.library.domain.Book;
 import ru.pipko.otus.homework.library.dto.BookComment;
+import ru.pipko.otus.homework.library.exceptions.DaoRuntimeException;
 
-import javax.persistence.*;
+import javax.persistence.EntityManager;
+import javax.persistence.PersistenceContext;
+import javax.persistence.TypedQuery;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Repository
 @RequiredArgsConstructor
-public class BookJpaDao implements BookDao{
+public class BookJpaDao implements BookDao {
 
     @PersistenceContext
     private final EntityManager em;
@@ -31,33 +31,41 @@ public class BookJpaDao implements BookDao{
 
     @Override
     public Optional<Book> getById(long id) {
-        return Optional.ofNullable(em.find(Book.class,id));
+        return Optional.ofNullable(em.find(Book.class, id));
     }
 
     @Override
     public Book insert(Book book) {
-        if (book.getId() == null){
+        if (book.getId() == null) {
             em.persist(book);
-        } else{
-            throw new DaoRuntimeException("Attempt to add existing record, id = "+book.getId());
+        } else {
+            throw new DaoRuntimeException("Attempt to add existing record, id = " + book.getId());
         }
-        return  book;
+        return book;
     }
 
     @Override
     public Book update(Book book) {
-        if (book.getId() == null){
+        if (book.getId() == null) {
             throw new DaoRuntimeException("Book should have an id!");
-        }else{
+        } else {
             return em.merge(book);
         }
     }
 
     @Override
     public int delete(long id) {
+        Book book = em.find(Book.class, id);
+        if (book == null) {
+            throw new DaoRuntimeException("Deletion impossible: book with id:"+id+" not found!");
+        }
+        em.remove(book);
+        return 1;
+/*      CascadeType.ALL doesn't work with query!!!
         final Query query = em.createQuery("DELETE FROM Book e WHERE e.id = :id");
         query.setParameter("id",id);
         return query.executeUpdate();
+ */
     }
 
     @Override
@@ -65,19 +73,19 @@ public class BookJpaDao implements BookDao{
         final TypedQuery<Long> query = em.createQuery("SELECT COUNT(e) FROM Book e " +
                 "JOIN e.authors as a " +
                 "WHERE a.id = :authorId", Long.class);
-        query.setParameter("authorId",authorId);
+        query.setParameter("authorId", authorId);
         return query.getSingleResult();
     }
 
     @Override
-    public List<BookComment> getBookCommentsCount(int limit){
+    public List<BookComment> getBookCommentsCount(int limit) {
         final TypedQuery<BookComment> query = em
                 .createQuery("SELECT new ru.pipko.otus.homework.library.dto.BookComment(e.name, COUNT(c)) " +
                                 "FROM Book e " +
                                 "left join e.comments c " +
                                 "GROUP BY e " +
                                 "ORDER BY COUNT(c) desc"
-                        ,BookComment.class);
+                        , BookComment.class);
         return query.getResultList().stream().limit(limit).collect(Collectors.toList());
     }
 }

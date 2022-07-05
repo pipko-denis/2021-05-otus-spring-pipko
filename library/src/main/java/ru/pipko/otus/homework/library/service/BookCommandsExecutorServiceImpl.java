@@ -17,11 +17,8 @@ public class BookCommandsExecutorServiceImpl implements BookCommandsExecutorServ
 
     private final BooksEditorService booksEditorService;
 
-    private final int outCommentsCount;
-
-    public BookCommandsExecutorServiceImpl(BooksEditorService booksEditorService, @Value("${book.out.comments.count}") int outCommentsCount) {
+    public BookCommandsExecutorServiceImpl(BooksEditorService booksEditorService) {
         this.booksEditorService = booksEditorService;
-        this.outCommentsCount = outCommentsCount;
     }
 
 
@@ -77,23 +74,9 @@ public class BookCommandsExecutorServiceImpl implements BookCommandsExecutorServ
         return "Books list: \n" + bookList.stream().map(book ->
                         "\"" + book.getName() + "\" (art:" + book.getId()+"):\n" +
                         " - authors: " + book.getAuthors().stream().map(Author::getName).collect(Collectors.joining(",")) + " \n" +
-                        " - genres: " + book.getGenres().stream().map(Genre::getName).collect(Collectors.joining(",")) + " \n" +
-                        " - comments: " + book.getComments().stream()
-                        .map(comment -> getCommentPart(comment))
-                        .limit(outCommentsCount)
-                        .collect(Collectors.joining(","))
-                        + ((book.getComments().size() > outCommentsCount) ? " (" + (book.getComments().size() - outCommentsCount) + " more)" : "")
+                        " - genres: " + book.getGenres().stream().map(Genre::getName).collect(Collectors.joining(","))
         ).collect(Collectors.joining("\n\n"));
 
-    }
-
-    private String getCommentPart(Comment comment) {
-        String commentText = comment.getText();
-        if ((commentText != null) && (commentText.length() > 10)) {
-            return commentText.substring(0, 10) + "...";
-        } else {
-            return commentText;
-        }
     }
 
     @Transactional
